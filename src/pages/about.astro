@@ -3,6 +3,7 @@ import { interests, coursework } from "../data/content";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionHeading from "../components/SectionHeading.astro";
+import Contact from "../components/Contact.astro";
 ---
 
 <BaseLayout title="About | Portfolio">
@@ -61,4 +62,6 @@ import SectionHeading from "../components/SectionHeading.astro";
       {coursework.map((course) => <span class="glass ui-tag">{course}</span>)}
     </div>
   </section>
+
+  <Contact />
 </BaseLayout>

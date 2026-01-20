@@ -1,0 +1,39 @@
+---
+import DarkToggle from "../components/DarkToggle.astro";
+
+import { Icon } from "astro-icon/components";
+---
+
+<header class="flex items-center justify-between py-8">
+  <a href="/" class="flex items-center gap-3">
+    <img
+      class="flex items-center justify-center w-10 h-10 rounded-full shadow-lg bg-gradient-to-br"
+      src="/photo.jpeg"
+    />
+    <div>
+      <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Ryan Rooks</h1>
+      <span class="flex items-center gap-1 text-md text-slate-500 dark:text-slate-400">
+        Hi!
+        <Icon name="mdi:hand-wave" />
+      </span>
+    </div>
+  </a>
+
+  <div class="flex items-center gap-4">
+    <nav class="hidden gap-6 text-slate-600 dark:text-slate-300 md:flex">
+      <a class="stagger transition hover:text-slate-900 dark:hover:text-white" href="/">Home</a>
+      <a class="stagger transition hover:text-slate-900 dark:hover:text-white" href="/projects">Projects</a>
+      <a class="stagger transition hover:text-slate-900 dark:hover:text-white" href="/about">About</a>
+      <a class="stagger transition hover:text-slate-900 dark:hover:text-white" href="/contact">Contact</a>
+    </nav>
+    <DarkToggle />
+  </div>
+</header>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".stagger").forEach((el, i) => {
+      setTimeout(() => el.classList.add("visible"), i * 200);
+    });
+  });
+</script>
