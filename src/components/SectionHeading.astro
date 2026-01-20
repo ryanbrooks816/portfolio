@@ -1,0 +1,9 @@
+---
+const props = Astro.props as { title: string; subtitle?: string };
+const { title, subtitle } = props;
+---
+
+<header class="mb-6">
+  <h2 class="ui-heading-lg">{title}</h2>
+  {subtitle ? <p class="mt-1 ui-p">{subtitle}</p> : null}
+</header>

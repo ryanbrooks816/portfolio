@@ -1,0 +1,116 @@
+---
+import { projects } from "../data/content";
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+
+// Sort projects by date (most recent first)
+const sortedProjects = projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// Get unique values for filters
+const uniqueTypes = [...new Set(projects.map((p) => p.type))];
+const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
+---
+
+<BaseLayout title="Projects | Portfolio">
+  <section class="py-8">
+    <div>
+      <h2 class="ui-heading-lg">Projects</h2>
+      <p class="mt-2 ui-p">
+        A curated list of selected projects. Some projects are private — request access to view code or demos.
+      </p>
+
+      <div class="projects-filters flex flex-wrap items-center gap-3 mt-8">
+        <input id="search" placeholder="Search projects" class="ui-input w-[300px]" />
+        <select id="type-filter" class="pr-8 ui-input">
+          <option value="all">All Types</option>
+          {uniqueTypes.map((type) => <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>)}
+        </select>
+        <select id="tag-filter" class="pr-8 ui-input">
+          <option value="all">All Tags</option>
+          {uniqueTags.map((tag) => <option value={tag}>{tag}</option>)}
+        </select>
+        <select id="access-filter" class="pr-8 ui-input">
+          <option value="all">All Access</option>
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+        <select id="featured-filter" class="pr-8 ui-input">
+          <option value="all">All Projects</option>
+          <option value="featured">Featured</option>
+          <option value="non-featured">Non-Featured</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="projects-grid" class="grid grid-cols-1 gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-2">
+      {sortedProjects.map((p) => <ProjectCard project={p} />)}
+    </div>
+
+    <div id="no-projects-found" class="mt-12 text-center ui-p text-lg hidden">
+      <span>No projects found</span>
+    </div>
+  </section>
+
+  <script>
+    import { logError } from "../utils/logger";
+
+    (function () {
+      try {
+        const projects = Array.from(document.querySelectorAll("#projects-grid article"));
+        const searchEl = document.getElementById("search") as HTMLInputElement;
+        const typeFilterEl = document.getElementById("type-filter") as HTMLSelectElement;
+        const tagFilterEl = document.getElementById("tag-filter") as HTMLSelectElement;
+        const accessFilterEl = document.getElementById("access-filter") as HTMLSelectElement;
+        const featuredFilterEl = document.getElementById("featured-filter") as HTMLSelectElement;
+
+        function apply() {
+          const query = searchEl?.value?.toLowerCase() || "";
+          const typeFilter = typeFilterEl?.value || "all";
+          const tagFilter = tagFilterEl?.value || "all";
+          const accessFilter = accessFilterEl?.value || "all";
+          const featuredFilter = featuredFilterEl?.value || "all";
+
+          let visibleCount = 0;
+          projects.forEach((el) => {
+            const title = el.getAttribute("data-title")?.toLowerCase() || "";
+            const desc = el.getAttribute("data-p")?.toLowerCase() || "";
+            const projectType = el.getAttribute("data-type") || "";
+            const projectTags = el.getAttribute("data-tags") || "";
+            const isPrivate = el.getAttribute("data-access") === "private";
+            const isFeatured = el.getAttribute("data-featured") === "true";
+
+            const matchesQuery = query === "" || title.includes(query) || desc.includes(query);
+            const matchesType = typeFilter === "all" || projectType === typeFilter;
+            const matchesTag = tagFilter === "all" || projectTags.includes(tagFilter);
+            const matchesAccess =
+              accessFilter === "all" ||
+              (accessFilter === "private" && isPrivate) ||
+              (accessFilter === "public" && !isPrivate);
+            const matchesFeatured =
+              featuredFilter === "all" ||
+              (featuredFilter === "featured" && isFeatured) ||
+              (featuredFilter === "non-featured" && !isFeatured);
+
+            const shouldShow = matchesQuery && matchesType && matchesTag && matchesAccess && matchesFeatured;
+            (el as HTMLElement).style.display = shouldShow ? "" : "none";
+            if (shouldShow) visibleCount++;
+          });
+
+          const noProjectsEl = document.getElementById("no-projects-found");
+          if (noProjectsEl) {
+            noProjectsEl.style.display = visibleCount === 0 ? "block" : "none";
+          }
+        }
+
+        [searchEl, typeFilterEl, tagFilterEl, accessFilterEl, featuredFilterEl].forEach((el) => {
+          if (el) {
+            el.addEventListener(el.tagName === "INPUT" ? "input" : "change", apply);
+          }
+        });
+      } catch (e) {
+        logError(e, "projects.astro script");
+      }
+    })();
+  </script>
+</BaseLayout>

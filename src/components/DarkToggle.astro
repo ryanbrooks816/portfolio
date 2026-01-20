@@ -1,0 +1,133 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button
+  id="theme-toggle"
+  class="relative h-10 w-10 overflow-visible rounded-full bg-slate-200/60 dark:bg-slate-800/60 p-2 transition hover:bg-slate-200/80 dark:hover:bg-slate-800/80"
+  aria-label="Toggle theme"
+>
+  <span class="sr-only">Toggle theme</span>
+  <Icon name="mdi:weather-night" class="hidden dark:inline" />
+  <Icon name="mdi:white-balance-sunny" class="inline dark:hidden" />
+</button>
+
+<script>
+  import { logError } from "../utils/logger";
+
+  (function () {
+    const root = document.documentElement;
+    try {
+      const stored = localStorage.getItem("theme");
+      if (stored === "dark") root.classList.add("dark");
+      else if (stored === "light") root.classList.remove("dark");
+      else {
+        // No stored preference, use system preference
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (prefersDark) root.classList.add("dark");
+        else root.classList.remove("dark");
+      }
+    } catch (e) {
+      // Fallback to system preference
+      try {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (prefersDark) root.classList.add("dark");
+        else root.classList.remove("dark");
+      } catch (e2) {}
+    }
+
+    const btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+
+    const ANIM_DURATION = 700; // ms
+
+    function createGlassyRipple(x: number, y: number, toDark: boolean) {
+      const ripple = document.createElement("div");
+      ripple.setAttribute("aria-hidden", "true");
+      ripple.style.position = "fixed";
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      ripple.style.width = "20px";
+      ripple.style.height = "20px";
+      ripple.style.borderRadius = "50%";
+      ripple.style.pointerEvents = "none";
+      ripple.style.zIndex = "9999";
+      // glassy radial gradient; lighter for switching to light, darker for switching to dark
+      if (toDark) {
+        ripple.style.background =
+          "radial-gradient(circle at center, rgba(0,0,0,0.28), rgba(0,0,0,0.08) 40%, rgba(0,0,0,0) 70%)";
+      } else {
+        ripple.style.background =
+          "radial-gradient(circle at center, rgba(255,255,255,0.16), rgba(255,255,255,0.06) 40%, rgba(255,255,255,0) 70%)";
+      }
+      // subtle blur for glass effect
+      ripple.style.setProperty("backdrop-filter", "blur(6px)");
+      ripple.style.opacity = "0.98";
+      ripple.style.transform = "translate(-50%, -50%) scale(0)";
+      ripple.style.transition = `transform ${ANIM_DURATION}ms cubic-bezier(.2,.9,.2,1), opacity ${ANIM_DURATION}ms ease`;
+      document.body.appendChild(ripple);
+
+      // compute size to cover screen from point
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      const dx = Math.max(x, vw - x);
+      const dy = Math.max(y, vh - y);
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const finalSize = dist * 2;
+      ripple.style.width = `${finalSize}px`;
+      ripple.style.height = `${finalSize}px`;
+
+      // trigger grow
+      requestAnimationFrame(() => {
+        ripple.style.transform = `translate(-50%, -50%) scale(1)`;
+      });
+
+      // fade out softly near end
+      setTimeout(() => {
+        ripple.style.opacity = "0";
+      }, ANIM_DURATION - 200);
+      setTimeout(() => {
+        ripple.remove();
+      }, ANIM_DURATION + 40);
+    }
+
+    btn.addEventListener("click", (ev: Event) => {
+      const isCurrentlyDark = root.classList.contains("dark");
+      const targetIsDark = !isCurrentlyDark;
+
+      let cx = 0,
+        cy = 0;
+      if (ev && (ev as MouseEvent).clientX !== undefined) {
+        const me = ev as MouseEvent;
+        cx = me.clientX;
+        cy = me.clientY;
+      } else {
+        const rect = (btn as HTMLElement).getBoundingClientRect();
+        cx = rect.left + rect.width / 2;
+        cy = rect.top + rect.height / 2;
+      }
+
+      try {
+        localStorage.setItem("theme", targetIsDark ? "dark" : "light");
+      } catch (e) {
+        logError(e, "DarkToggle script");
+      }
+
+      targetIsDark ? root.classList.add("dark") : root.classList.remove("dark");
+      createGlassyRipple(cx, cy, targetIsDark);
+
+      // re-apply theme after delay to sync with ripple
+      setTimeout(
+        () => {
+          try {
+            localStorage.setItem("theme", targetIsDark ? "dark" : "light");
+          } catch (e) {
+            logError(e, "DarkToggle script");
+          }
+          targetIsDark ? root.classList.add("dark") : root.classList.remove("dark");
+        },
+        Math.round(ANIM_DURATION * 0.4),
+      );
+    });
+  })();
+</script>

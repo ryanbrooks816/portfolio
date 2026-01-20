@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+
+import DarkToggle from "../components/DarkToggle.astro";
+import AnimatedGradient from "../components/AnimatedGradient.astro";
+
+const { title = "Portfolio" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content="Personal portfolio" />
+  </head>
+  <body
+    class="relative min-h-screen antialiased bg-gradient-to-b from-slate-50 via-white to-slate-100 text-slate-900 dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-950 dark:to-black dark:text-slate-100"
+  >
+    <AnimatedGradient />
+    <div class="relative z-10 max-w-5xl px-6 mx-auto sm:px-8">
+      <header class="flex items-center justify-between py-8">
+        <a href="/" class="flex items-center gap-3">
+          <img
+            class="flex items-center justify-center w-10 h-10 rounded-full shadow-lg bg-gradient-to-br"
+            src="/photo.jpeg"
+          />
+          <div>
+            <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Ryan Rooks</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Developer</p>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <nav class="hidden gap-6 text-slate-600 dark:text-slate-300 md:flex">
+            <a class="transition hover:text-slate-900 dark:hover:text-white" href="/">Home</a>
+            <a class="transition hover:text-slate-900 dark:hover:text-white" href="/projects">Projects</a>
+            <a class="transition hover:text-slate-900 dark:hover:text-white" href="/about">About</a>
+          </nav>
+          <DarkToggle />
+        </div>
+      </header>
+
+      <main class="relative">
+        <slot />
+      </main>
+
+      <footer class="py-16 text-sm text-center text-slate-400 dark:text-slate-500">
+        <p>
+          © {new Date().getFullYear()} — Ryan Brooks
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

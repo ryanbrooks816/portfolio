@@ -1,0 +1,64 @@
+---
+import { interests, coursework } from "../data/content";
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+---
+
+<BaseLayout title="About | Portfolio">
+  <section class="py-12">
+    <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-3">
+      <div class="md:col-span-2">
+        <SectionHeading title="About me" subtitle="A little background" />
+
+        <p class="mt-4 ui-p">
+          I'm a full-stack developer who cares about performance, accessibility, and building delightful user
+          experiences. I enjoy designing thoughtful systems, shipping reliable backends, and collaborating closely with
+          designers and product teams.
+        </p>
+
+        <p class="mt-4 ui-p">
+          My work spans web apps, APIs, and edge platforms. I like to measure impact with performance budgets and
+          automated tests, and I prefer simple maintainable solutions over clever complexity.
+        </p>
+
+        <div class="mt-6">
+          <h3 class="ui-heading-md">What I'm working on</h3>
+          <p class="mt-2 ui-p">
+            Currently focused on improving developer DX for a distributed team and exploring edge-first architectures.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <a href="/contact" class="ui-button-primary">Get in touch</a>
+          <a href="/projects" class="ml-3 ui-button-secondary">See projects</a>
+        </div>
+      </div>
+
+      <aside class="fade-in" style="animation-delay:160ms">
+        <div class="glass rounded-xl p-6">
+          <h4 class="ui-heading-sm">Quick facts</h4>
+          <ul class="mt-4 space-y-2 ui-list">
+            <li><strong>Location:</strong> Remote (based in the US)</li>
+            <li><strong>Experience:</strong> 6+ years building web products</li>
+            <li><strong>Focus:</strong> Accessibility, performance, DX</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <SectionHeading title="Interests" subtitle="Areas that drive my curiosity" />
+    <div class="flex flex-wrap gap-2 mt-4">
+      {interests.map((interest) => <span class="glass ui-tag">{interest}</span>)}
+    </div>
+  </section>
+
+  <section class="py-12">
+    <SectionHeading title="Coursework" subtitle="Academic foundation" />
+    <div class="flex flex-wrap gap-2 mt-4">
+      {coursework.map((course) => <span class="glass ui-tag">{course}</span>)}
+    </div>
+  </section>
+</BaseLayout>

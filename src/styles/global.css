@@ -1,0 +1,193 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --glass: rgba(255, 255, 255, 0.04);
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Global utilities */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+html.dark .glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.frost {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+html.dark .frost {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Hero gradient */
+.animated-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* background: linear-gradient(120deg, rgba(88, 28, 135, 0.15), rgba(14, 165, 233, 0.08), rgba(99, 102, 241, 0.12)); */
+  background: linear-gradient(
+    120deg,
+    rgba(255, 220, 130, 0.13),
+    rgba(255, 182, 193, 0.1),
+    rgba(173, 216, 230, 0.1),
+    rgba(152, 251, 152, 0.1)
+  );
+  background-size: 300% 300%;
+  animation: gradientShift 12s ease infinite;
+  filter: blur(40px) saturate(1.1);
+}
+
+html.dark .animated-gradient {
+  background: linear-gradient(120deg, rgba(88, 28, 135, 0.15), rgba(14, 165, 233, 0.08), rgba(99, 102, 241, 0.12));
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeInUp 700ms ease forwards;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero greeting background */
+.hero-hi {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  left: 0;
+  bottom: 40px;
+  font-weight: 700;
+  line-height: 0.9;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  color: rgba(2, 6, 23, 0.045);
+  font-family: "Dancing Script", "Segoe Script", "Snell Roundhand", "Apple Chancery", "Lucida Handwriting";
+  font-size: clamp(3rem, 20vw, 6rem);
+  word-break: keep-all;
+  filter: blur(0.6px) saturate(0.98);
+  mix-blend-mode: multiply;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark .hero-hi {
+  color: rgba(255, 255, 255, 0.06);
+  mix-blend-mode: screen;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23475569' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  padding-right: 2.25rem;
+  transition: all 0.2s ease;
+}
+
+html.dark select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394A3B8' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgb(99 102 241);
+  border-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .projects-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .projects-filters > * {
+    width: 100%;
+  }
+}
+
+.transition-colors {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Common components */
+.ui-button-primary {
+  @apply inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700;
+}
+
+.ui-button-secondary {
+  @apply inline-flex items-center gap-2 rounded-md border border-slate-300 px-4 py-2 text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800;
+}
+
+.ui-heading-lg {
+  @apply text-2xl font-semibold text-slate-900 dark:text-slate-100;
+}
+
+.ui-heading-md {
+  @apply text-lg font-semibold text-slate-900 dark:text-slate-100;
+}
+
+.ui-heading-sm {
+  @apply text-sm font-semibold text-slate-800 dark:text-slate-200;
+}
+
+.ui-p {
+  @apply text-slate-600 dark:text-slate-400;
+}
+
+.ui-list {
+  @apply text-sm text-slate-700 dark:text-slate-300;
+}
+
+.ui-tag {
+  @apply rounded-md bg-slate-100/80 px-3 py-2 text-sm text-slate-700 dark:bg-white/10 dark:text-slate-200;
+}
+
+.ui-input {
+  @apply rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100;
+}

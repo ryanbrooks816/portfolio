@@ -1,0 +1,78 @@
+---
+import { projects, skills } from "../data/content";
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+import { Icon } from "astro-icon/components";
+
+// Filter featured projects for hero
+const featuredProjects = projects.filter((p) => p.featured);
+
+// Sort projects by date (most recent first) and take top 4
+const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 4);
+
+// Flatten skills object into an array
+const skillsArray = Object.values(skills).flat();
+---
+
+<BaseLayout title="Home | Portfolio">
+  <section class="relative overflow-hidden py-12">
+    <div class="relative z-10 grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+      <div class="fade-in" style="animation-delay:120ms">
+        <h2 class="text-4xl font-extrabold tracking-tight">
+          Building systems at the intersection of software and applied math.
+        </h2>
+        <p class="mt-4 ui-p">
+          I'm Ryan Brooks - a Computer Science + Applied Mathematics student at the University of Rhode Island. I like
+          to build full-stack applications and develop new tools to make designing systems easier.
+        </p>
+        <div class="mt-6 flex gap-4">
+          <a href="/projects" class="ui-button-primary">View projects</a>
+          <a href="/resume.pdf" target="_blank" class="ui-button-secondary">
+            <Icon name="mdi:open-in-new" />
+            Resume</a
+          >
+        </div>
+      </div>
+
+      <div class="fade-in" style="animation-delay:240ms">
+        <div class="grid grid-cols-1 gap-4">
+          {featuredProjects.map((p) => <ProjectCard project={p} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <SectionHeading title="Current Work" subtitle="Deep dives into systems, design, and performance." />
+
+    <div class="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {recentProjects.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <section class="py-12">
+    <SectionHeading title="Skills" subtitle="Technologies I use often" />
+    <div class="flex flex-wrap gap-3">
+      {skillsArray.map((s) => <div class="glass ui-tag">{s}</div>)}
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="glass rounded-xl p-6">
+      <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+        <div>
+          <h3 class="text-xl font-semibold">Interested in collaborating?</h3>
+          <p class="mt-1 text-slate-600 dark:text-slate-300">
+            I'm available for freelance and full-time roles. Let's build something awesome!
+          </p>
+        </div>
+        <div>
+          <a href="/contact" class="ui-button-primary">Get in touch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
