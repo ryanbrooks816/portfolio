@@ -1,0 +1,59 @@
+---
+import type { Project } from "../types";
+
+const props = Astro.props as { project: Project };
+const { project } = props;
+---
+
+<article
+  class="group relative gap-4 pb-1 transition-all sm:gap-8 md:gap-4 lg:hover:!opacity-100"
+  data-title={project.title}
+  data-p={project.description}
+  data-type={project.type}
+  data-tags={project.tags.join(",")}
+  data-access={project.private ? "private" : "public"}
+  data-featured={project.featured ? "true" : "false"}
+>
+  <div
+    class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-slate-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.10)]"
+  >
+  </div>
+
+  <a href={`/projects/${project.slug}`} class="block relative z-10">
+    <div class={project.image ? "flex justify-between gap-6 items-start" : ""}>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs mb-1 ui-p-accent uppercase">
+          {project.date}
+          {project.endDate && ` - ${project.endDate}`}
+        </div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="ui-heading-md mb-0.5">{project.title}</h3>
+          <p class="ui-subheading">{project.subtitle}</p>
+        </div>
+        <p class="text-sm ui-p mb-4">{project.description}</p>
+        <slot />
+        {
+          project.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <span class="ui-tag blue">{tag}</span>
+              ))}
+            </div>
+          )
+        }
+      </div>
+      {
+        project.image && (
+          <div class="flex-shrink-0 ml-4 max-w-[120px] w-full">
+            <img
+              src={project.image}
+              alt={project.title + " image"}
+              class="rounded-md object-cover w-full h-auto"
+              loading="lazy"
+            />
+          </div>
+        )
+      }
+    </div>
+  </a>
+</article>

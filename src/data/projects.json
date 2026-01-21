@@ -5,7 +5,7 @@
     "description": "Modern Astro-built portfolio highlighting projects, research, and systems work.",
     "tags": ["Astro", "Tailwind", "Cloudflare"],
     "type": "project",
-    "date": "2025-01",
+    "date": "Jan 2025",
     "featured": true,
     "highlights": [
       "Fast static-first architecture",
@@ -24,7 +24,7 @@
     "description": "Research prototype proposing a cross-layer dependency graph to improve correctness of LLM changes across frontend, backend, and database layers.",
     "tags": ["Research", "LLMs", "Databases", "Full-Stack Systems"],
     "type": "research",
-    "date": "2025-09",
+    "date": "Sep 2025",
     "featured": true,
     "highlights": [
       "Cross-layer dependency modeling with DB focus",
@@ -43,7 +43,7 @@
     "description": "Computer vision pipeline to detect and rectify a Scrabble board, segment tiles, and classify letters using PCA (SVD) + k-NN.",
     "tags": ["Computer Vision", "PCA", "SVD", "Python"],
     "type": "project",
-    "date": "2025-12",
+    "date": "Dec 2025",
     "featured": true,
     "highlights": [
       "Perspective rectification + grid segmentation",
@@ -62,7 +62,7 @@
     "description": "Led a team to build a MySQL + PHP full-stack app for managing a games database and end-to-end support ticketing workflows.",
     "tags": ["PHP", "MySQL", "Full-Stack", "Team Lead"],
     "type": "project",
-    "date": "2025-05",
+    "date": "May 2025",
     "featured": false,
     "highlights": [
       "Project lead for team of 5",
@@ -82,7 +82,7 @@
     "description": "Research project classifying program speedup/slowdown from loop transformations using an adapted training pipeline and stratified evaluation.",
     "tags": ["Machine Learning", "Research", "Weights & Biases"],
     "type": "research",
-    "date": "2024-12",
+    "date": "Dec 2024",
     "featured": false,
     "highlights": [
       "Ran stratified experiments across benchmarks",
@@ -101,7 +101,7 @@
     "description": "Java scientific computing library supporting calculus operations, optimization tasks, function approximation, and physics-style computations.",
     "tags": ["Java", "Numerical Methods", "OOP"],
     "type": "project",
-    "date": "2024-05",
+    "date": "May 2024",
     "featured": false,
     "highlights": [
       "OOP design focused on reusable computation modules",
@@ -120,7 +120,7 @@
     "description": "Developed 15+ production websites for small businesses, improving performance, SEO, and maintainability across deployments.",
     "tags": ["PHP", "MySQL", "JavaScript", "SEO", "Web Performance"],
     "type": "professional",
-    "date": "2023-07",
+    "date": "Jul 2023",
     "featured": false,
     "highlights": [
       "Owned full lifecycle: UI/UX → backend → deployment",

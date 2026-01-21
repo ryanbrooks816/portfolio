@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,16 +6,35 @@
 
 :root {
   --glass: rgba(255, 255, 255, 0.04);
+  --academic-primary: #1e3a8a;
+  --academic-secondary: #3730a3;
+  --academic-accent: #059669;
+  --academic-text: #1e293b;
+  --academic-text-light: #64748b;
+  --academic-bg: #ffffff;
+  --academic-bg-secondary: #f8fafc;
+  --academic-border: #e2e8f0;
 }
 
 html.dark {
   color-scheme: dark;
+  --academic-primary: #3b82f6;
+  --academic-secondary: #6366f1;
+  --academic-accent: #10b981;
+  --academic-text: #f1f5f9;
+  --academic-text-light: #94a3b8;
+  --academic-bg: #0f172a;
+  --academic-bg-secondary: #1e293b;
+  --academic-border: #334155;
 }
 
 /* Global utilities */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--academic-bg);
+  color: var(--academic-text);
 }
 
 html {
@@ -34,16 +53,6 @@ html.dark .glass {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.frost {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-html.dark .frost {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
 /* Hero gradient */
 .animated-gradient {
   position: absolute;
@@ -51,20 +60,20 @@ html.dark .frost {
   z-index: -1;
   background: linear-gradient(
     120deg,
-    rgba(255, 220, 130, 0.13),
-    rgba(255, 182, 193, 0.1),
-    rgba(173, 216, 230, 0.1),
-    rgba(152, 251, 152, 0.1)
+    rgba(255, 220, 130, 0.25),
+    rgba(255, 182, 193, 0.2),
+    rgba(173, 216, 230, 0.25),
+    rgba(152, 251, 152, 0.2)
   );
   background-size: 300% 300%;
-  animation: gradientShift 8s ease infinite;
-  filter: blur(40px) saturate(1.1);
+  animation: gradientShift 24s ease infinite;
+  filter: blur(40px) saturate(1.2);
 }
 
 html.dark .animated-gradient {
   background: linear-gradient(120deg, rgba(88, 28, 135, 0.15), rgba(14, 165, 233, 0.08), rgba(99, 102, 241, 0.12));
   background-size: 300% 300%;
-  animation: gradientShift 8s ease infinite;
+  animation: gradientShift 12s ease infinite;
   filter: blur(40px) saturate(1.1);
 }
 
@@ -90,6 +99,13 @@ html.dark .animated-gradient {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.transition-colors {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* Hero greeting background */
@@ -119,48 +135,6 @@ html.dark .hero-hi {
   mix-blend-mode: screen;
 }
 
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23475569' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  padding-right: 2.25rem;
-  transition: all 0.2s ease;
-}
-
-html.dark select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394A3B8' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  ring: 2px;
-  ring-color: rgb(99 102 241);
-  border-color: transparent;
-}
-
-@media (max-width: 768px) {
-  .projects-filters {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .projects-filters > * {
-    width: 100%;
-  }
-}
-
-.transition-colors {
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
-}
-
 /* Common components */
 .ui-button-primary {
   @apply inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700;
@@ -168,6 +142,10 @@ select:focus {
 
 .ui-button-secondary {
   @apply inline-flex items-center gap-2 rounded-md border border-slate-300 px-4 py-2 text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800;
+}
+
+.ui-heading-hero {
+  @apply text-4xl font-bold text-slate-900 dark:text-slate-100;
 }
 
 .ui-heading-lg {
@@ -182,8 +160,16 @@ select:focus {
   @apply text-sm font-semibold text-slate-800 dark:text-slate-200;
 }
 
+.ui-subheading {
+  @apply font-medium text-blue-600 dark:text-blue-400;
+}
+
 .ui-p {
   @apply text-slate-600 dark:text-slate-400;
+}
+
+.ui-p-accent {
+  @apply text-slate-600 dark:text-slate-300;
 }
 
 .ui-list {
@@ -191,22 +177,62 @@ select:focus {
 }
 
 .ui-tag {
-  @apply rounded-md bg-slate-100/80 px-3 py-2 text-sm text-slate-700 dark:bg-white/10 dark:text-slate-200;
+  @apply relative z-10 rounded-full px-3 py-1 text-xs font-medium;
 }
 
-.ui-input {
+.ui-tag.blue {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-400/10 dark:text-blue-300;
+}
+
+.ui-tag.green {
+  @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-300;
+}
+
+.ui-tag.orange {
+  @apply bg-orange-100 text-orange-800 dark:bg-orange-400/10 dark:text-orange-300;
+}
+
+.ui-tag.teal {
+  @apply bg-violet-100 text-violet-800 dark:bg-violet-400/10 dark:text-violet-300;
+}
+
+input,
+select {
   @apply rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100;
+  padding-right: 2rem;
 }
 
-/* Nav animation */
-.stagger {
-  opacity: 0;
-  transition:
-    opacity 0.5s,
-    transform 0.5s;
-  transform: translateY(20px);
+select {
+  @apply appearance-none bg-no-repeat pr-9 transition-all duration-200 ease-in-out;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23475569' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
-.stagger.visible {
-  opacity: 1;
-  transform: none;
+
+html.dark select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394A3B8' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Floating nav */
+.nav-section {
+  @apply rounded-full border border-slate-200/50 bg-white/80 shadow-lg backdrop-blur-sm transition-all duration-200 dark:border-slate-700/50 dark:bg-slate-800/80;
+  height: 46px;
+}
+
+.nav-dot {
+  @apply relative h-2 w-2 rounded-full border-2 border-slate-600 transition-colors duration-200 hover:border-slate-800 dark:border-slate-400 dark:hover:border-slate-200;
+}
+
+.nav-link.active {
+  @apply bg-slate-200/70 text-slate-900 shadow-sm;
+}
+.nav-dot.active {
+  @apply h-2.5 w-2.5 border-blue-600 bg-blue-100 text-blue-900 shadow-lg;
+}
+
+html.dark .nav-link.active {
+  @apply bg-slate-800/70 text-white shadow-sm;
+}
+html.dark .nav-dot.active {
+  @apply h-2.5 w-2.5 border-blue-600 bg-blue-700 text-white shadow-lg;
 }

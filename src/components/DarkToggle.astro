@@ -4,12 +4,28 @@ import { Icon } from "astro-icon/components";
 
 <button
   id="theme-toggle"
-  class="relative h-10 w-10 overflow-visible rounded-full bg-slate-200/60 dark:bg-slate-800/60 p-2 transition hover:bg-slate-200/80 dark:hover:bg-slate-800/80"
-  aria-label="Toggle theme"
+  class="relative inline-flex h-8 w-14 items-center rounded-full bg-slate-200 dark:bg-slate-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800"
+  role="switch"
+  aria-checked="false"
+  aria-label="Toggle dark mode"
 >
-  <span class="sr-only">Toggle theme</span>
-  <Icon name="mdi:weather-night" class="hidden dark:inline" />
-  <Icon name="mdi:white-balance-sunny" class="inline dark:hidden" />
+  <span class="sr-only">Toggle dark mode</span>
+
+  <!-- Switch handle with icons -->
+  <span
+    class="h-6 w-6 transform rounded-full bg-white dark:bg-slate-800 shadow-lg transition-transform duration-200 translate-x-1 dark:translate-x-7 flex items-center justify-center"
+  >
+    <Icon
+      name="mdi:white-balance-sunny"
+      class="h-4 w-4 text-amber-500 opacity-100 dark:opacity-0 transition-opacity duration-200 absolute"
+    />
+    <Icon
+      name="mdi:moon-waning-crescent"
+      class="h-4 w-4 text-slate-300 opacity-0 dark:opacity-100 transition-opacity duration-200 absolute"
+    />
+  </span>
+
+  <div class="absolute inset-0 flex items-center justify-between px-2"></div>
 </button>
 
 <script>
@@ -20,21 +36,8 @@ import { Icon } from "astro-icon/components";
     try {
       const stored = localStorage.getItem("theme");
       if (stored === "dark") root.classList.add("dark");
-      else if (stored === "light") root.classList.remove("dark");
-      else {
-        // No stored preference, use system preference
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if (prefersDark) root.classList.add("dark");
-        else root.classList.remove("dark");
-      }
-    } catch (e) {
-      // Fallback to system preference
-      try {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if (prefersDark) root.classList.add("dark");
-        else root.classList.remove("dark");
-      } catch (e2) {}
-    }
+      if (stored === "light") root.classList.remove("dark");
+    } catch (e) {}
 
     const btn = document.getElementById("theme-toggle");
     if (!btn) return;
@@ -113,7 +116,13 @@ import { Icon } from "astro-icon/components";
         logError(e, "DarkToggle script");
       }
 
-      targetIsDark ? root.classList.add("dark") : root.classList.remove("dark");
+      // Apply theme change
+      if (targetIsDark) {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+
       createGlassyRipple(cx, cy, targetIsDark);
 
       // re-apply theme after delay to sync with ripple

@@ -2,7 +2,12 @@
 import { projects } from "../data/content";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ProjectCard from "../components/ProjectCard.astro";
+import Navigation from "../components/Navigation.astro";
+import NavLink from "../components/NavLink.astro";
+import CardGridView from "../components/CardGridView.astro";
+import CardListView from "../components/CardListView.astro";
+
+import { Icon } from "astro-icon/components";
 
 // Sort projects by date (most recent first)
 const sortedProjects = projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -13,38 +18,88 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
 ---
 
 <BaseLayout title="Projects | Portfolio">
-  <section class="py-8">
-    <div>
-      <h2 class="ui-heading-lg">Projects</h2>
-      <p class="mt-2 ui-p">
-        A curated list of selected projects. Some projects are private — request access to view code or demos.
-      </p>
+  <Navigation>
+    <NavLink slot="nav-links" href="/" label="Home" section="about" />
+    <NavLink slot="nav-links" href="/projects" label="Projects" section="projects" classes="active" />
+  </Navigation>
 
-      <div class="projects-filters flex flex-wrap items-center gap-3 mt-8">
-        <input id="search" placeholder="Search projects" class="ui-input w-[300px]" />
-        <select id="type-filter" class="pr-8 ui-input">
-          <option value="all">All Types</option>
-          {uniqueTypes.map((type) => <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>)}
-        </select>
-        <select id="tag-filter" class="pr-8 ui-input">
-          <option value="all">All Tags</option>
-          {uniqueTags.map((tag) => <option value={tag}>{tag}</option>)}
-        </select>
-        <select id="access-filter" class="pr-8 ui-input">
-          <option value="all">All Access</option>
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-        </select>
-        <select id="featured-filter" class="pr-8 ui-input">
-          <option value="all">All Projects</option>
-          <option value="featured">Featured</option>
-          <option value="non-featured">Non-Featured</option>
-        </select>
-      </div>
+  <section class="pt-12">
+    <h2 class="ui-heading-hero">Projects</h2>
+    <p class="mt-2 ui-p">
+      A big list of projects I've worked on through coursework, personal projects, and professional experience.<br
+      />Some projects are private — request access to view code or demos.
+    </p>
+
+    <div class="mt-8 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-6 gap-4">
+      <input
+        id="search"
+        placeholder="Search projects"
+        class="ui-input w-full xs:col-span-2 md:col-span-4 lg:col-span-2"
+      />
+
+      <select id="type-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
+        <option value="all">All Types</option>
+        {uniqueTypes.map((type) => <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>)}
+      </select>
+
+      <select id="tag-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
+        <option value="all">All Tags</option>
+        {uniqueTags.map((tag) => <option value={tag}>{tag}</option>)}
+      </select>
+
+      <select id="access-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
+        <option value=" all">All Access</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+
+      <select id="featured-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
+        <option value="all">All Projects</option>
+        <option value="featured">Featured</option>
+        <option value="non-featured">Non-Featured</option>
+      </select>
     </div>
 
-    <div id="projects-grid" class="grid grid-cols-1 gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-2">
-      {sortedProjects.map((p) => <ProjectCard project={p} />)}
+    <div class="mt-6 flex gap-4">
+      <button id="toggle-grid" class="ui-button-secondary" title="Grid View">
+        <Icon name="mdi:view-grid" class="h-4 w-4" />
+        <span class="sr-only">Grid View</span>
+      </button>
+      <button id="toggle-list" class="ui-button-secondary" title="List View">
+        <Icon name="mdi:format-list-bulleted" class="h-4 w-4" />
+        <span class="sr-only">List View</span>
+      </button>
+    </div>
+
+    <!-- Grid View -->
+    <div id="projects-grid" class="hidden grid grid-cols-1 gap-8 mt-8 sm:grid-cols-2 lg:grid-cols-2">
+      {sortedProjects.map((p) => <CardGridView project={p} />)}
+    </div>
+
+    <!-- List/Table View (default) -->
+    <div id="projects-list" class="mt-8">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+          <thead
+            class="sticky top-0 z-10 border-b border-slate-300/10 dark:border-slate-300/10 bg-slate-100/75 dark:bg-slate-900/75 backdrop-blur"
+          >
+            <tr>
+              <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Year</th>
+              <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Project</th>
+              <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200 lg:table-cell"
+                >Tags</th
+              >
+              <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200 sm:table-cell"
+                >Type</th
+              >
+              <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Links</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedProjects.map((p) => <CardListView project={p} />)}
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div id="no-projects-found" class="mt-12 text-center ui-p text-lg hidden">
@@ -57,12 +112,31 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
 
     (function () {
       try {
+        const gridView = document.getElementById("projects-grid");
+        const listView = document.getElementById("projects-list");
+        const toggleGrid = document.getElementById("toggle-grid");
+        const toggleList = document.getElementById("toggle-list");
+
+        function showGrid() {
+          if (gridView) gridView.classList.remove("hidden");
+          if (listView) listView.classList.add("hidden");
+        }
+        function showList() {
+          if (gridView) gridView.classList.add("hidden");
+          if (listView) listView.classList.remove("hidden");
+        }
+        if (toggleGrid && toggleList) {
+          toggleGrid.addEventListener("click", showGrid);
+          toggleList.addEventListener("click", showList);
+        }
+
+        // Filtering logic for both views
         const projects = Array.from(document.querySelectorAll("#projects-grid article"));
-        const searchEl = document.getElementById("search") as HTMLInputElement;
-        const typeFilterEl = document.getElementById("type-filter") as HTMLSelectElement;
-        const tagFilterEl = document.getElementById("tag-filter") as HTMLSelectElement;
-        const accessFilterEl = document.getElementById("access-filter") as HTMLSelectElement;
-        const featuredFilterEl = document.getElementById("featured-filter") as HTMLSelectElement;
+        const searchEl = document.getElementById("search") as HTMLInputElement | null;
+        const typeFilterEl = document.getElementById("type-filter") as HTMLSelectElement | null;
+        const tagFilterEl = document.getElementById("tag-filter") as HTMLSelectElement | null;
+        const accessFilterEl = document.getElementById("access-filter") as HTMLSelectElement | null;
+        const featuredFilterEl = document.getElementById("featured-filter") as HTMLSelectElement | null;
 
         function apply() {
           const query = searchEl?.value?.toLowerCase() || "";
@@ -97,9 +171,34 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
             if (shouldShow) visibleCount++;
           });
 
+          // List view filtering
+          const listRows = document.querySelectorAll("#projects-list tbody tr");
+          let listVisible = 0;
+          listRows.forEach((row) => {
+            const cells = row.children;
+            const title = cells[1]?.querySelector("a")?.textContent?.toLowerCase() || "";
+            const desc = ""; // Not shown in list view
+            const projectType = cells[3]?.textContent?.trim() || "";
+            const tags = Array.from(cells[2]?.querySelectorAll(".ui-tag") || [])
+              .map((el) => el.textContent)
+              .join(",");
+            const isPrivate = false; // Not shown in list view
+            const isFeatured = false; // Not shown in list view
+
+            const matchesQuery = query === "" || title.includes(query);
+            const matchesType = typeFilter === "all" || projectType === typeFilter;
+            const matchesTag = tagFilter === "all" || tags.includes(tagFilter);
+            const matchesAccess = true; // Not filtered in list view
+            const matchesFeatured = true; // Not filtered in list view
+
+            const shouldShow = matchesQuery && matchesType && matchesTag && matchesAccess && matchesFeatured;
+            (row as HTMLElement).style.display = shouldShow ? "" : "none";
+            if (shouldShow) listVisible++;
+          });
+
           const noProjectsEl = document.getElementById("no-projects-found");
           if (noProjectsEl) {
-            noProjectsEl.style.display = visibleCount === 0 ? "block" : "none";
+            noProjectsEl.style.display = visibleCount === 0 && listVisible === 0 ? "block" : "none";
           }
         }
 

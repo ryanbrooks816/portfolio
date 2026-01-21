@@ -1,65 +1,266 @@
 ---
-import { projects, skills } from "../data/content";
+import { projects, skills, omni, interests, coursework } from "../data/content";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import SectionHeading from "../components/SectionHeading.astro";
+import SectionLayout from "../layouts/SectionLayout.astro";
+import HomeNavigation from "../components/HomeNavigation.astro";
+import TextLink from "../components/TextLink.astro";
+import CardGridView from "../components/CardGridView.astro";
 import Contact from "../components/Contact.astro";
 
 import { Icon } from "astro-icon/components";
 
-// Filter featured projects for hero
-const featuredProjects = projects.filter((p) => p.featured);
-
 // Sort projects by date (most recent first) and take top 4
 const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 4);
-
-// Flatten skills object into an array
-const skillsArray = Object.values(skills).flat();
 ---
 
 <BaseLayout title="Home | Portfolio">
-  <section class="relative overflow-hidden py-12">
-    <div class="relative z-10 grid grid-cols-1 items-center gap-8 md:grid-cols-2">
-      <div class="fade-in" style="animation-delay:120ms">
-        <h2 class="text-4xl font-extrabold tracking-tight">
-          Building systems at the intersection of software and applied math.
+  <HomeNavigation />
+  <div class="lg:flex lg:justify-between lg:gap-8">
+    <!-- Sticky Left Sidebar -->
+    <div class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-32">
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl">
+          <a href="/">Ryan Brooks</a>
+        </h1>
+        <h2 class="mt-4 text-md font-medium tracking-tight text-slate-700 dark:text-slate-200">
+          CS + Applied Math Student @ URI
+          <br />Full-Stack Developer @ OMNI Digital Services
         </h2>
-        <p class="mt-4 ui-p">
-          I'm Ryan Brooks - a Computer Science + Applied Mathematics student at the University of Rhode Island. I like
-          to build full-stack applications and develop new tools to make designing systems easier.
+        <p class="mt-6 max-w-xs leading-normal ui-p text-lg">
+          Building systems at the intersection of software and applied mathematics.
         </p>
-        <div class="mt-6 flex gap-4">
-          <a href="/projects" class="ui-button-primary">View projects</a>
-          <a href="/resume.pdf" target="_blank" class="ui-button-secondary">
-            <Icon name="mdi:open-in-new" />
-            Resume</a
+
+        <!-- Key Interests -->
+        <div class="mt-8">
+          <h3 class="text-sm font-semibold uppercase tracking-widest ui-p-accent mb-4">Interests</h3>
+          <div class="flex flex-wrap gap-2">
+            {interests.map((interest) => <span class="ui-tag teal text-xs">{interest}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Icons - Sticky Bottom -->
+      <ul class="ml-1 mt-8 flex items-center" aria-label="Social media">
+        <li class="mr-5 text-xs shrink-0">
+          <a
+            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            href="https://github.com/ryanbrooks816"
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="GitHub (opens in a new tab)"
+            title="GitHub"
           >
+            <span class="sr-only">GitHub</span>
+            <Icon name="mdi:github" class="h-6 w-6" />
+          </a>
+        </li>
+        <li class="mr-5 text-xs shrink-0">
+          <a
+            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            href="https://linkedin.com/in/ryan-mbrooks"
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="LinkedIn (opens in a new tab)"
+            title="LinkedIn"
+          >
+            <span class="sr-only">LinkedIn</span>
+            <Icon name="mdi:linkedin" class="h-6 w-6" />
+          </a>
+        </li>
+        <li class="mr-5 text-xs shrink-0">
+          <a
+            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            href="mailto:brooksryan1234@gmail.com"
+            aria-label="Email (opens your email client)"
+            title="Email"
+          >
+            <span class="sr-only">Email</span>
+            <Icon name="mdi:email" class="h-6 w-6" />
+          </a>
+        </li>
+        <li class="mr-5 text-xs shrink-0">
+          <a
+            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            href="/resume.pdf"
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="Resume (opens in a new tab)"
+            title="Resume"
+          >
+            <span class="sr-only">Resume</span>
+            <Icon name="mdi:file-document-outline" class="h-6 w-6" />
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Scrollable Right Content -->
+    <div class="pt-32 lg:w-1/2 lg:py-32">
+      <!-- About Section -->
+      <SectionLayout id="section-about" heading="About">
+        <div class="space-y-4">
+          <p class="mb-4 ui-p">
+            I'm a Computer Science + Applied Mathematics student at the University of Rhode Island. I focus on building
+            full-stack applications and developing computational tools that bridge software engineering with
+            mathematical optimization.
+          </p>
+          <p class="mb-4 ui-p">
+            My work centers on creating scalable systems that leverage mathematical modeling, performance optimization,
+            and data-driven insights. I'm particularly interested in the intersection of distributed systems and
+            numerical methods.
+          </p>
+          <p class="ui-p">
+            When I'm not coding, you can find me working on mathematical research, exploring new frameworks, or
+            collaborating on open-source projects that solve complex computational problems.
+          </p>
+        </div>
+      </SectionLayout>
+
+      <!-- Experience & Education Section -->
+      <SectionLayout id="section-experience" heading="Experience">
+        <ol class="group/list">
+          <li class="mb-12">
+            <CardGridView
+              project={{
+                title: "OMNI Digital Services",
+                description: "Full-Stack Developer",
+                date: "Jul 2023",
+                endDate: "Present",
+                tags: [],
+              }}
+            >
+              <ul class="space-y-3 text-sm">
+                {
+                  omni.map((item) => (
+                    <li class="flex items-start">
+                      <span class="mr-3 text-slate-600 dark:text-slate-400">•</span>
+                      <span class="ui-p">{item}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </CardGridView>
+          </li>
+          <li class="mb-12">
+            <CardGridView
+              project={{
+                title: "University of Rhode Island",
+                description:
+                  "Computer Science + Applied Mathematics • Currently studying software systems, machine learning, and optimization. Conducting research on machine learning applications in system optimization.",
+                date: "Sep 2022",
+                endDate: "May 2026",
+                tags: [],
+              }}
+            >
+              <div class="flex flex-wrap gap-2">
+                {coursework.map((course) => <span class="ui-tag green">{course}</span>)}
+              </div>
+            </CardGridView>
+          </li>
+
+          <!-- Resume Link -->
+          <div class="mt-12">
+            <TextLink href="/resume.pdf" label="View Full Résumé" />
+          </div>
+        </ol>
+      </SectionLayout>
+    </div>
+  </div>
+
+  <!-- Projects Section -->
+  <SectionLayout id="section-projects" heading="Featured Projects">
+    <ul class="group/list">
+      {
+        recentProjects.map((project) => (
+          <li class="mb-12">
+            <CardGridView project={project} />
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mt-12">
+      <TextLink href="/projects" label="View All Projects" />
+    </div>
+  </SectionLayout>
+
+  <!-- Skills & Technologies Section -->
+  <SectionLayout id="section-skills" heading="Skills & Technologies">
+    <div class="mb-8">
+      <p class="ui-p leading-relaxed">
+        I specialize in designing scalable full-stack systems that are optimized for maintainability and performance. My
+        current work focuses on problems that lie at the intersection of software engineering and mathematical
+        optimization.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Languages</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.languages.map((s) => <span class="ui-tag teal">{s}</span>)}
         </div>
       </div>
-
-      <div class="fade-in" style="animation-delay:240ms">
-        <div class="grid grid-cols-1 gap-4">
-          {featuredProjects.map((p) => <ProjectCard project={p} />)}
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Frontend</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.frontend.map((s) => <span class="ui-tag teal">{s}</span>)}
+        </div>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Backend</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.backend.map((s) => <span class="ui-tag teal">{s}</span>)}
+        </div>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">DevOps</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.devops.map((s) => <span class="ui-tag teal">{s}</span>)}
+        </div>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Machine Learning</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.ml.map((s) => <span class="ui-tag teal">{s}</span>)}
+        </div>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Tools & Analytics</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.product_growth.map((s) => <span class="ui-tag teal">{s}</span>)}
         </div>
       </div>
     </div>
-  </section>
+  </SectionLayout>
 
-  <section class="py-12">
-    <SectionHeading title="Current Work" subtitle="Deep dives into systems, design, and performance." />
-
-    <div class="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {recentProjects.map((p) => <ProjectCard project={p} />)}
+  <!-- Research Interests Section -->
+  <SectionLayout id="section-research" heading="Research & Interests">
+    <div class="mb-8">
+      <p class="ui-p text-base leading-relaxed">
+        My current research prospects focus on the intersection of systems and mathematical optimization. I'm
+        particularly interested in how developer tooling can be improved through machine learning.
+      </p>
     </div>
-  </section>
 
-  <section class="py-12">
-    <SectionHeading title="Skills" subtitle="Technologies I use often" />
-    <div class="flex flex-wrap gap-3">
-      {skillsArray.map((s) => <div class="glass ui-tag">{s}</div>)}
+    <div class="space-y-6">
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-200">Current Focus Areas</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 gap-4">
+        {
+          interests.map((interest) => (
+            <div class="group bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <h4 class="text-sm font-medium text-slate-900 dark:text-slate-100 group-hover:text-slate-800 dark:group-hover:text-white transition-colors">
+                {interest}
+              </h4>
+            </div>
+          ))
+        }
+      </div>
     </div>
-  </section>
+  </SectionLayout>
 
-  <Contact />
+  <!-- Contact Section -->
+  <SectionLayout id="section-contact" heading="Get In Touch">
+    <Contact />
+  </SectionLayout>
 </BaseLayout>

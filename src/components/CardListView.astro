@@ -1,0 +1,117 @@
+---
+import type { Project } from "../types";
+import { Icon } from "astro-icon/components";
+
+const { project } = Astro.props as { project: Project };
+---
+
+<tr
+  class="border-b border-slate-300/10 dark:border-slate-300/10 last:border-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+>
+  <td class="py-4 px-4 align-top text-sm">
+    <div class="translate-y-px text-slate-600 dark:text-slate-400">{project.date}</div>
+  </td>
+  <td class="py-4 px-4 align-top font-semibold leading-snug text-slate-900 dark:text-slate-200">
+    <div>
+      <div class="block sm:hidden">
+        <a
+          class="inline-flex items-baseline font-medium leading-tight text-slate-900 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-200 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 group/link text-base transition-colors"
+          href={`/projects/${project.slug}`}
+          aria-label={`${project.title} project details`}
+        >
+          <span>{project.title}</span>
+          <Icon
+            name="mdi:arrow-top-right"
+            class="ml-0.5 h-4 w-4 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
+          />
+        </a>
+      </div>
+      <div class="hidden sm:block">{project.title}</div>
+    </div>
+    <div class="mt-2 text-sm leading-normal text-slate-600 dark:text-slate-400">{project.description}</div>
+    <ul class="mt-2 flex flex-wrap lg:hidden" aria-label="Technologies used">
+      {
+        project.tags.map((tag) => (
+          <li class="mr-1.5 mt-2">
+            <div class="flex items-center ui-tag blue">{tag}</div>
+          </li>
+        ))
+      }
+    </ul>
+  </td>
+  <td class="hidden py-4 px-4 align-top lg:table-cell">
+    <ul class="flex -translate-y-1.5 flex-wrap">
+      {
+        project.tags.map((tag) => (
+          <li class="my-1 mr-1.5">
+            <div class="flex items-center ui-tag blue">{tag}</div>
+          </li>
+        ))
+      }
+    </ul>
+  </td>
+  <td class="hidden py-4 px-4 align-top text-sm sm:table-cell">
+    <div class="translate-y-px whitespace-nowrap text-slate-600 dark:text-slate-400 capitalize">{project.type}</div>
+  </td>
+  <td class="py-4 px-4 align-top">
+    <ul class="translate-y-1">
+      {
+        project.links?.demo && (
+          <li class="mb-1 flex items-center">
+            <a
+              class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
+              href={project.links.demo}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={`${project.title} demo (opens in a new tab)`}
+            >
+              <span>Demo</span>
+              <Icon
+                name="mdi:arrow-top-right"
+                class="ml-0.5 h-3 w-3 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
+              />
+            </a>
+          </li>
+        )
+      }
+      {
+        project.links?.github && (
+          <li class="mb-1 flex items-center">
+            <a
+              class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
+              href={project.links.github}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={`${project.title} on GitHub (opens in a new tab)`}
+            >
+              <span>GitHub</span>
+              <Icon
+                name="mdi:arrow-top-right"
+                class="ml-0.5 h-3 w-3 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
+              />
+            </a>
+          </li>
+        )
+      }
+      {
+        project.links?.paper && (
+          <li class="mb-1 flex items-center">
+            <a
+              class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
+              href={project.links.paper}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={`${project.title} paper (opens in a new tab)`}
+            >
+              <span>Paper</span>
+              <Icon
+                name="mdi:arrow-top-right"
+                class="ml-0.5 h-3 w-3 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
+              />
+            </a>
+          </li>
+        )
+      }
+    </ul>
+  </td>
+</tr>

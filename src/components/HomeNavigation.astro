@@ -1,0 +1,84 @@
+---
+import Navigation from "../components/Navigation.astro";
+import NavLink from "../components/NavLink.astro";
+
+// Define sections for navigation dots
+const sections = [
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "research", label: "Research" },
+  { id: "contact", label: "Contact" },
+];
+---
+
+<Navigation>
+  <NavLink slot="nav-links" href="#section-about" label="About" section="about" />
+  <NavLink slot="nav-links" href="#section-experience" label="Experience" section="experience" />
+  <NavLink slot="nav-links" href="#section-projects" label="Projects" section="projects" />
+  <NavLink slot="nav-links" href="#section-skills" label="Skills" section="skills" />
+  <NavLink slot="nav-links" href="#section-research" label="Research" section="research" />
+  <NavLink slot="nav-links" href="#section-contact" label="Contact" section="contact" />
+
+  <!-- Floating Dots Navigator: Desktop (right) -->
+  <nav class="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:block" aria-label="Section navigation">
+    <div class="flex flex-col space-y-4 items-center">
+      {
+        sections.map((section) => (
+          <a href={`#section-${section.id}`} class="nav-dot" aria-label={section.label} data-section={section.id}>
+            <span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-600 dark:text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              {section.label}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+
+  <!-- Floating Dots Navigator: Mobile (bottom center) -->
+  <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex md:hidden" aria-label="Section navigation">
+    <div class="flex flex-row space-x-4 items-center bg-white/80 dark:bg-slate-900/80 px-4 py-2 rounded-full shadow-lg">
+      {
+        sections.map((section) => (
+          <a href={`#section-${section.id}`} class="nav-dot" aria-label={section.label} data-section={section.id} />
+        ))
+      }
+    </div>
+  </nav>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sectionIds = ["about", "experience", "projects", "skills", "research", "contact"];
+      const navLinks = Array.from(document.querySelectorAll("a[data-section]")) as HTMLElement[];
+
+      function onScroll() {
+        let current = sectionIds[0];
+        let scrollY = window.scrollY + window.innerHeight / 2.2;
+
+        for (const id of sectionIds) {
+          const section = document.getElementById("section-" + id);
+          if (section && section.offsetTop <= scrollY) {
+            current = id;
+          }
+        }
+
+        // If at the bottom of the page, set last section as active
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) {
+          current = sectionIds[sectionIds.length - 1];
+        }
+
+        navLinks.forEach((link) => {
+          if (link.dataset.section === current) {
+            link.classList.add("active");
+          } else {
+            link.classList.remove("active");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    });
+  </script>
+</Navigation>

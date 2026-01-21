@@ -1,0 +1,18 @@
+---
+import { Icon } from "astro-icon/components";
+
+const { href, label } = Astro.props;
+---
+
+<a
+  class="inline-flex items-center font-medium leading-tight text-slate-800 dark:text-slate-200 font-semibold hover:text-slate-900 dark:hover:text-white group"
+  aria-label={label}
+  href={href}
+  target="_blank"
+>
+  <span>{label}</span>
+  <Icon
+    name="mdi:arrow-top-right"
+    class="ml-1 h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 group-focus-visible:-translate-y-1 group-focus-visible:translate-x-1 motion-reduce:transition-none"
+  />
+</a>
