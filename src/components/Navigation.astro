@@ -15,9 +15,13 @@ import DarkToggle from "./DarkToggle.astro";
   </a>
 
   <!-- Navigation Links -->
-  <div class="hidden md:flex items-center gap-1 px-2 py-1 nav-section">
-    <slot name="nav-links" />
-  </div>
+  {
+    Astro.slots.has("nav-links") && (
+      <div class="hidden md:flex items-center gap-1 px-2 py-1 nav-section">
+        <slot name="nav-links" />
+      </div>
+    )
+  }
 
   <div class="flex items-center gap-2 px-2 py-1 nav-section">
     <DarkToggle />

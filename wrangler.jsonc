@@ -10,4 +10,10 @@
   "observability": {
     "enabled": true,
   },
+  "kv_namespaces": [
+    {
+      "binding": "ACCESS_CODES",
+      "id": "9d9f20f41b7e4416abbb930d0e67341a",
+    },
+  ],
 }

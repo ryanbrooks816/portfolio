@@ -4,4 +4,5 @@ dist
 .DS_Store
 .vscode
 /.astro
-/.astro
+SECURITY.md
+/.wrangler

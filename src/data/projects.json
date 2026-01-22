@@ -13,10 +13,25 @@
       "Clean content collections for scalable updates"
     ],
     "links": {
-      "github": "https://github.com/ryanbrooks816",
-      "demo": "#"
+      "github": "https://github.com/ryanbrooks816"
     },
     "private": false
+  },
+  {
+    "slug": "enterprise-security-audit",
+    "title": "Enterprise Security Infrastructure Audit",
+    "description": "Comprehensive security assessment and infrastructure redesign for Fortune 500 client, identifying 47 critical vulnerabilities.",
+    "tags": ["Security", "Infrastructure", "Compliance", "Enterprise"],
+    "type": "professional",
+    "date": "Nov 2024",
+    "featured": true,
+    "highlights": [
+      "Identified 47 critical security vulnerabilities",
+      "Reduced attack surface by 78% through strategic redesign",
+      "Achieved SOC 2 Type II compliance",
+      "Implemented zero-trust architecture"
+    ],
+    "private": true
   },
   {
     "slug": "llm-reliability-cross-layer-dep-graph",
@@ -32,8 +47,7 @@
       "Implemented frontend visualization prototype"
     ],
     "links": {
-      "github": "https://github.com/ryanbrooks816",
-      "paper": "#"
+      "github": "https://github.com/ryanbrooks816"
     },
     "private": false
   },
@@ -51,8 +65,7 @@
       "90-94% accuracy on sample data"
     ],
     "links": {
-      "github": "https://github.com/ryanbrooks816",
-      "demo": "#"
+      "github": "https://github.com/ryanbrooks816"
     },
     "private": false
   },
@@ -71,8 +84,7 @@
       "Led UI/UX design and deployment via cPanel"
     ],
     "links": {
-      "github": "https://github.com/ryanbrooks816",
-      "demo": "#"
+      "github": "https://github.com/ryanbrooks816"
     },
     "private": false
   },
@@ -90,8 +102,7 @@
       "Analysis + report with visualized outcomes"
     ],
     "links": {
-      "github": "https://github.com/ryanbrooks816",
-      "paper": "#"
+      "github": "https://github.com/ryanbrooks816"
     },
     "private": false
   },
@@ -109,8 +120,7 @@
       "Demonstrates algorithm design and numerical methods"
     ],
     "links": {
-      "github": "https://github.com/ryanbrooks816",
-      "demo": "#"
+      "github": "https://github.com/ryanbrooks816"
     },
     "private": false
   },

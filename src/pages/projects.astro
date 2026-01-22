@@ -18,16 +18,19 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
 ---
 
 <BaseLayout title="Projects | Portfolio">
-  <Navigation>
-    <NavLink slot="nav-links" href="/" label="Home" section="about" />
-    <NavLink slot="nav-links" href="/projects" label="Projects" section="projects" classes="active" />
-  </Navigation>
-
+  <Navigation />
   <section class="pt-12">
+    <a
+      href="/"
+      class="inline-flex items-center text-sm text-slate-400 hover:text-slate-200 dark:hover:text-slate-300 mb-6"
+    >
+      <Icon name="mdi:arrow-left" class="w-4 h-4 mr-1" />
+      <span>Back to Home</span>
+    </a>
     <h2 class="ui-heading-hero">Projects</h2>
     <p class="mt-2 ui-p">
       A big list of projects I've worked on through coursework, personal projects, and professional experience.<br
-      />Some projects are private — request access to view code or demos.
+      />Some projects are private — password provided in my resume to view code or demos.
     </p>
 
     <div class="mt-8 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-6 gap-4">
@@ -48,7 +51,7 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
       </select>
 
       <select id="access-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
-        <option value=" all">All Access</option>
+        <option value="all">All Access</option>
         <option value="public">Public</option>
         <option value="private">Private</option>
       </select>
@@ -84,7 +87,7 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
             class="sticky top-0 z-10 border-b border-slate-300/10 dark:border-slate-300/10 bg-slate-100/75 dark:bg-slate-900/75 backdrop-blur"
           >
             <tr>
-              <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Year</th>
+              <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Date</th>
               <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Project</th>
               <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200 lg:table-cell"
                 >Tags</th
