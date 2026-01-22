@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 import type { Project } from "../types";
 
 const props = Astro.props as { project: Project };
@@ -27,7 +29,16 @@ const { project } = props;
           {project.endDate && ` - ${project.endDate}`}
         </div>
         <div class="flex items-center justify-between mb-2">
-          <h3 class="ui-heading-md mb-0.5">{project.title}</h3>
+          <div class="flex items-center gap-2">
+            <h3 class="ui-heading-md mb-0.5">{project.title}</h3>
+            {
+              project.private && (
+                <span class="px-2 py-1 text-xs font-medium text-amber-300" aria-label="Private project">
+                  <Icon name="mdi:lock" class="w-4 h-4" />
+                </span>
+              )
+            }
+          </div>
           <p class="ui-subheading">{project.subtitle}</p>
         </div>
         <p class="text-sm ui-p mb-4">{project.description}</p>
