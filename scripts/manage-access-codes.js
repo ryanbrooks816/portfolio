@@ -105,7 +105,9 @@ if (!action) {
   console.log("Arguments:");
   console.log("  action     - create, revoke, usage, or list");
   console.log("  code       - Access code string (required for create/revoke/usage)");
-  console.log("  scope      - '*' for all private projects, or comma-separated project slugs (e.g. 'project-a,project-b')");
+  console.log(
+    "  scope      - '*' for all private projects, or comma-separated project slugs (e.g. 'project-a,project-b')",
+  );
   console.log("  daysValid  - Days until expiration (default: 90)");
   console.log("  maxUses    - Maximum uses allowed (default: 50)");
   console.log();
