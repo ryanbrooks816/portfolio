@@ -1,7 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
-
 import DarkToggle from "./DarkToggle.astro";
+
+import { text } from "../data/text";
 ---
 
 <nav
@@ -10,8 +10,8 @@ import DarkToggle from "./DarkToggle.astro";
 >
   <!-- Logo/Home Link -->
   <a href="/" class="hidden sm:flex items-center gap-3 px-4 py-1 nav-section">
-    <img class="w-8 h-8 rounded-full" src="/photo.jpeg" alt="Ryan Brooks" />
-    <span class="font-semibold text-slate-900 dark:text-white">Ryan Brooks</span>
+    <img class="w-8 h-8 rounded-full" src="/photo.jpeg" alt={text.name} />
+    <span class="font-semibold text-slate-900 dark:text-white">{text.name}</span>
   </a>
 
   <!-- Navigation Links -->

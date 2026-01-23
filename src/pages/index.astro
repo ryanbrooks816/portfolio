@@ -1,17 +1,25 @@
 ---
-import { projects, skills, omni, interests, coursework } from "../data/content";
+import { skills, omni, interests, coursework } from "../data/content";
+import { text } from "../data/text";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionLayout from "../layouts/SectionLayout.astro";
 import HomeNavigation from "../components/HomeNavigation.astro";
 import TextLink from "../components/TextLink.astro";
 import CardGridView from "../components/CardGridView.astro";
+import ExperienceCard from "../components/ExperienceCard.astro";
 import Contact from "../components/Contact.astro";
 
 import { Icon } from "astro-icon/components";
 
+import { getProjects } from "../data/content";
+
+const projects = await getProjects();
+
 // Sort projects by date (most recent first) and take top 4
-const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 4);
+const recentProjects = projects
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 4);
 ---
 
 <BaseLayout title="Home | Portfolio">
@@ -21,14 +29,14 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
     <div class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-32">
       <div>
         <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl">
-          <a href="/">Ryan Brooks</a>
+          <a href="/">{text.name}</a>
         </h1>
         <h2 class="mt-4 text-md font-medium tracking-tight text-slate-700 dark:text-slate-200">
-          CS + Applied Math Student @ URI
-          <br />Full-Stack Developer @ OMNI Digital Services
+          {text.title}
+          <br />{text.subtitle}
         </h2>
         <p class="mt-6 max-w-xs leading-normal ui-p text-lg">
-          Building systems at the intersection of software and applied mathematics.
+          {text.tagline}
         </p>
 
         <!-- Key Interests -->
@@ -45,7 +53,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
         <li class="mr-5 text-xs shrink-0">
           <a
             class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
-            href="https://github.com/ryanbrooks816"
+            href={text.contact.github}
             target="_blank"
             rel="noreferrer noopener"
             aria-label="GitHub (opens in a new tab)"
@@ -58,7 +66,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
         <li class="mr-5 text-xs shrink-0">
           <a
             class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
-            href="https://linkedin.com/in/ryan-mbrooks"
+            href={text.contact.linkedin}
             target="_blank"
             rel="noreferrer noopener"
             aria-label="LinkedIn (opens in a new tab)"
@@ -71,7 +79,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
         <li class="mr-5 text-xs shrink-0">
           <a
             class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
-            href="mailto:brooksryan1234@gmail.com"
+            href={`mailto:${text.contact.email}`}
             aria-label="Email (opens your email client)"
             title="Email"
           >
@@ -82,7 +90,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
         <li class="mr-5 text-xs shrink-0">
           <a
             class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
-            href="/resume.pdf"
+            href={text.contact.resume}
             target="_blank"
             rel="noreferrer noopener"
             aria-label="Resume (opens in a new tab)"
@@ -101,18 +109,13 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
       <SectionLayout id="section-about" heading="About">
         <div class="space-y-4">
           <p class="mb-4 ui-p">
-            I'm a Computer Science + Applied Mathematics student at the University of Rhode Island. I focus on building
-            full-stack applications and developing computational tools that bridge software engineering with
-            mathematical optimization.
+            {text.about.intro}
           </p>
           <p class="mb-4 ui-p">
-            My work centers on creating scalable systems that leverage mathematical modeling, performance optimization,
-            and data-driven insights. I'm particularly interested in the intersection of distributed systems and
-            numerical methods.
+            {text.about.focus}
           </p>
           <p class="ui-p">
-            When I'm not coding, you can find me working on mathematical research, exploring new frameworks, or
-            collaborating on open-source projects that solve complex computational problems.
+            {text.about.personal}
           </p>
         </div>
       </SectionLayout>
@@ -121,14 +124,11 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
       <SectionLayout id="section-experience" heading="Experience">
         <ol class="group/list">
           <li class="mb-12">
-            <CardGridView
-              project={{
-                title: "OMNI Digital Services",
-                description: "Full-Stack Developer",
-                date: "Jul 2023",
-                endDate: "Present",
-                tags: [],
-              }}
+            <ExperienceCard
+              title="OMNI Digital Services"
+              description="Full-Stack Developer"
+              date="2023-07"
+              endDate="Present"
             >
               <ul class="space-y-3 text-sm">
                 {
@@ -140,28 +140,24 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
                   ))
                 }
               </ul>
-            </CardGridView>
+            </ExperienceCard>
           </li>
           <li class="mb-12">
-            <CardGridView
-              project={{
-                title: "University of Rhode Island",
-                description:
-                  "Computer Science + Applied Mathematics • Currently studying software systems, machine learning, and optimization. Conducting research on machine learning applications in system optimization.",
-                date: "Sep 2022",
-                endDate: "May 2026",
-                tags: [],
-              }}
+            <ExperienceCard
+              title={text.experience.university.name}
+              description={text.experience.university.description}
+              date={text.experience.university.startDate}
+              endDate={text.experience.university.endDate}
             >
               <div class="flex flex-wrap gap-2">
                 {coursework.map((course) => <span class="ui-tag green">{course}</span>)}
               </div>
-            </CardGridView>
+            </ExperienceCard>
           </li>
 
           <!-- Resume Link -->
           <div class="mt-12">
-            <TextLink href="/resume.pdf" label="View Full Résumé" />
+            <TextLink href={text.contact.resume} label="View Full Résumé" />
           </div>
         </ol>
       </SectionLayout>
@@ -176,6 +172,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
           <li class="mb-12">
             <CardGridView project={project} />
           </li>
+            <hr class="my-12 border-slate-200 dark:border-slate-700" />
         ))
       }
     </ul>
@@ -188,9 +185,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
   <SectionLayout id="section-skills" heading="Skills & Technologies">
     <div class="mb-8">
       <p class="ui-p leading-relaxed">
-        I specialize in designing scalable full-stack systems that are optimized for maintainability and performance. My
-        current work focuses on problems that lie at the intersection of software engineering and mathematical
-        optimization.
+        {text.skillsIntro}
       </p>
     </div>
 
@@ -238,8 +233,7 @@ const recentProjects = projects.sort((a, b) => new Date(b.date).getTime() - new 
   <SectionLayout id="section-research" heading="Research & Interests">
     <div class="mb-8">
       <p class="ui-p text-base leading-relaxed">
-        My current research prospects focus on the intersection of systems and mathematical optimization. I'm
-        particularly interested in how developer tooling can be improved through machine learning.
+        {text.researchIntro}
       </p>
     </div>
 

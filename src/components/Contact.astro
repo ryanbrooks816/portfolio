@@ -1,19 +1,20 @@
 ---
 import { Icon } from "astro-icon/components";
+
+import { text } from "../data/text";
 ---
 
 <div class="text-center max-w-2xl mx-auto">
-  <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">Let's Connect</h2>
+  <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">{text.contactSection.heading}</h2>
   <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-    I'm always interested in discussing new opportunities, research collaborations, or projects relating to my other
-    areas of interest.
+    {text.contactSection.description}
   </p>
   <a
-    href="mailto:brooksryan1234@gmail.com"
+    href={`mailto:${text.contact.email}`}
     class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors group"
   >
     <Icon name="mdi:email-outline" class="mr-2 h-5 w-5" />
-    <span>Get In Touch</span>
+    <span>{text.contactSection.buttonText}</span>
     <Icon
       name="mdi:arrow-top-right"
       class="ml-2 h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"

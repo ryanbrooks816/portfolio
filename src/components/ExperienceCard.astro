@@ -1,0 +1,47 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  endDate?: string;
+}
+
+const { title, description, date, endDate } = Astro.props;
+
+function formatDate(date?: Date | string) {
+  if (!date) return "";
+  if (typeof date === "string") {
+    // If it's a common non-date string (like 'Present'), return as-is
+    if (date.toLowerCase() === "present") return date;
+    // Try to parse as date
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return date; // Not a valid date string
+    return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(dateObj);
+  }
+  // If it's a Date object
+  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
+}
+---
+
+<article class="group relative gap-4 pb-1 transition-all sm:gap-8 md:gap-4 lg:hover:!opacity-100">
+  <div
+    class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-slate-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.10)]"
+  >
+  </div>
+
+  <div class="relative z-10">
+    <div class="flex-1 min-w-0">
+      <div class="text-xs mb-1 ui-p-accent uppercase">
+        {formatDate(date)}
+        {endDate && ` - ${formatDate(endDate)}`}
+      </div>
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <h3 class="ui-heading-md mb-0.5">{title}</h3>
+        </div>
+      </div>
+      <p class="text-sm ui-p mb-4">{description}</p>
+      <slot />
+    </div>
+  </div>
+</article>

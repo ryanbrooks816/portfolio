@@ -1,20 +1,21 @@
 ---
-import { projects } from "../data/content";
-
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navigation from "../components/Navigation.astro";
-import NavLink from "../components/NavLink.astro";
 import CardGridView from "../components/CardGridView.astro";
 import CardListView from "../components/CardListView.astro";
 
 import { Icon } from "astro-icon/components";
 
+import { getProjects } from "../data/content";
+
+const projects = await getProjects();
+
 // Sort projects by date (most recent first)
-const sortedProjects = projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+const sortedProjects = projects.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
 // Get unique values for filters
-const uniqueTypes = [...new Set(projects.map((p) => p.type))];
-const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
+const uniqueTypes = [...new Set(projects.map((p) => p.data.type))];
+const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
 ---
 
 <BaseLayout title="Projects | Portfolio">
@@ -22,12 +23,12 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
   <section class="pt-12">
     <a
       href="/"
-      class="inline-flex items-center text-sm text-slate-400 hover:text-slate-200 dark:hover:text-slate-300 mb-6"
+      class="inline-flex items-center text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 mb-6 transition-colors"
     >
       <Icon name="mdi:arrow-left" class="w-4 h-4 mr-1" />
       <span>Back to Home</span>
     </a>
-    <h2 class="ui-heading-hero">Projects</h2>
+    <h2 class="ui-heading-hero mb-4">Projects</h2>
     <p class="mt-2 ui-p">
       A big list of projects I've worked on through coursework, personal projects, and professional experience.<br
       />Some projects are private — password provided in my resume to view code or demos.
@@ -84,7 +85,7 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
       <div class="overflow-x-auto">
         <table class="w-full border-collapse text-left">
           <thead
-            class="sticky top-0 z-10 border-b border-slate-300/10 dark:border-slate-300/10 bg-slate-100/75 dark:bg-slate-900/75 backdrop-blur"
+            class="sticky top-0 z-10 border-b border-slate-400 dark:border-slate-600 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur"
           >
             <tr>
               <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Date</th>
