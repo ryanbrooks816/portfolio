@@ -3,6 +3,8 @@ import "../styles/style.css";
 
 import AnimatedGradient from "../components/AnimatedGradient.astro";
 
+import { text } from "../data/text";
+
 const { title = "Portfolio" } = Astro.props;
 ---
 
@@ -12,10 +14,7 @@ const { title = "Portfolio" } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    <meta
-      name="description"
-      content="Computer Science + Applied Mathematics student at URI. Building full-stack applications and system design tools."
-    />
+    <meta name="description" content={`${text.title}. ${text.tagline}`} />
   </head>
   <body
     class="relative min-h-screen antialiased bg-gradient-to-br from-slate-50/90 via-white/95 to-slate-100/90 text-slate-900 dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-950 dark:to-black dark:text-slate-100"
@@ -28,7 +27,7 @@ const { title = "Portfolio" } = Astro.props;
 
       <footer class="py-16 text-sm text-center text-slate-400 dark:text-slate-500">
         <p>
-          © {new Date().getFullYear()} — Ryan Brooks
+          © {new Date().getFullYear()} — {text.name}
         </p>
       </footer>
     </div>
