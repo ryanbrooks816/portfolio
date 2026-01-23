@@ -1,30 +1,35 @@
 ---
-import { projects } from "../../data/content";
-import { requireAuthentication, addPrivateHeaders, getUserScope } from "../../utils/auth";
+export const prerender = true;
+
+import { requireAuthentication, getUserScope } from "../../utils/auth";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+
 import { Icon } from "astro-icon/components";
 
-import type { Project } from "../../types";
+import { getProjects, renderProject } from "../../data/content";
+import type { CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  return projects.map((p: Project) => ({ params: { slug: p.slug } }));
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
 }
 
-const { slug } = Astro.params;
-const project: Project | undefined = projects.find((p: Project) => p.slug === slug);
+const { project } = Astro.props as { project: CollectionEntry<"projects"> };
+const { Content } = await renderProject(project);
 
-// Handle project not found
-if (!project) {
-  return new Response(null, {
-    status: 404,
-    statusText: "Not Found",
-  });
+function formatDate(date?: Date) {
+  if (!date) return "";
+  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
 }
 
 // Check authentication for private projects
-if (project.private) {
-  const authResponse = requireAuthentication(Astro, project.slug);
+if (project.data.private) {
+  const authResponse = requireAuthentication(Astro, project.id);
   if (authResponse) {
     return authResponse;
   }
@@ -33,7 +38,7 @@ if (project.private) {
 // Determine user scope for access
 const userScope = getUserScope(Astro);
 const hasAccess =
-  !project.private ||
+  !project.data.private ||
   userScope
     ?.split(",")
     .map((s) => s.trim())
@@ -41,207 +46,331 @@ const hasAccess =
   userScope
     ?.split(",")
     .map((s) => s.trim())
-    .includes(project.slug);
+    .includes(project.id);
+
+// Redirect to /access if user does not have access
+if (!hasAccess) {
+  return Astro.redirect("/access");
+}
+
+// Helper function to get link icon
+function getLinkIcon(key: string) {
+  const icons: Record<string, string> = {
+    github: "mdi:github",
+    demo: "mdi:open-in-new",
+    paper: "mdi:file-document",
+    case_study: "mdi:clipboard-text",
+    report: "mdi:chart-box",
+    technical_details: "mdi:cog",
+  };
+  return icons[key] || "mdi:link";
+}
 ---
 
-<BaseLayout title={`${project.title} | Portfolio`}>
-  <article class="py-8">
-    <div class="flex items-center gap-3 mb-6">
-      <h1 class="text-3xl font-bold text-slate-100">{project.title}</h1>
-      {
-        project.private && (
-          <span class="px-2 py-1 text-xs font-medium text-amber-300" aria-label="Private project">
-            <Icon name="mdi:lock" class="w-4 h-4" />
-          </span>
-        )
-      }
+<BaseLayout title={`${project.data.title} | Portfolio`}>
+  <Navigation />
+
+  <!-- Hero Section -->
+  <section class="relative pt-8 pb-16 overflow-hidden">
+    <div>
+      <!-- Back Navigation -->
+      <div class="mb-8">
+        <a
+          href="/projects"
+          class="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors group text-sm"
+        >
+          <Icon name="mdi:arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          <span>Back to Projects</span>
+        </a>
+      </div>
+
+      <!-- Project Badges & Date -->
+      <div class="flex flex-wrap items-center gap-3 mb-8">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+          {project.data.type.charAt(0).toUpperCase() + project.data.type.slice(1)} Project
+        </span>
+        {
+          project.data.private && (
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+              <Icon name="mdi:lock" class="w-3.5 h-3.5" />
+              Private
+            </span>
+          )
+        }
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          <Icon name="mdi:calendar" class="w-4 h-4" />
+            <span>
+            {formatDate(project.data.date)}
+            {project.data.endDate
+              ? ` – ${formatDate(project.data.endDate)}`
+              : " – Present"}
+            </span>
+        </div>
+      </div>
     </div>
 
-    <p class="mt-3 text-lg text-slate-300">{project.description}</p>
+      <!-- Project Content & Thumbnail -->
+      <div class="flex flex-col lg:flex-row gap-8 items-center">
+        <!-- Main Content -->
+        <div class="w-full lg:w-1/2 space-y-8">
+          <!-- Project Title & Subtitle -->
+          <div>
+            <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 leading-tight">
+              {project.data.title}
+            </h1>
+            {
+              project.data.subtitle && (
+                <h2 class="text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                  {project.data.subtitle}
+                </h2>
+              )
+            }
+          </div>
 
-    <div class="mt-6">
-      <h3 class="text-sm uppercase text-slate-400 font-medium">Technologies</h3>
-      <div class="flex flex-wrap gap-2 mt-2">
+          <!-- Project Description -->
+          <div>
+            <p class="text-base md:text-lg lg:text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
+              {project.data.description}
+            </p>
+          </div>
+
+          <!-- Action Links -->
+          {
+            project.data.links && Object.keys(project.data.links).length > 0 && (
+              <div class="flex flex-wrap gap-3">
+                {Object.entries(project.data.links).map(
+                  ([key, url], index) =>
+                    url && (
+                      <a
+                        href={url}
+                        class={`inline-flex items-center gap-2 px-4 py-2.5 lg:px-5 lg:py-3 rounded-lg font-medium transition-all hover:transform hover:scale-105 text-sm lg:text-base ${
+                          index === 0 
+                            ? "bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-lg hover:shadow-xl" 
+                            : "bg-slate-50 text-slate-900 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
+                        }`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Icon name={getLinkIcon(key)} class="w-4 h-4 lg:w-5 lg:h-5" />
+                        <span>{key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
+                      </a>
+                    ),
+                )}
+              </div>
+            )
+          }
+        </div>
+
+        <!-- Project Thumbnail -->
+        <div class="w-full lg:w-1/2 flex justify-center">
+          {
+            project.data.thumbnail && (
+              <div class="w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 shadow-xl bg-slate-50 dark:bg-slate-800 flex">
+                <img
+                  src={project.data.thumbnail}
+                  alt={`${project.data.title} thumbnail`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Achievements -->
+  {
+    project.data.highlights && project.data.highlights.length > 0 && (
+      <div class="my-16 py-8 border-t border-slate-300 dark:border-slate-700">
+        <h3 class="ui-heading-lg mb-6">Key Achievements</h3>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {project.data.highlights.map((highlight) => (
+            <li class="flex items-start gap-3 ui-list">
+              <span class="text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0 font-bold text-lg leading-none">✓</span>
+              <span>{highlight}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  <div class="space-y-12">
+    {/* Project Overview Sections */}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-8">
+        {/* Rich Content from Markdown */}
+        <section class="markdown max-w-none">
+          <Content />
+        </section>
+      </div>
+
+      {/* Sidebar */}
+      <div class="space-y-8">
+        <!-- Technologies -->
+        <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
+          <h3 class="ui-heading-sm mb-4">Technologies</h3>
+          <div class="flex flex-wrap gap-2">
+            {project.data.tags.map((tag) => <span class="tech-tag">{tag}</span>)}
+          </div>
+        </div>
+
+        <!-- Timeline -->
         {
-          project.tags.map((tag) => (
-            <span class="px-3 py-1 text-sm rounded-md bg-slate-800/40 text-slate-300 border border-slate-700/50">
-              {tag}
-            </span>
-          ))
+          project.data.timeline && project.data.timeline.length > 0 && (
+            <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
+              <h3 class="ui-heading-sm mb-4">Timeline</h3>
+              <div class="space-y-4">
+                {project.data.timeline.map((phase) => (
+                  <div class="border-l-2 border-slate-400 dark:border-slate-600 pl-4 pb-4">
+                    <div class="font-medium text-slate-900 dark:text-slate-200">{phase.phase}</div>
+                    <div class="text-sm ui-p mb-1">{phase.duration}</div>
+                    <div class="text-sm ui-p">{phase.description}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Responsibilities -->
+        {
+          project.data.responsibilities && project.data.responsibilities.length > 0 && (
+            <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
+              <h3 class="ui-heading-sm mb-4">My Role</h3>
+              <ul class="space-y-2">
+                {project.data.responsibilities.map((responsibility) => (
+                  <li class="flex items-start gap-2 text-sm ui-list">
+                    <span class="text-slate-400 dark:text-slate-500 mt-1">•</span>
+                    <span>{responsibility}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        <!-- Access Status for Private Projects -->
+        {
+          project.data.private && userScope && (
+            <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
+              <h4 class="ui-heading-sm text-green-900 dark:text-green-300 mb-2">Access Granted</h4>
+              <p class="text-sm ui-p mb-2">
+                You have authenticated access to this private project.
+              </p>
+              <p class="text-xs ui-p">Scope: {userScope}</p>
+            </div>
+          )
         }
       </div>
     </div>
 
+    <!-- Gallery Section -->
     {
-      project.date && (
-        <div class="mt-4">
-          <h3 class="text-sm uppercase text-slate-400 font-medium">Completed</h3>
-          <p class="text-slate-300 mt-1">{project.date}</p>
-        </div>
+      project.data.gallery?.images && project.data.gallery.images.length > 0 && (
+        <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
+          <h2 class="ui-heading-lg mb-6">
+            {project.data.private ? "Private Gallery" : "Project Gallery"}
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {project.data.gallery.images.map((image, index) => (
+              <div class="group cursor-pointer">
+                <div class="aspect-video border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden hover:border-slate-400 dark:hover:border-slate-600 transition-colors">
+                  <div class="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-800">
+                    <div class="text-center">
+                      <Icon name="mdi:image" class="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto mb-2" />
+                      <div class="text-xs ui-p">
+                        {project.data.gallery?.captions?.[index] || `Screenshot ${index + 1}`}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {project.data.gallery?.captions?.[index] && (
+                  <p class="mt-2 text-sm ui-p text-center">
+                    {project.data.gallery.captions[index]}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
       )
     }
 
-    <div class="mt-8">
-      {
-        hasAccess ? (
-          <div class="space-y-8">
-            {/* Key Highlights Section */}
-            {project.highlights && project.highlights.length > 0 && (
-              <div class="bg-slate-800/30 border border-slate-700/50 rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-slate-200 mb-4">Key Achievements</h3>
-                <ul class="space-y-2">
-                  {project.highlights.map((highlight) => (
-                    <li class="flex items-start gap-2 text-slate-300">
-                      <span class="text-green-400 mt-1">✓</span>
-                      <span>{highlight}</span>
+    <!-- Project Summary Section -->
+    {
+      (project.data.highlights || project.data.challenges || project.data.learnings) && (
+        <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
+          <h2 class="ui-heading-lg mb-8">Project Summary</h2>
+
+          <div class="grid md:grid-cols-3 gap-8">
+            <!-- Key Achievements -->
+            {project.data.highlights && project.data.highlights.length > 0 && (
+              <div>
+                <h3 class="ui-heading-md mb-4">Key Achievements</h3>
+                <ul class="space-y-3">
+                  {project.data.highlights.map((highlight) => (
+                    <li class="flex items-start gap-3 ui-list">
+                      <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
+                      <span class="text-sm leading-relaxed">{highlight}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {/* Main Content */}
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-              <div class="lg:col-span-2 space-y-6">
-                <div class="prose prose-invert prose-slate max-w-none">
-                  <h3>Project Overview</h3>
-                  {project.private ? (
-                    <div>
-                      <p>
-                        This is a private project showcasing advanced technical implementations and proprietary
-                        solutions.
-                      </p>
-                      <p>
-                        The project demonstrates expertise in {project.tags.slice(0, 3).join(", ")} and includes
-                        detailed technical documentation, architecture decisions, and performance metrics.
-                      </p>
-                      {project.type === "professional" && (
-                        <p>
-                          This professional work was completed for enterprise clients and includes sensitive business
-                          logic and proprietary implementations.
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <div>
-                      <p>
-                        This public project demonstrates practical application of modern web technologies and
-                        development best practices.
-                      </p>
-                      <p>
-                        The implementation focuses on clean architecture, performance optimization, and user experience
-                        design.
-                      </p>
-                    </div>
-                  )}
-
-                  {project.links && (
-                    <div class="flex flex-wrap gap-4 mt-6">
-                      {Object.entries(project.links).map(([key, url]) => {
-                        let icon = null;
-                        if (key === "github") icon = "📁";
-                        else if (key === "demo") icon = "🔗";
-                        else if (key === "paper") icon = "📄";
-                        else if (key === "case_study") icon = "📊";
-                        else if (key === "report") icon = "📋";
-                        else if (key === "technical_details") icon = "⚙️";
-                        return (
-                          <a
-                            href={url}
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors bg-indigo-600 hover:bg-indigo-700 text-white"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {icon && <span>{icon}</span>}
-                            <span class="capitalize">{key.replace(/_/g, " ")}</span>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+            <!-- Key Challenges -->
+            {project.data.challenges && project.data.challenges.length > 0 && (
+              <div>
+                <h3 class="ui-heading-md mb-4">Key Challenges</h3>
+                <ul class="space-y-3">
+                  {project.data.challenges.map((challenge) => (
+                    <li class="flex items-start gap-3 ui-list">
+                      <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
+                      <span class="text-sm leading-relaxed">{challenge}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+            )}
 
-              {/* Sidebar */}
-              <div class="space-y-6">
-                <div class="bg-slate-800/30 border border-slate-700/50 rounded-lg p-4">
-                  <h4 class="text-sm font-medium text-slate-300 mb-3">Project Type</h4>
-                  <span class="inline-block px-3 py-1 text-sm rounded-md bg-slate-700/50 text-slate-300 capitalize">
-                    {project.type}
-                  </span>
-                </div>
-
-                {project.private && userScope && (
-                  <div class="bg-green-900/20 border border-green-800/50 rounded-lg p-4">
-                    <h4 class="text-sm font-medium text-green-300 mb-2">✅ Access Granted</h4>
-                    <p class="text-xs text-green-400">You have authenticated access to this private project.</p>
-                    <p class="text-xs text-slate-400 mt-2">Scope: {userScope}</p>
-                  </div>
-                )}
+            <!-- Key Learnings -->
+            {project.data.learnings && project.data.learnings.length > 0 && (
+              <div>
+                <h3 class="ui-heading-md mb-4">Key Learnings</h3>
+                <ul class="space-y-3">
+                  {project.data.learnings.map((learning) => (
+                    <li class="flex items-start gap-3 ui-list">
+                      <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
+                      <span class="text-sm leading-relaxed">{learning}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
-            {/* Gallery/Screenshots */}
-            <div>
-              <h3 class="text-lg font-semibold text-slate-200 mb-4">
-                {project.private ? "Private Gallery" : "Project Gallery"}
-              </h3>
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div
-                  class={`h-48 rounded-lg flex items-center justify-center ${
-                    project.private
-                      ? "bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-500/20"
-                      : "bg-slate-800/30 border border-slate-700/50"
-                  }`}
-                >
-                  <span class="text-sm text-slate-400">
-                    {project.private ? "Private Screenshot 1" : "Screenshot 1"}
-                  </span>
-                </div>
-                <div
-                  class={`h-48 rounded-lg flex items-center justify-center ${
-                    project.private
-                      ? "bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-500/20"
-                      : "bg-slate-800/30 border border-slate-700/50"
-                  }`}
-                >
-                  <span class="text-sm text-slate-400">
-                    {project.private ? "Private Screenshot 2" : "Screenshot 2"}
-                  </span>
-                </div>
-                <div
-                  class={`h-48 rounded-lg flex items-center justify-center ${
-                    project.private
-                      ? "bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-500/20"
-                      : "bg-slate-800/30 border border-slate-700/50"
-                  }`}
-                >
-                  <span class="text-sm text-slate-400">
-                    {project.private ? "Private Architecture" : "Architecture"}
-                  </span>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
-        ) : (
-          <div class="rounded-lg border border-red-800 bg-red-900/10 p-6">
-            <h4 class="font-semibold text-red-300">Access Required</h4>
-            <p class="mt-2 text-slate-300">
-              This is a private project that requires authentication to view. Please use the access code from my resume.
-            </p>
-            <div class="mt-4">
-              <a
-                href="/access"
-                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors"
-              >
-                Request Access
-              </a>
-            </div>
-          </div>
-        )
-      }
+        </section>
+      )
+    }
+  </div>
+
+  <!-- Navigation -->
+  <nav class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
+    <div class="flex justify-between items-center">
+      <a
+        href="/projects"
+        class="ui-button-secondary"
+      >
+        <Icon name="mdi:arrow-left" class="w-4 h-4" />
+        Back to Projects
+      </a>
+      <div class="flex items-center gap-2 text-sm ui-p">
+        <Icon name="mdi:calendar" class="w-4 h-4" />
+        <span>{formatDate(project.data.date)}{project.data.endDate && ` - ${formatDate(project.data.endDate)}`}</span>
+      </div>
     </div>
-  </article>
-
-  {/* Not found case - this won't be reached due to server-side 404 above */}
+  </nav>
 </BaseLayout>
+
