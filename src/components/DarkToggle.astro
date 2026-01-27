@@ -35,9 +35,19 @@ import { Icon } from "astro-icon/components";
     const root = document.documentElement;
     try {
       const stored = localStorage.getItem("theme");
-      if (stored === "dark") root.classList.add("dark");
-      if (stored === "light") root.classList.remove("dark");
-    } catch (e) {}
+      if (stored === "dark") {
+        root.classList.add("dark");
+      } else if (stored === "light") {
+        root.classList.remove("dark");
+      } else {
+        // Default to dark mode when no preference is stored
+        root.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      }
+    } catch (e) {
+      // Fallback to dark mode if localStorage fails
+      root.classList.add("dark");
+    }
 
     const btn = document.getElementById("theme-toggle");
     if (!btn) return;
