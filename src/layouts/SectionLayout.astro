@@ -1,14 +1,31 @@
 ---
-const props = Astro.props;
+interface Props {
+  id: string;
+  heading: string;
+  delay?: number;
+  stickyHeading?: boolean;
+}
+
+const { id, heading, delay = 0, stickyHeading = false } = Astro.props;
 ---
 
-<section id={props.id} class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label={props.heading}>
-  <div
-    class="sticky top-0 z-30 -mx-6 mb-8 w-screen bg-gray-800/80 px-6 py-8 backdrop-blur-lg border-b border-gray-700 shadow-xl sm:-mx-6 sm:px-6 md:sr-only md:relative md:top-auto md:mx-auto md:w-full md:px-0 md:py-0 md:opacity-0 transition-all duration-300"
-  >
-    <h2 class="text-base font-bold uppercase tracking-widest text-slate-100 drop-shadow-sm lg:sr-only">
-      {props.heading}
-    </h2>
+<section
+  id={id}
+  class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+  aria-label={heading}
+  data-aos="fade-up"
+  data-aos-delay={delay * 100}
+>
+  {
+    stickyHeading && (
+      <div class="sticky top-0 z-20 -mx-6 mb-8 w-screen bg-gray-800/80 px-6 py-8 backdrop-blur-lg border-b border-gray-700 shadow-xl sm:-mx-6 sm:px-6 md:sr-only md:relative md:top-auto md:mx-auto md:w-full md:px-0 md:py-0 md:opacity-0 transition-all duration-300">
+        <h2 class="text-base font-bold uppercase tracking-widest text-slate-100 drop-shadow-sm lg:sr-only">
+          {heading}
+        </h2>
+      </div>
+    )
+  }
+  <div data-aos="fade-up" data-aos-delay={(delay * 100) + 150}>
+    <slot />
   </div>
-  <slot />
 </section>

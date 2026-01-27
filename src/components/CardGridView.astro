@@ -1,16 +1,13 @@
 ---
 import { Icon } from "astro-icon/components";
 
-import type { CollectionEntry } from "astro:content";
-type Project = CollectionEntry<"projects">;
+import { formatProjectDateRange, getProjectUrl, getProjectThumbnail } from "../data/projects";
+import type { Project } from "../data/projects";
 
 const props = Astro.props as { project: Project };
 const { project } = props;
 
-function formatDate(date?: Date) {
-  if (!date) return "";
-  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
-}
+const thumbnailUrl = getProjectThumbnail(project);
 ---
 
 <article
@@ -27,12 +24,11 @@ function formatDate(date?: Date) {
   >
   </div>
 
-  <a href={`/projects/${project.id}`} class="block relative z-10">
-    <div class={project.data.thumbnail ? "flex justify-between gap-6 items-start" : ""}>
+  <a href={getProjectUrl(project)} class="block relative z-10">
+    <div class={thumbnailUrl ? "flex justify-between gap-6 items-center" : ""}>
       <div class="flex-1 min-w-0">
         <div class="text-xs mb-1 ui-p-accent uppercase">
-          {formatDate(project.data.date)}
-          {project.data.endDate && ` - ${formatDate(project.data.endDate)}`}
+          {formatProjectDateRange(project.data.date, project.data.endDate)}
         </div>
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-2">
@@ -59,10 +55,10 @@ function formatDate(date?: Date) {
         }
       </div>
       {
-        project.data.thumbnail && (
+        thumbnailUrl && (
           <div class="flex-shrink-0 ml-4 max-w-[120px] w-full">
             <img
-              src={project.data.thumbnail}
+              src={thumbnailUrl}
               alt={project.data.title + " image"}
               class="rounded-md object-cover w-full h-auto"
               loading="lazy"

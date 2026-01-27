@@ -1,41 +1,36 @@
-// Import the glob loader
 import { glob } from "astro/loaders";
-// Import utilities from `astro:content`
 import { z, defineCollection } from "astro:content";
-// Define a `loader` and `schema` for each collection
+
 const projectsCollection = defineCollection({
   loader: glob({ pattern: "**/[^_]*.md", base: "./src/content/projects" }),
   schema: z.object({
+    // Main Details
     title: z.string(),
-    subtitle: z.string().optional(),
     description: z.string(),
     tags: z.array(z.string()),
     type: z.string(),
     date: z.coerce.date(),
-    endDate: z.coerce.date().optional(),
-    thumbnail: z.string().optional(),
+    endDate: z.coerce.date().optional(), // Can be left out when it's not needed or treated as "Present"
+    thumbnail: z.string().optional(), // Links should be relative to the project's subfolder
     featured: z.boolean().optional(),
     private: z.boolean().optional(),
+    // Optional Details
     teamSize: z.number().optional(),
     role: z.string().optional(),
-    highlights: z.array(z.string()).optional(),
+    // Outcomes Section above Project Summary (only when important)
+    outcomes: z.array(z.string()).optional(),
+    // Project Summary Sections
+    achievements: z.array(z.string()).optional(),
     challenges: z.array(z.string()).optional(),
     learnings: z.array(z.string()).optional(),
-    techDetails: z
-      .object({
-        architecture: z.string().optional(),
-        database: z.string().optional(),
-        deployment: z.string().optional(),
-        testing: z.string().optional(),
-        performance: z.string().optional(),
-      })
-      .optional(),
+    // Gallery Section
     gallery: z
       .object({
         images: z.array(z.string()),
         captions: z.array(z.string()),
       })
       .optional(),
+    // Sidebar Sections
     timeline: z
       .array(
         z.object({
@@ -46,12 +41,10 @@ const projectsCollection = defineCollection({
       )
       .optional(),
     responsibilities: z.array(z.string()).optional(),
-    links: z
-      .object({
-        github: z.string().url().optional(),
-      })
-      .optional(),
+    // Action Links Section
+    links: z.record(z.string()), // Accept any key with a string value
   }),
 });
-// Export a single `collections` object to register your collection(s)
+
+// Export a collections object to register the collections
 export const collections = { projects: projectsCollection };
