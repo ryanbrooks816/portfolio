@@ -1,6 +1,5 @@
 ---
-import { skills, omni, interests, coursework } from "../data/content";
-import { text } from "../data/text";
+import { text, omni, coursework, interests, skills } from "../data/text";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionLayout from "../layouts/SectionLayout.astro";
@@ -12,7 +11,7 @@ import Contact from "../components/Contact.astro";
 
 import { Icon } from "astro-icon/components";
 
-import { getProjects } from "../data/content";
+import { getProjects } from "../data/projects";
 
 const projects = await getProjects();
 
@@ -24,23 +23,24 @@ const recentProjects = projects
 
 <BaseLayout title="Home | Portfolio">
   <HomeNavigation />
+  
   <div class="lg:flex lg:justify-between lg:gap-8">
     <!-- Sticky Left Sidebar -->
     <div class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-32">
       <div>
-        <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl">
+        <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl" data-aos="fade-up" data-aos-delay="100">
           <a href="/">{text.name}</a>
         </h1>
-        <h2 class="mt-4 text-md font-medium tracking-tight text-slate-700 dark:text-slate-200">
+        <h2 class="mt-4 text-md font-medium tracking-tight text-slate-700 dark:text-slate-200" data-aos="fade-up" data-aos-delay="200">
           {text.title}
           <br />{text.subtitle}
         </h2>
-        <p class="mt-6 max-w-xs leading-normal ui-p text-lg">
+        <p class="mt-6 max-w-xs leading-normal ui-p text-lg" data-aos="fade-up" data-aos-delay="300">
           {text.tagline}
         </p>
 
         <!-- Key Interests -->
-        <div class="mt-8">
+        <div class="mt-8" data-aos="fade-up" data-aos-delay="400">
           <h3 class="text-sm font-semibold uppercase tracking-widest ui-p-accent mb-4">Interests</h3>
           <div class="flex flex-wrap gap-2">
             {interests.map((interest) => <span class="ui-tag teal text-xs">{interest}</span>)}
@@ -49,7 +49,7 @@ const recentProjects = projects
       </div>
 
       <!-- Social Icons - Sticky Bottom -->
-      <ul class="ml-1 mt-8 flex items-center" aria-label="Social media">
+      <ul class="ml-1 mt-8 flex items-center" aria-label="Social media" data-aos="fade-up" data-aos-delay="500">
         <li class="mr-5 text-xs shrink-0">
           <a
             class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
@@ -105,8 +105,9 @@ const recentProjects = projects
 
     <!-- Scrollable Right Content -->
     <div class="pt-32 lg:w-1/2 lg:py-32">
+      
       <!-- About Section -->
-      <SectionLayout id="section-about" heading="About">
+      <SectionLayout id="section-about" heading="About" delay={2}>
         <div class="space-y-4">
           <p class="mb-4 ui-p">
             {text.about.intro}
@@ -121,7 +122,7 @@ const recentProjects = projects
       </SectionLayout>
 
       <!-- Experience & Education Section -->
-      <SectionLayout id="section-experience" heading="Experience">
+      <SectionLayout id="section-experience" heading="Experience" delay={3}>
         <ol class="group/list">
           <li class="mb-12">
             <ExperienceCard
@@ -165,7 +166,7 @@ const recentProjects = projects
   </div>
 
   <!-- Projects Section -->
-  <SectionLayout id="section-projects" heading="Featured Projects">
+  <SectionLayout id="section-projects" heading="Featured Projects" delay={4} stickyHeading={true}>
     <ul class="group/list">
       {
         recentProjects.map((project) => (
@@ -182,7 +183,7 @@ const recentProjects = projects
   </SectionLayout>
 
   <!-- Skills & Technologies Section -->
-  <SectionLayout id="section-skills" heading="Skills & Technologies">
+  <SectionLayout id="section-skills" heading="Skills & Technologies" delay={5}>
     <div class="mb-8">
       <p class="ui-p leading-relaxed">
         {text.skillsIntro}
@@ -230,7 +231,7 @@ const recentProjects = projects
   </SectionLayout>
 
   <!-- Research Interests Section -->
-  <SectionLayout id="section-research" heading="Research & Interests">
+  <SectionLayout id="section-research" heading="Research & Interests" delay={6}>
     <div class="mb-8">
       <p class="ui-p text-base leading-relaxed">
         {text.researchIntro}
@@ -254,7 +255,7 @@ const recentProjects = projects
   </SectionLayout>
 
   <!-- Contact Section -->
-  <SectionLayout id="section-contact" heading="Get In Touch">
+  <SectionLayout id="section-contact" heading="Get In Touch" delay={7}>
     <Contact />
   </SectionLayout>
 </BaseLayout>
