@@ -1,23 +1,20 @@
 ---
 import { Icon } from "astro-icon/components";
 
-import type { CollectionEntry } from "astro:content";
-type Project = CollectionEntry<"projects">;
+import { formatProjectDate, getProjectUrl, getPrimaryProjectLink } from "../data/projects";
+import type { Project } from "../data/projects";
 
 const props = Astro.props as { project: Project };
 const { project } = props;
 
-function formatDate(date?: Date) {
-  if (!date) return "";
-  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
-}
+const primaryLink = getPrimaryProjectLink(project);
 ---
 
 <tr
   class="border-b border-slate-300 dark:border-slate-600 last:border-none hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
 >
   <td class="py-4 px-4 align-top text-sm">
-    <div class="translate-y-px text-slate-600 dark:text-slate-400">{formatDate(project.data.date)}</div>
+    <div class="translate-y-px text-slate-600 dark:text-slate-400">{formatProjectDate(project.data.date)}</div>
   </td>
   <td class="py-4 px-4 align-top font-semibold leading-snug text-slate-900 dark:text-slate-200">
     <div>
@@ -25,7 +22,7 @@ function formatDate(date?: Date) {
         <div class="block sm:hidden">
           <a
             class="inline-flex items-baseline font-medium leading-tight text-slate-900 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-200 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 group/link text-base transition-colors"
-            href={`/projects/${project.id}`}
+            href={getProjectUrl(project)}
             aria-label={`${project.data.title} project details`}
           >
             <span>{project.data.title}</span>
@@ -77,7 +74,7 @@ function formatDate(date?: Date) {
       <li class="mb-3 flex items-center">
         <a
           class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
-          href={`/projects/${project.id}`}
+          href={getProjectUrl(project)}
           aria-label={`View ${project.data.title} details`}
         >
           <span>View</span>
@@ -88,31 +85,23 @@ function formatDate(date?: Date) {
         </a>
       </li>
       {
-        project.data.links &&
-          Object.entries(project.data.links).map(([key, value]) => {
-            // Capitalize key for label
-            let label = key.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
-            if (label.toLowerCase() === "github") {
-              label = "GitHub";
-            }
-            return (
-              <li class="mb-1 flex items-center">
-                <a
-                  class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
-                  href={value}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={`${project.data.title} ${label} (opens in a new tab)`}
-                >
-                  <span>{label}</span>
-                  <Icon
-                    name="mdi:arrow-top-right"
-                    class="ml-0.5 h-3 w-3 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
-                  />
-                </a>
-              </li>
-            );
-          })
+        primaryLink?.key === "github" && (
+          <li class="mb-1 flex items-center">
+            <a
+              class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
+              href={primaryLink.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={`${project.data.title} GitHub (opens in a new tab)`}
+            >
+              <span>GitHub</span>
+              <Icon
+                name="mdi:arrow-top-right"
+                class="ml-0.5 h-3 w-3 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
+              />
+            </a>
+          </li>
+        )
       }
     </ul>
   </td>

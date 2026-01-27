@@ -1,31 +1,36 @@
 ---
-export const prerender = true;
+export const prerender = false;
 
 import { requireAuthentication, getUserScope } from "../../utils/auth";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
+import BackLinkNavigation from "../../components/BackNavigation.astro";
 
 import { Icon } from "astro-icon/components";
 
-import { getProjects, renderProject } from "../../data/content";
-import type { CollectionEntry } from "astro:content";
+import {
+  PROJECTS_LINK,
+  getProjectById,
+  renderProject,
+  formatProjectDateRange,
+  getProjectLinks,
+  getProjectThumbnail,
+} from "../../data/projects";
 
-export async function getStaticPaths() {
-  const projects = await getProjects();
-  return projects.map((project) => ({
-    params: { slug: project.id },
-    props: { project },
-  }));
+const slug = Astro.params.slug;
+if (!slug) {
+  return Astro.redirect(PROJECTS_LINK);
 }
 
-const { project } = Astro.props as { project: CollectionEntry<"projects"> };
+const project = await getProjectById(slug);
+if (!project) {
+  return Astro.redirect(PROJECTS_LINK);
+}
+
 const { Content } = await renderProject(project);
 
-function formatDate(date?: Date) {
-  if (!date) return "";
-  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
-}
+const thumbnailUrl = getProjectThumbnail(project);
 
 // Check authentication for private projects
 if (project.data.private) {
@@ -52,41 +57,22 @@ const hasAccess =
 if (!hasAccess) {
   return Astro.redirect("/access");
 }
-
-// Helper function to get link icon
-function getLinkIcon(key: string) {
-  const icons: Record<string, string> = {
-    github: "mdi:github",
-    demo: "mdi:open-in-new",
-    paper: "mdi:file-document",
-    case_study: "mdi:clipboard-text",
-    report: "mdi:chart-box",
-    technical_details: "mdi:cog",
-  };
-  return icons[key] || "mdi:link";
-}
 ---
 
 <BaseLayout title={`${project.data.title} | Portfolio`}>
   <Navigation />
 
   <!-- Hero Section -->
-  <section class="relative pt-8 pb-16 overflow-hidden">
+  <section class="relative pt-12 pb-16 overflow-hidden">
     <div>
       <!-- Back Navigation -->
-      <div class="mb-8">
-        <a
-          href="/projects"
-          class="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors group text-sm"
-        >
-          <Icon name="mdi:arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          <span>Back to Projects</span>
-        </a>
-      </div>
+      <BackLinkNavigation href={PROJECTS_LINK} label="Back to Projects" />
 
       <!-- Project Badges & Date -->
       <div class="flex flex-wrap items-center gap-3 mb-8">
-        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+        <span
+          class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+        >
           {project.data.type.charAt(0).toUpperCase() + project.data.type.slice(1)} Project
         </span>
         {
@@ -97,99 +83,87 @@ function getLinkIcon(key: string) {
             </span>
           )
         }
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+        >
           <Icon name="mdi:calendar" class="w-4 h-4" />
-            <span>
-            {formatDate(project.data.date)}
-            {project.data.endDate
-              ? ` – ${formatDate(project.data.endDate)}`
-              : " – Present"}
-            </span>
+          <span>
+            {formatProjectDateRange(project.data.date, project.data.endDate)}
+          </span>
         </div>
       </div>
     </div>
 
-      <!-- Project Content & Thumbnail -->
-      <div class="flex flex-col lg:flex-row gap-8 items-center">
-        <!-- Main Content -->
-        <div class="w-full lg:w-1/2 space-y-8">
-          <!-- Project Title & Subtitle -->
-          <div>
-            <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 leading-tight">
-              {project.data.title}
-            </h1>
-            {
-              project.data.subtitle && (
-                <h2 class="text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
-                  {project.data.subtitle}
-                </h2>
-              )
-            }
-          </div>
+    <!-- Project Title -->
+    <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-12 leading-tight">
+      {project.data.title}
+    </h1>
 
-          <!-- Project Description -->
-          <div>
-            <p class="text-base md:text-lg lg:text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
-              {project.data.description}
-            </p>
-          </div>
-
-          <!-- Action Links -->
-          {
-            project.data.links && Object.keys(project.data.links).length > 0 && (
-              <div class="flex flex-wrap gap-3">
-                {Object.entries(project.data.links).map(
-                  ([key, url], index) =>
-                    url && (
-                      <a
-                        href={url}
-                        class={`inline-flex items-center gap-2 px-4 py-2.5 lg:px-5 lg:py-3 rounded-lg font-medium transition-all hover:transform hover:scale-105 text-sm lg:text-base ${
-                          index === 0 
-                            ? "bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-lg hover:shadow-xl" 
-                            : "bg-slate-50 text-slate-900 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
-                        }`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Icon name={getLinkIcon(key)} class="w-4 h-4 lg:w-5 lg:h-5" />
-                        <span>{key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
-                      </a>
-                    ),
-                )}
-              </div>
-            )
-          }
+    <!-- Project Content & Thumbnail -->
+    <div class="flex flex-col lg:flex-row gap-8 items-stretch h-full">
+      <!-- Main Content -->
+      <div class="flex-1 space-y-8 flex flex-col justify-between">
+        <!-- Project Description -->
+        <div>
+          <p class="text-base md:text-lg lg:text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
+            {project.data.description}
+          </p>
         </div>
 
-        <!-- Project Thumbnail -->
-        <div class="w-full lg:w-1/2 flex justify-center">
-          {
-            project.data.thumbnail && (
-              <div class="w-full aspect-[16/9] rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 shadow-xl bg-slate-50 dark:bg-slate-800 flex">
-                <img
-                  src={project.data.thumbnail}
-                  alt={`${project.data.title} thumbnail`}
-                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-              </div>
-            )
-          }
-        </div>
+        <!-- Action Links -->
+        {
+          getProjectLinks(project).length > 0 && (
+            <div class="flex flex-wrap gap-3">
+              {getProjectLinks(project).map((link) => (
+                <a
+                  href={link.url}
+                  class={`inline-flex items-center gap-2 px-4 py-2.5 lg:px-5 lg:py-3 rounded-lg font-medium transition-all text-sm lg:text-base ${
+                    link.isPrimary
+                      ? "bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-lg hover:shadow-xl"
+                      : "bg-slate-50 text-slate-900 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon name={link.icon} class="w-4 h-4 lg:w-5 lg:h-5" />
+                  <span>{link.label}</span>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Project Thumbnail -->
+      <div class="flex-1 flex justify-center">
+        {
+          thumbnailUrl && (
+            <div class="w-full aspect-[16/9] rounded-xl overflow-hidden border border-black border-2 dark:border-slate-700 shadow-xl bg-slate-50 dark:bg-slate-800 flex">
+              <img
+                src={thumbnailUrl}
+                alt={`${project.data.title} thumbnail`}
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   </section>
 
-  <!-- Key Achievements -->
+  <!-- Main Outcomes -->
   {
-    project.data.highlights && project.data.highlights.length > 0 && (
+    project.data.outcomes && project.data.outcomes.length > 0 && (
       <div class="my-16 py-8 border-t border-slate-300 dark:border-slate-700">
-        <h3 class="ui-heading-lg mb-6">Key Achievements</h3>
+        <h3 class="ui-heading-lg mb-6">Main Outcomes</h3>
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {project.data.highlights.map((highlight) => (
+          {project.data.outcomes.map((outcome) => (
             <li class="flex items-start gap-3 ui-list">
-              <span class="text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0 font-bold text-lg leading-none">✓</span>
-              <span>{highlight}</span>
+              <span class="text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0 font-bold text-lg leading-none">
+                ✓
+              </span>
+              <span>{outcome}</span>
             </li>
           ))}
         </ul>
@@ -197,7 +171,7 @@ function getLinkIcon(key: string) {
     )
   }
 
-  <div class="space-y-12">
+  <div class="py-8 space-y-12">
     {/* Project Overview Sections */}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2 space-y-8">
@@ -257,9 +231,7 @@ function getLinkIcon(key: string) {
           project.data.private && userScope && (
             <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
               <h4 class="ui-heading-sm text-green-900 dark:text-green-300 mb-2">Access Granted</h4>
-              <p class="text-sm ui-p mb-2">
-                You have authenticated access to this private project.
-              </p>
+              <p class="text-sm ui-p mb-2">You have authenticated access to this private project.</p>
               <p class="text-xs ui-p">Scope: {userScope}</p>
             </div>
           )
@@ -271,9 +243,7 @@ function getLinkIcon(key: string) {
     {
       project.data.gallery?.images && project.data.gallery.images.length > 0 && (
         <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-          <h2 class="ui-heading-lg mb-6">
-            {project.data.private ? "Private Gallery" : "Project Gallery"}
-          </h2>
+          <h2 class="ui-heading-lg mb-6">{project.data.private ? "Private Gallery" : "Project Gallery"}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {project.data.gallery.images.map((image, index) => (
               <div class="group cursor-pointer">
@@ -288,9 +258,7 @@ function getLinkIcon(key: string) {
                   </div>
                 </div>
                 {project.data.gallery?.captions?.[index] && (
-                  <p class="mt-2 text-sm ui-p text-center">
-                    {project.data.gallery.captions[index]}
-                  </p>
+                  <p class="mt-2 text-sm ui-p text-center">{project.data.gallery.captions[index]}</p>
                 )}
               </div>
             ))}
@@ -301,27 +269,25 @@ function getLinkIcon(key: string) {
 
     <!-- Project Summary Section -->
     {
-      (project.data.highlights || project.data.challenges || project.data.learnings) && (
+      (project.data.achievements || project.data.challenges || project.data.learnings) && (
         <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
           <h2 class="ui-heading-lg mb-8">Project Summary</h2>
 
           <div class="grid md:grid-cols-3 gap-8">
-            <!-- Key Achievements -->
-            {project.data.highlights && project.data.highlights.length > 0 && (
+            {project.data.achievements && project.data.achievements.length > 0 && (
               <div>
                 <h3 class="ui-heading-md mb-4">Key Achievements</h3>
                 <ul class="space-y-3">
-                  {project.data.highlights.map((highlight) => (
+                  {project.data.achievements.map((achievement) => (
                     <li class="flex items-start gap-3 ui-list">
                       <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
-                      <span class="text-sm leading-relaxed">{highlight}</span>
+                      <span class="text-sm leading-relaxed">{achievement}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <!-- Key Challenges -->
             {project.data.challenges && project.data.challenges.length > 0 && (
               <div>
                 <h3 class="ui-heading-md mb-4">Key Challenges</h3>
@@ -336,7 +302,6 @@ function getLinkIcon(key: string) {
               </div>
             )}
 
-            <!-- Key Learnings -->
             {project.data.learnings && project.data.learnings.length > 0 && (
               <div>
                 <h3 class="ui-heading-md mb-4">Key Learnings</h3>
@@ -358,19 +323,15 @@ function getLinkIcon(key: string) {
 
   <!-- Navigation -->
   <nav class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-    <div class="flex justify-between items-center">
-      <a
-        href="/projects"
-        class="ui-button-secondary"
-      >
+    <div class="flex flex-wrap justify-center items-center gap-8 xs:justify-between">
+      <a href="/projects" class="ui-button-secondary">
         <Icon name="mdi:arrow-left" class="w-4 h-4" />
         Back to Projects
       </a>
       <div class="flex items-center gap-2 text-sm ui-p">
         <Icon name="mdi:calendar" class="w-4 h-4" />
-        <span>{formatDate(project.data.date)}{project.data.endDate && ` - ${formatDate(project.data.endDate)}`}</span>
+        {formatProjectDateRange(project.data.date, project.data.endDate)}
       </div>
     </div>
   </nav>
 </BaseLayout>
-
