@@ -8,7 +8,12 @@ dist
 SECURITY.md
 /.wrangler
 
-# Synced from the private portfolio-projects repository.
+# Synced from the private portfolio-data repository.
 /portfolio-projects/
+/portfolio-data/
 /src/content/projects/
 /public/projects/
+/public/resume.pdf
+/public/photo.*
+/public/photos/
+/src/data/text.ts
