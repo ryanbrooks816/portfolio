@@ -1,12 +1,9 @@
 ---
-interface Props {
-  title: string;
-  description: string;
-  date: string;
-  endDate?: string;
-}
+import type { ExperienceEntry } from "../data/types";
 
-const { title, description, date, endDate } = Astro.props;
+type Props = ExperienceEntry;
+
+const { title, description, date, endDate, content } = Astro.props;
 
 function formatDate(date?: Date | string) {
   if (!date) return "";
@@ -54,7 +51,24 @@ function formatDate(date?: Date | string) {
         </div>
       </div>
       <p class="mb-4 text-slate-600 dark:text-slate-400">{description}</p>
-      <slot />
+      {
+        content.layout === "bullets" ? (
+          <ul class="space-y-3 text-sm">
+            {content.items.map((item) => (
+              <li class="flex items-start">
+                <span class="mr-3 text-slate-600 dark:text-slate-400">•</span>
+                <span class="text-slate-600 dark:text-slate-400">{item}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="flex flex-wrap gap-2">
+            {content.items.map((item) => (
+              <span class="ui-tag green">{item}</span>
+            ))}
+          </div>
+        )
+      }
     </div>
   </div>
 </article>
