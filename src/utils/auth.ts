@@ -55,7 +55,7 @@ export async function authenticateSession(context: APIContext, projectId: string
     return redirectToAccess(context.url);
   }
 
-  const record = await accessCodes.get<AccessCodeRecord>(authResult.payload.codeId, "json");
+  const record = await getAccessCodeRecord(accessCodes, authResult.payload.codeId);
 
   if (!record) {
     return redirectToAccess(context.url);
@@ -152,8 +152,14 @@ export function getAccessCodes(context: APIContext): KVNamespace | null {
   return (context.locals as any).runtime?.env?.ACCESS_CODES ?? null;
 }
 
+export async function getAccessCodeRecord(accessCodes: KVNamespace, codeId: string): Promise<AccessCodeRecord | null> {
+  return await accessCodes.get<AccessCodeRecord>(codeId, "json");
+}
+
 export function isAccessCodeExpired(record: AccessCodeRecord, now = Date.now()): boolean {
-  return now > Date.parse(record.expiresAt);
+  const expiresAt = Date.parse(record.expiresAt);
+
+  return !Number.isFinite(expiresAt) || now >= expiresAt;
 }
 
 function hasRequiredScope(currentScope: string, projectId: string): boolean {
