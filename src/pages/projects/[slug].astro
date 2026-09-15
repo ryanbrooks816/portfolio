@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 
-import { requireAuthentication, getUserScope } from "../../utils/auth";
+import { authenticateSession } from "../../utils/auth";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
@@ -28,35 +28,19 @@ if (!project) {
   return Astro.redirect(PROJECTS_LINK);
 }
 
-const { Content } = await renderProject(project);
-
-const thumbnailUrl = getProjectThumbnail(project);
-
 // Check authentication for private projects
+// The authResponse will be a redirect if the user is not authenticated, or null if they are authorized.
 if (project.data.private) {
-  const authResponse = await requireAuthentication(Astro, project.id);
+  const authResponse = await authenticateSession(Astro, project.id);
+
   if (authResponse) {
     return authResponse;
   }
 }
 
-// Determine user scope for access
-const userScope = getUserScope(Astro);
-const hasAccess =
-  !project.data.private ||
-  userScope
-    ?.split(",")
-    .map((s) => s.trim())
-    .includes("*") ||
-  userScope
-    ?.split(",")
-    .map((s) => s.trim())
-    .includes(project.id);
+const { Content } = await renderProject(project);
 
-// Redirect to /access if user does not have access
-if (!hasAccess) {
-  return Astro.redirect("/access");
-}
+const thumbnailUrl = getProjectThumbnail(project);
 ---
 
 <BaseLayout title={`${project.data.title} | Portfolio`}>
@@ -202,19 +186,6 @@ if (!hasAccess) {
                   </li>
                 ))}
               </ul>
-            </div>
-          )
-        }
-
-        <!-- Access Status for Private Projects -->
-        {
-          project.data.private && userScope && (
-            <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-              <h4 class="mb-2 text-sm font-semibold text-green-900 dark:text-green-300">Access Granted</h4>
-              <p class="mb-2 text-sm text-slate-600 dark:text-slate-400">
-                You have authenticated access to this private project.
-              </p>
-              <p class="text-xs text-slate-600 dark:text-slate-400">Scope: {userScope}</p>
             </div>
           )
         }
