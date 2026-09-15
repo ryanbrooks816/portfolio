@@ -42,7 +42,7 @@ const projectsCollection = defineCollection({
       .optional(),
     responsibilities: z.array(z.string()).optional(),
     // Action Links Section
-    links: z.record(z.string()), // Accept any key with a string value
+    links: z.record(z.string()).optional(), // Accept any key with a string value
   }),
 });
 
