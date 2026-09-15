@@ -45,12 +45,6 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
       {uniqueTags.map((tag) => <option value={tag}>{tag}</option>)}
     </select>
 
-    <select id="access-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
-      <option value="all">All Access</option>
-      <option value="public">Public</option>
-      <option value="private">Private</option>
-    </select>
-
     <select id="featured-filter" class="w-full col-span-1 md:col-span-2 lg:col-span-1">
       <option value="all">All Projects</option>
       <option value="featured">Featured</option>
@@ -151,14 +145,12 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
         const searchEl = document.getElementById("search") as HTMLInputElement | null;
         const typeFilterEl = document.getElementById("type-filter") as HTMLSelectElement | null;
         const tagFilterEl = document.getElementById("tag-filter") as HTMLSelectElement | null;
-        const accessFilterEl = document.getElementById("access-filter") as HTMLSelectElement | null;
         const featuredFilterEl = document.getElementById("featured-filter") as HTMLSelectElement | null;
 
         function apply() {
           const query = searchEl?.value?.toLowerCase() || "";
           const typeFilter = typeFilterEl?.value || "all";
           const tagFilter = tagFilterEl?.value || "all";
-          const accessFilter = accessFilterEl?.value || "all";
           const featuredFilter = featuredFilterEl?.value || "all";
 
           let visibleCount = 0;
@@ -167,22 +159,17 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
             const desc = el.getAttribute("data-p")?.toLowerCase() || "";
             const projectType = el.getAttribute("data-type") || "";
             const projectTags = el.getAttribute("data-tags") || "";
-            const isPrivate = el.getAttribute("data-access") === "private";
             const isFeatured = el.getAttribute("data-featured") === "true";
 
             const matchesQuery = query === "" || title.includes(query) || desc.includes(query);
             const matchesType = typeFilter === "all" || projectType === typeFilter;
             const matchesTag = tagFilter === "all" || projectTags.includes(tagFilter);
-            const matchesAccess =
-              accessFilter === "all" ||
-              (accessFilter === "private" && isPrivate) ||
-              (accessFilter === "public" && !isPrivate);
             const matchesFeatured =
               featuredFilter === "all" ||
               (featuredFilter === "featured" && isFeatured) ||
               (featuredFilter === "non-featured" && !isFeatured);
 
-            const shouldShow = matchesQuery && matchesType && matchesTag && matchesAccess && matchesFeatured;
+            const shouldShow = matchesQuery && matchesType && matchesTag && matchesFeatured;
             (el as HTMLElement).style.display = shouldShow ? "" : "none";
             if (shouldShow) visibleCount++;
           });
@@ -194,20 +181,18 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
             const cells = row.children;
             const title = cells[1]?.querySelector("a")?.textContent?.toLowerCase() || "";
             const desc = ""; // Not shown in list view
+            const isFeatured = false; // Not shown in list view
             const projectType = cells[3]?.textContent?.trim() || "";
             const tags = Array.from(cells[2]?.querySelectorAll(".ui-tag") || [])
               .map((el) => el.textContent)
               .join(",");
-            const isPrivate = false; // Not shown in list view
-            const isFeatured = false; // Not shown in list view
 
             const matchesQuery = query === "" || title.includes(query);
             const matchesType = typeFilter === "all" || projectType === typeFilter;
             const matchesTag = tagFilter === "all" || tags.includes(tagFilter);
-            const matchesAccess = true; // Not filtered in list view
             const matchesFeatured = true; // Not filtered in list view
 
-            const shouldShow = matchesQuery && matchesType && matchesTag && matchesAccess && matchesFeatured;
+            const shouldShow = matchesQuery && matchesType && matchesTag && matchesFeatured;
             (row as HTMLElement).style.display = shouldShow ? "" : "none";
             if (shouldShow) listVisible++;
           });
@@ -218,7 +203,7 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
           }
         }
 
-        [searchEl, typeFilterEl, tagFilterEl, accessFilterEl, featuredFilterEl].forEach((el) => {
+        [searchEl, typeFilterEl, tagFilterEl, featuredFilterEl].forEach((el) => {
           if (el) {
             el.addEventListener(el.tagName === "INPUT" ? "input" : "change", apply);
           }
