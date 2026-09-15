@@ -14,9 +14,7 @@ function formatDate(date?: Date | string) {
     // If it's a common non-date string (like 'Present'), return as-is
     if (date.toLowerCase() === "present") return date;
 
-    // Parse month-only values as local calendar dates. `new Date("2022-09")`
-    // is parsed as UTC midnight, which can display as the previous month in
-    // time zones west of UTC.
+    // Parse month-only values as local calendar dates
     const monthDate = /^(\d{4})-(\d{2})$/.exec(date);
     if (monthDate) {
       const year = Number(monthDate[1]);
@@ -46,16 +44,16 @@ function formatDate(date?: Date | string) {
 
   <div class="relative z-10">
     <div class="flex-1 min-w-0">
-      <div class="text-xs mb-1 ui-p-accent uppercase">
+      <div class="mb-1 text-xs uppercase text-slate-600 dark:text-slate-300">
         {formatDate(date)}
         {endDate && ` - ${formatDate(endDate)}`}
       </div>
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-2">
-          <h3 class="ui-heading-md mb-0.5">{title}</h3>
+          <h3 class="mb-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
         </div>
       </div>
-      <p class="text-sm ui-p mb-4">{description}</p>
+      <p class="mb-4 text-slate-600 dark:text-slate-400">{description}</p>
       <slot />
     </div>
   </div>
