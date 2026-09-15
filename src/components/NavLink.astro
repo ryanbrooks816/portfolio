@@ -4,7 +4,7 @@ const { href, label, section, classes } = Astro.props;
 
 <a
   href={href}
-  class=`nav-link px-4 py-2 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-700/60 transition-all duration-200 ${classes || ""}`
+  class=`nav-link rounded-full px-4 py-2 text-sm font-medium text-slate-900 decoration-slate-300 transition-all duration-200 hover:bg-slate-100/60 hover:decoration-current dark:text-white dark:decoration-slate-600 dark:hover:bg-slate-700/60 ${classes || ""}`
   data-section={section}
 >
   {label}

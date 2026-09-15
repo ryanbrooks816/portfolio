@@ -63,103 +63,83 @@ if (!hasAccess) {
   <Navigation />
 
   <!-- Hero Section -->
-  <section class="relative pt-12 pb-16 overflow-hidden">
-    <div>
-      <!-- Back Navigation -->
-      <BackLinkNavigation href={PROJECTS_LINK} label="Back to Projects" />
+  <section class="relative overflow-hidden pb-16">
+    <BackLinkNavigation href={PROJECTS_LINK} label="Back to Projects" />
 
-      <!-- Project Badges & Date -->
-      <div class="flex flex-wrap items-center gap-3 mb-8">
-        <span
-          class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
-        >
+    <div class="pt-8">
+      <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+        <span class="font-medium text-slate-900 dark:text-slate-100">
           {project.data.type.charAt(0).toUpperCase() + project.data.type.slice(1)} Project
         </span>
         {
           project.data.private && (
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-              <Icon name="mdi:lock" class="w-3.5 h-3.5" />
+            <span
+              class="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-300"
+              aria-label="Private project"
+            >
+              <Icon name="mdi:lock" class="h-3.5 w-3.5" />
               Private
             </span>
           )
         }
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
-        >
-          <Icon name="mdi:calendar" class="w-4 h-4" />
-          <span>
-            {formatProjectDateRange(project.data.date, project.data.endDate)}
-          </span>
+        <div class="project-date">
+          <Icon name="mdi:calendar" class="h-4 w-4" />
+          <span>{formatProjectDateRange(project.data.date, project.data.endDate)}</span>
         </div>
       </div>
+
+      <h1
+        class="mt-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl"
+      >
+        {project.data.title}
+      </h1>
+
+      <p class="mt-6 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+        {project.data.description}
+      </p>
+
+      <!-- Action Links -->
+      {
+        getProjectLinks(project).length > 0 && (
+          <div class="mt-8 flex flex-wrap gap-3">
+            {getProjectLinks(project).map((link) => (
+              <a
+                href={link.url}
+                class={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all lg:px-5 lg:py-3 lg:text-base ${
+                  link.isPrimary
+                    ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                    : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name={link.icon} class="h-4 w-4 lg:h-5 lg:w-5" />
+                <span>{link.label}</span>
+              </a>
+            ))}
+          </div>
+        )
+      }
     </div>
 
-    <!-- Project Title -->
-    <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-12 leading-tight">
-      {project.data.title}
-    </h1>
-
-    <!-- Project Content & Thumbnail -->
-    <div class="flex flex-col lg:flex-row gap-8 items-stretch h-full">
-      <!-- Main Content -->
-      <div class="flex-1 space-y-8 flex flex-col justify-between">
-        <!-- Project Description -->
-        <div>
-          <p class="text-base md:text-lg lg:text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
-            {project.data.description}
-          </p>
+    <!-- Project Thumbnail -->
+    {
+      thumbnailUrl && (
+        <div class="mx-auto mt-12 aspect-[16/9] max-w-[70%] overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+          <img src={thumbnailUrl} alt={`${project.data.title} thumbnail`} class="object-center" loading="lazy" />
         </div>
-
-        <!-- Action Links -->
-        {
-          getProjectLinks(project).length > 0 && (
-            <div class="flex flex-wrap gap-3">
-              {getProjectLinks(project).map((link) => (
-                <a
-                  href={link.url}
-                  class={`inline-flex items-center gap-2 px-4 py-2.5 lg:px-5 lg:py-3 rounded-lg font-medium transition-all text-sm lg:text-base ${
-                    link.isPrimary
-                      ? "bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-lg hover:shadow-xl"
-                      : "bg-slate-50 text-slate-900 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
-                  }`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon name={link.icon} class="w-4 h-4 lg:w-5 lg:h-5" />
-                  <span>{link.label}</span>
-                </a>
-              ))}
-            </div>
-          )
-        }
-      </div>
-
-      <!-- Project Thumbnail -->
-      <div class="flex-1 flex justify-center">
-        {
-          thumbnailUrl && (
-            <div class="w-full aspect-[16/9] rounded-xl overflow-hidden border border-black border-2 dark:border-slate-700 shadow-xl bg-slate-50 dark:bg-slate-800 flex">
-              <img
-                src={thumbnailUrl}
-                alt={`${project.data.title} thumbnail`}
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                loading="lazy"
-              />
-            </div>
-          )
-        }
-      </div>
-    </div>
+      )
+    }
   </section>
 
   <!-- Main Outcomes -->
   {
     project.data.outcomes && project.data.outcomes.length > 0 && (
       <div class="my-16 py-8 border-t border-slate-300 dark:border-slate-700">
-        <h3 class="ui-heading-lg mb-6">Main Outcomes</h3>
+        <h3 class="mb-6 text-2xl font-semibold text-slate-900 dark:text-slate-100">Main Outcomes</h3>
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {project.data.outcomes.map((outcome) => (
-            <li class="flex items-start gap-3 ui-list">
+            <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
               <span class="text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0 font-bold text-lg leading-none">
                 ✓
               </span>
@@ -185,9 +165,9 @@ if (!hasAccess) {
       <div class="space-y-8">
         <!-- Technologies -->
         <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-          <h3 class="ui-heading-sm mb-4">Technologies</h3>
+          <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Technologies</h3>
           <div class="flex flex-wrap gap-2">
-            {project.data.tags.map((tag) => <span class="tech-tag">{tag}</span>)}
+            {project.data.tags.map((tag) => <span class="ui-tag purple">{tag}</span>)}
           </div>
         </div>
 
@@ -195,13 +175,13 @@ if (!hasAccess) {
         {
           project.data.timeline && project.data.timeline.length > 0 && (
             <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-              <h3 class="ui-heading-sm mb-4">Timeline</h3>
+              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Timeline</h3>
               <div class="space-y-4">
                 {project.data.timeline.map((phase) => (
                   <div class="border-l-2 border-slate-400 dark:border-slate-600 pl-4 pb-4">
                     <div class="font-medium text-slate-900 dark:text-slate-200">{phase.phase}</div>
-                    <div class="text-sm ui-p mb-1">{phase.duration}</div>
-                    <div class="text-sm ui-p">{phase.description}</div>
+                    <div class="mb-1 text-sm text-slate-600 dark:text-slate-400">{phase.duration}</div>
+                    <div class="text-sm text-slate-600 dark:text-slate-400">{phase.description}</div>
                   </div>
                 ))}
               </div>
@@ -213,10 +193,10 @@ if (!hasAccess) {
         {
           project.data.responsibilities && project.data.responsibilities.length > 0 && (
             <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-              <h3 class="ui-heading-sm mb-4">My Role</h3>
+              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">My Role</h3>
               <ul class="space-y-2">
                 {project.data.responsibilities.map((responsibility) => (
-                  <li class="flex items-start gap-2 text-sm ui-list">
+                  <li class="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
                     <span class="text-slate-400 dark:text-slate-500 mt-1">•</span>
                     <span>{responsibility}</span>
                   </li>
@@ -230,9 +210,11 @@ if (!hasAccess) {
         {
           project.data.private && userScope && (
             <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-              <h4 class="ui-heading-sm text-green-900 dark:text-green-300 mb-2">Access Granted</h4>
-              <p class="text-sm ui-p mb-2">You have authenticated access to this private project.</p>
-              <p class="text-xs ui-p">Scope: {userScope}</p>
+              <h4 class="mb-2 text-sm font-semibold text-green-900 dark:text-green-300">Access Granted</h4>
+              <p class="mb-2 text-sm text-slate-600 dark:text-slate-400">
+                You have authenticated access to this private project.
+              </p>
+              <p class="text-xs text-slate-600 dark:text-slate-400">Scope: {userScope}</p>
             </div>
           )
         }
@@ -243,7 +225,9 @@ if (!hasAccess) {
     {
       project.data.gallery?.images && project.data.gallery.images.length > 0 && (
         <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-          <h2 class="ui-heading-lg mb-6">{project.data.private ? "Private Gallery" : "Project Gallery"}</h2>
+          <h2 class="mb-6 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            {project.data.private ? "Private Gallery" : "Project Gallery"}
+          </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {project.data.gallery.images.map((image, index) => (
               <div class="group cursor-pointer">
@@ -251,14 +235,16 @@ if (!hasAccess) {
                   <div class="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-800">
                     <div class="text-center">
                       <Icon name="mdi:image" class="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto mb-2" />
-                      <div class="text-xs ui-p">
+                      <div class="text-xs text-slate-600 dark:text-slate-400">
                         {project.data.gallery?.captions?.[index] || `Screenshot ${index + 1}`}
                       </div>
                     </div>
                   </div>
                 </div>
                 {project.data.gallery?.captions?.[index] && (
-                  <p class="mt-2 text-sm ui-p text-center">{project.data.gallery.captions[index]}</p>
+                  <p class="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+                    {project.data.gallery.captions[index]}
+                  </p>
                 )}
               </div>
             ))}
@@ -271,15 +257,15 @@ if (!hasAccess) {
     {
       (project.data.achievements || project.data.challenges || project.data.learnings) && (
         <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-          <h2 class="ui-heading-lg mb-8">Project Summary</h2>
+          <h2 class="mb-8 text-2xl font-semibold text-slate-900 dark:text-slate-100">Project Summary</h2>
 
           <div class="grid md:grid-cols-3 gap-8">
             {project.data.achievements && project.data.achievements.length > 0 && (
               <div>
-                <h3 class="ui-heading-md mb-4">Key Achievements</h3>
+                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Key Achievements</h3>
                 <ul class="space-y-3">
                   {project.data.achievements.map((achievement) => (
-                    <li class="flex items-start gap-3 ui-list">
+                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
                       <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
                       <span class="text-sm leading-relaxed">{achievement}</span>
                     </li>
@@ -290,10 +276,10 @@ if (!hasAccess) {
 
             {project.data.challenges && project.data.challenges.length > 0 && (
               <div>
-                <h3 class="ui-heading-md mb-4">Key Challenges</h3>
+                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Key Challenges</h3>
                 <ul class="space-y-3">
                   {project.data.challenges.map((challenge) => (
-                    <li class="flex items-start gap-3 ui-list">
+                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
                       <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
                       <span class="text-sm leading-relaxed">{challenge}</span>
                     </li>
@@ -304,10 +290,10 @@ if (!hasAccess) {
 
             {project.data.learnings && project.data.learnings.length > 0 && (
               <div>
-                <h3 class="ui-heading-md mb-4">Key Learnings</h3>
+                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Key Learnings</h3>
                 <ul class="space-y-3">
                   {project.data.learnings.map((learning) => (
-                    <li class="flex items-start gap-3 ui-list">
+                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
                       <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
                       <span class="text-sm leading-relaxed">{learning}</span>
                     </li>
@@ -323,12 +309,12 @@ if (!hasAccess) {
 
   <!-- Navigation -->
   <nav class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-    <div class="flex flex-wrap justify-center items-center gap-8 xs:justify-between">
+    <div class="flex flex-wrap items-center justify-center gap-8 xs:justify-between">
       <a href="/projects" class="ui-button-secondary">
         <Icon name="mdi:arrow-left" class="w-4 h-4" />
         Back to Projects
       </a>
-      <div class="flex items-center gap-2 text-sm ui-p">
+      <div class="project-date">
         <Icon name="mdi:calendar" class="w-4 h-4" />
         {formatProjectDateRange(project.data.date, project.data.endDate)}
       </div>

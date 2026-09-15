@@ -11,7 +11,7 @@ const primaryLink = getPrimaryProjectLink(project);
 ---
 
 <tr
-  class="border-b border-slate-300 dark:border-slate-600 last:border-none hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+  class="group border-b border-slate-300 transition-colors last:border-none hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800/50"
 >
   <td class="py-4 px-4 align-top text-sm">
     <div class="translate-y-px text-slate-600 dark:text-slate-400">{formatProjectDate(project.data.date)}</div>
@@ -19,20 +19,12 @@ const primaryLink = getPrimaryProjectLink(project);
   <td class="py-4 px-4 align-top font-semibold leading-snug text-slate-900 dark:text-slate-200">
     <div>
       <div class="flex items-center gap-2">
-        <div class="block sm:hidden">
-          <a
-            class="inline-flex items-baseline font-medium leading-tight text-slate-900 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-200 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 group/link text-base transition-colors"
-            href={getProjectUrl(project)}
-            aria-label={`${project.data.title} project details`}
-          >
+        <h3 class="m-0">
+          <a class="project-title" href={getProjectUrl(project)} aria-label={`${project.data.title} project details`}>
             <span>{project.data.title}</span>
-            <Icon
-              name="mdi:arrow-top-right"
-              class="ml-0.5 h-4 w-4 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
-            />
+            <Icon name="mdi:arrow-top-right" class="project-title-arrow" />
           </a>
-        </div>
-        <div class="hidden sm:block">{project.data.title}</div>
+        </h3>
         {
           project.data.private && (
             <span class="px-2 py-1 text-xs font-medium text-amber-300" aria-label="Private project">
@@ -42,7 +34,7 @@ const primaryLink = getPrimaryProjectLink(project);
         }
       </div>
     </div>
-    <div class="mt-2 text-sm leading-normal text-slate-600 dark:text-slate-400">{project.data.description}</div>
+    <div class="project-description mt-2">{project.data.description}</div>
     <ul class="mt-2 flex flex-wrap lg:hidden" aria-label="Technologies used">
       {
         project.data.tags.map((tag) => (
@@ -73,7 +65,7 @@ const primaryLink = getPrimaryProjectLink(project);
     <ul class="translate-y-px">
       <li class="mb-3 flex items-center">
         <a
-          class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
+          class="group/link inline-flex items-baseline text-sm font-medium leading-tight text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-900 hover:decoration-current focus-visible:text-slate-900 dark:text-white dark:decoration-slate-600 dark:hover:text-white dark:focus-visible:text-white"
           href={getProjectUrl(project)}
           aria-label={`View ${project.data.title} details`}
         >
@@ -88,7 +80,7 @@ const primaryLink = getPrimaryProjectLink(project);
         primaryLink?.key === "github" && (
           <li class="mb-1 flex items-center">
             <a
-              class="inline-flex items-baseline font-medium leading-tight text-slate-600 hover:text-blue-600 focus-visible:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 dark:focus-visible:text-blue-400 text-sm group/link transition-colors"
+              class="group/link inline-flex items-baseline text-sm font-medium leading-tight text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-900 hover:decoration-current focus-visible:text-slate-900 dark:text-white dark:decoration-slate-600 dark:hover:text-white dark:focus-visible:text-white"
               href={primaryLink.url}
               target="_blank"
               rel="noreferrer noopener"

@@ -11,6 +11,10 @@ module.exports = {
       "2xl": "1536px",
     },
     extend: {
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+      },
       colors: {
         brand: {
           50: "#f5f3ff",

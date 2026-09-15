@@ -19,20 +19,24 @@ const thumbnailUrl = getProjectThumbnail(project);
   data-access={project.data.private ? "private" : "public"}
   data-featured={project.data.featured ? "true" : "false"}
 >
-  <div
-    class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-slate-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.10)]"
-  >
-  </div>
+  <div class="project-hover-surface"></div>
 
   <a href={getProjectUrl(project)} class="block relative z-10">
     <div class={thumbnailUrl ? "flex justify-between gap-6 items-center" : ""}>
       <div class="flex-1 min-w-0">
-        <div class="text-xs mb-1 ui-p-accent uppercase">
+        <div class="mb-1 text-xs uppercase text-slate-600 dark:text-slate-300">
           {formatProjectDateRange(project.data.date, project.data.endDate)}
         </div>
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-2">
-            <h3 class="ui-heading-md mb-0.5">{project.data.title}</h3>
+            <h3 class="mb-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {project.data.title}
+              <Icon
+                name="mdi:arrow-top-right"
+                aria-hidden="true"
+                class="ml-1 inline-block h-4 w-4 align-[-0.125em] opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100"
+              />
+            </h3>
             {
               project.data.private && (
                 <span class="px-2 py-1 text-xs font-medium text-amber-300" aria-label="Private project">
@@ -42,7 +46,7 @@ const thumbnailUrl = getProjectThumbnail(project);
             }
           </div>
         </div>
-        <p class="text-sm ui-p mb-4">{project.data.description}</p>
+        <p class="project-description mb-4">{project.data.description}</p>
         <slot />
         {
           project.data.tags.length > 0 && (

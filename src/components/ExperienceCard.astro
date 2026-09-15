@@ -13,6 +13,21 @@ function formatDate(date?: Date | string) {
   if (typeof date === "string") {
     // If it's a common non-date string (like 'Present'), return as-is
     if (date.toLowerCase() === "present") return date;
+
+    // Parse month-only values as local calendar dates. `new Date("2022-09")`
+    // is parsed as UTC midnight, which can display as the previous month in
+    // time zones west of UTC.
+    const monthDate = /^(\d{4})-(\d{2})$/.exec(date);
+    if (monthDate) {
+      const year = Number(monthDate[1]);
+      const month = Number(monthDate[2]);
+      if (month >= 1 && month <= 12) {
+        return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(
+          new Date(year, month - 1, 1),
+        );
+      }
+    }
+
     // Try to parse as date
     const dateObj = new Date(date);
     if (isNaN(dateObj.getTime())) return date; // Not a valid date string
