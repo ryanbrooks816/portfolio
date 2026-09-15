@@ -1,0 +1,75 @@
+---
+import { Icon } from "astro-icon/components";
+
+import { formatProjectDateRange, getProjectUrl, getProjectThumbnail } from "../data/projects";
+import type { Project } from "../data/projects";
+
+const props = Astro.props as { project: Project };
+const { project } = props;
+
+const thumbnailUrl = getProjectThumbnail(project);
+---
+
+<article
+  class="group relative gap-4 pb-1 transition-all sm:gap-8 md:gap-4 lg:hover:!opacity-100"
+  data-title={project.data.title}
+  data-p={project.data.description}
+  data-type={project.data.type}
+  data-tags={project.data.tags.join(",")}
+  data-access={project.data.private ? "private" : "public"}
+  data-featured={project.data.featured ? "true" : "false"}
+>
+  <div class="project-hover-surface"></div>
+
+  <a href={getProjectUrl(project)} class="block relative z-10">
+    <div class={thumbnailUrl ? "flex justify-between gap-6 items-center" : ""}>
+      <div class="flex-1 min-w-0">
+        <div class="mb-1 text-xs uppercase text-slate-600 dark:text-slate-300">
+          {formatProjectDateRange(project.data.date, project.data.endDate)}
+        </div>
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <h3 class="mb-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {project.data.title}
+              <Icon
+                name="mdi:arrow-top-right"
+                aria-hidden="true"
+                class="ml-1 inline-block h-4 w-4 align-[-0.125em] opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100"
+              />
+            </h3>
+            {
+              project.data.private && (
+                <span class="px-2 py-1 text-xs font-medium text-amber-300" aria-label="Private project">
+                  <Icon name="mdi:lock" class="w-4 h-4" />
+                </span>
+              )
+            }
+          </div>
+        </div>
+        <p class="project-description mb-4">{project.data.description}</p>
+        <slot />
+        {
+          project.data.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {project.data.tags.map((tag) => (
+                <span class="ui-tag blue">{tag}</span>
+              ))}
+            </div>
+          )
+        }
+      </div>
+      {
+        thumbnailUrl && (
+          <div class="flex-shrink-0 ml-4 max-w-[120px] w-full">
+            <img
+              src={thumbnailUrl}
+              alt={project.data.title + " image"}
+              class="rounded-md object-cover w-full h-auto"
+              loading="lazy"
+            />
+          </div>
+        )
+      }
+    </div>
+  </a>
+</article>
