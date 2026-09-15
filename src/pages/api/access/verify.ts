@@ -21,7 +21,9 @@ function hashCode(code: string): string {
   return createHmac("sha256", CODE_SECRET).update(code.toLowerCase()).digest("hex");
 }
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async (context) => {
+  const { request } = context;
+
   if (!SESSION_SECRET) {
     return new Response(
       JSON.stringify({
@@ -65,7 +67,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Access KV storage
-    const accessCodes = getAccessCodes({ locals } as any);
+    const accessCodes = getAccessCodes(context);
 
     if (!accessCodes) {
       console.error("ACCESS_CODES KV namespace not available");
