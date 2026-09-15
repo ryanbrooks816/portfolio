@@ -34,14 +34,13 @@ export interface AuthResult {
  * Returns redirect response if not authenticated, null if authorized.
  */
 export async function authenticateSession(context: APIContext, projectId: string): Promise<Response | null> {
-  const cookies = context.request.headers.get("cookie") || "";
-  const existingSession = cookies.match(new RegExp(`${COOKIE_NAME}=([^;]+)`));
+  const existingSession = context.cookies.get(COOKIE_NAME)?.value;
 
   if (!existingSession) {
     return redirectToAccess(context.url);
   }
 
-  const authResult = verifySessionToken(existingSession[1]);
+  const authResult = verifySessionToken(existingSession);
 
   if (!authResult.isAuthenticated || !authResult.payload) {
     return redirectToAccess(context.url);
