@@ -1,8 +1,14 @@
+.vscode
 node_modules
 dist
 .env
 .DS_Store
-.vscode
+
 /.astro
 SECURITY.md
 /.wrangler
+
+# Synced from the private portfolio-projects repository.
+/portfolio-projects/
+/src/content/projects/
+/public/projects/
