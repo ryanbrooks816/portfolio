@@ -1,8 +1,6 @@
 ---
 export const prerender = false;
 
-import { authenticateSession } from "../../utils/auth";
-
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import BackLinkNavigation from "../../components/BackNavigation.astro";
@@ -26,16 +24,6 @@ if (!slug) {
 const project = await getProjectById(slug);
 if (!project) {
   return Astro.redirect(PROJECTS_LINK);
-}
-
-// Check authentication for private projects
-// The authResponse will be a redirect if the user is not authenticated, or null if they are authorized.
-if (project.data.private) {
-  const authResponse = await authenticateSession(Astro, project.id);
-
-  if (authResponse) {
-    return authResponse;
-  }
 }
 
 const { Content } = await renderProject(project);
