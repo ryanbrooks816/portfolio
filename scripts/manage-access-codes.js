@@ -39,7 +39,6 @@ function generateKVCommands(action, code, scope, daysValid, maxUses) {
     case "create": {
       const expiresAt = new Date(Date.now() + daysValid * 24 * 60 * 60 * 1000).toISOString();
       const record = {
-        code,
         expiresAt,
         scope,
         maxUses: parseInt(maxUses),

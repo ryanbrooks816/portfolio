@@ -1,29 +1,94 @@
 import type { APIContext } from "astro";
 import { createHmac } from "crypto";
+import type { KVNamespace } from "@cloudflare/workers-types";
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
+export const COOKIE_NAME = "portfolio_session";
+
+export interface AccessCodeRecord {
+  scope: string;
+  createdAt: string;
+  expiresAt: string;
+  maxUses?: number;
+  uses?: number;
+}
+
 export interface SessionPayload {
-  codeId: string;
+  codeId: string; // Generated from hash of CODE_SECRET
   expiresAt: number;
   issuedAt: number;
 }
 
-export interface AccessCodeRecord {
-  expiresAt: string;
-  scope: string;
-  maxUses?: number;
-  uses?: number;
-  createdAt: string;
-}
-
 export interface AuthResult {
   isAuthenticated: boolean;
-  scope?: string;
   reason?: string;
+  payload?: SessionPayload;
 }
+
 /**
- * Verifies a session token and returns authentication status
+ * Check session re-authentication for private routes.
+ *
+ * Check for a valid session cookie, verify the token, and check if the user has access
+ * to the project based on the codeId, and that it is not expired.
+ * Returns redirect response if not authenticated, null if authorized.
+ */
+export async function authenticateSession(context: APIContext, projectId: string): Promise<Response | null> {
+  const cookies = context.request.headers.get("cookie") || "";
+  const existingSession = cookies.match(new RegExp(`${COOKIE_NAME}=([^;]+)`));
+
+  if (!existingSession) {
+    return redirectToAccess(context.url);
+  }
+
+  const authResult = verifySessionToken(existingSession[1]);
+
+  if (!authResult.isAuthenticated || !authResult.payload) {
+    return redirectToAccess(context.url);
+  }
+
+  // Validate access code record from KV store
+  const accessCodes = getAccessCodes(context);
+
+  if (!accessCodes) {
+    console.error("ACCESS_CODES KV namespace not available");
+    return redirectToAccess(context.url);
+  }
+
+  const record = await accessCodes.get<AccessCodeRecord>(authResult.payload.codeId, "json");
+
+  if (!record) {
+    return redirectToAccess(context.url);
+  }
+
+  if (isAccessCodeExpired(record)) {
+    return redirectToAccess(context.url);
+  }
+
+  if (!hasRequiredScope(record.scope, projectId)) {
+    return redirectToAccess(context.url);
+  }
+
+  return null; // Authorized
+}
+
+/**
+ * Creates a session token with a payload and signs it with the SESSION_SECRET.
+ * The token is a base64-encoded JSON string of the payload, followed by a signature.
+ */
+export function createSessionToken(payload: SessionPayload): string {
+  if (!SESSION_SECRET) {
+    throw new Error("Session secret not configured");
+  }
+  const data = JSON.stringify(payload);
+  const signature = createHmac("sha256", SESSION_SECRET).update(data).digest("hex");
+
+  return `${Buffer.from(data).toString("base64")}.${signature}`;
+}
+
+/**
+ * Verifies a session token matches the correct signature and the payload is not expired.
+ * Returns an AuthResult indicating whether the token is valid and, if so, the decoded payload.
  */
 export function verifySessionToken(token: string): AuthResult {
   if (!SESSION_SECRET) {
@@ -37,7 +102,7 @@ export function verifySessionToken(token: string): AuthResult {
       return { isAuthenticated: false, reason: "Invalid token format" };
     }
 
-    // Verify signature
+    // Verify signature matches SESSION_SECRET
     const data = Buffer.from(dataB64, "base64").toString();
     const expectedSignature = createHmac("sha256", SESSION_SECRET).update(data).digest("hex");
 
@@ -55,36 +120,11 @@ export function verifySessionToken(token: string): AuthResult {
 
     return {
       isAuthenticated: true,
+      payload: payload,
     };
   } catch (error) {
     return { isAuthenticated: false, reason: "Token verification failed" };
   }
-}
-
-/**
- * Middleware function to check authentication for private routes
- * Returns redirect response if not authenticated, null if authorized
- */
-export async function requireAuthentication(context: APIContext, requiredScope: string): Promise<Response | null> {
-  const cookies = context.request.headers.get("cookie") || "";
-  const sessionMatch = cookies.match(/vault_session=([^;]+)/);
-
-  if (!sessionMatch) {
-    return redirectToAccess(context.url);
-  }
-
-  const authResult = verifySessionToken(sessionMatch[1]);
-
-  if (!authResult.isAuthenticated) {
-    return redirectToAccess(context.url);
-  }
-
-  // Check scope authorization
-  if (!hasRequiredScope(authResult.scope!, requiredScope)) {
-    return redirectToAccess(context.url);
-  }
-
-  return null; // Authorized
 }
 
 /**
@@ -108,38 +148,16 @@ function redirectToAccess(currentUrl: URL): Response {
   });
 }
 
-/**
- * Checks if current scope meets required scope
- */
-function hasRequiredScope(currentScope: string, requiredScope: string): boolean {
+export function getAccessCodes(context: APIContext): KVNamespace | null {
+  return (context.locals as any).runtime?.env?.ACCESS_CODES ?? null;
+}
+
+export function isAccessCodeExpired(record: AccessCodeRecord, now = Date.now()): boolean {
+  return now > Date.parse(record.expiresAt);
+}
+
+function hasRequiredScope(currentScope: string, projectId: string): boolean {
   // '*' grants access to all, otherwise check for requiredScope in the list
   const scopes = currentScope.split(",").map((s) => s.trim());
-  return scopes.includes("*") || scopes.includes(requiredScope);
-}
-
-/**
- * Adds security headers for private content
- */
-export function addPrivateHeaders(response: Response): Response {
-  response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-  response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet");
-  response.headers.set("Pragma", "no-cache");
-  response.headers.set("Expires", "0");
-
-  return response;
-}
-
-/**
- * Utility function to get current user's scope from request
- */
-export function getUserScope(context: APIContext): string | null {
-  const cookies = context.request.headers.get("cookie") || "";
-  const sessionMatch = cookies.match(/vault_session=([^;]+)/);
-
-  if (!sessionMatch) {
-    return null;
-  }
-
-  const authResult = verifySessionToken(sessionMatch[1]);
-  return authResult.isAuthenticated ? authResult.scope! : null;
+  return scopes.includes("*") || scopes.includes(projectId);
 }
