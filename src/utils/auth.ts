@@ -4,9 +4,17 @@ import { createHmac } from "crypto";
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
 export interface SessionPayload {
-  scope: string;
+  codeId: string;
   expiresAt: number;
   issuedAt: number;
+}
+
+export interface AccessCodeRecord {
+  expiresAt: string;
+  scope: string;
+  maxUses?: number;
+  uses?: number;
+  createdAt: string;
 }
 
 export interface AuthResult {
@@ -14,7 +22,6 @@ export interface AuthResult {
   scope?: string;
   reason?: string;
 }
-
 /**
  * Verifies a session token and returns authentication status
  */
@@ -48,7 +55,6 @@ export function verifySessionToken(token: string): AuthResult {
 
     return {
       isAuthenticated: true,
-      scope: payload.scope,
     };
   } catch (error) {
     return { isAuthenticated: false, reason: "Token verification failed" };
@@ -59,7 +65,7 @@ export function verifySessionToken(token: string): AuthResult {
  * Middleware function to check authentication for private routes
  * Returns redirect response if not authenticated, null if authorized
  */
-export function requireAuthentication(context: APIContext, requiredScope: string): Response | null {
+export async function requireAuthentication(context: APIContext, requiredScope: string): Promise<Response | null> {
   const cookies = context.request.headers.get("cookie") || "";
   const sessionMatch = cookies.match(/vault_session=([^;]+)/);
 

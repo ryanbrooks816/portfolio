@@ -34,7 +34,7 @@ const thumbnailUrl = getProjectThumbnail(project);
 
 // Check authentication for private projects
 if (project.data.private) {
-  const authResponse = requireAuthentication(Astro, project.id);
+  const authResponse = await requireAuthentication(Astro, project.id);
   if (authResponse) {
     return authResponse;
   }

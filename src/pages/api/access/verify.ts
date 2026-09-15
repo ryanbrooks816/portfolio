@@ -1,25 +1,11 @@
 import type { APIRoute } from "astro";
 import { createHmac } from "crypto";
+import type { SessionPayload, AccessCodeRecord } from "../../../utils/auth";
 
 // Session configuration
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const CODE_SECRET = process.env.CODE_SECRET;
 const SESSION_DURATION = 24 * 60 * 60;
-
-interface AccessCodeRecord {
-  code: string;
-  expiresAt: string;
-  scope: string;
-  maxUses?: number;
-  uses?: number;
-  createdAt: string;
-}
-
-interface SessionPayload {
-  scope: string;
-  expiresAt: number;
-  issuedAt: number;
-}
 
 function createSessionToken(payload: SessionPayload): string {
   if (!SESSION_SECRET) {
@@ -39,8 +25,6 @@ function hashCode(code: string): string {
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  console.log(process.env.CODE_SECRET);
-
   if (!SESSION_SECRET) {
     return new Response(
       JSON.stringify({
@@ -177,7 +161,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Create session token
     const sessionPayload: SessionPayload = {
-      scope: record.scope,
+      codeId: codeHash,
       expiresAt: now.getTime() + SESSION_DURATION * 1000,
       issuedAt: now.getTime(),
     };
