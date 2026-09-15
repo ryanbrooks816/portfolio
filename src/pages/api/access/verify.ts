@@ -1,21 +1,12 @@
 import type { APIRoute } from "astro";
 import { createHmac } from "crypto";
+import { COOKIE_NAME, createSessionToken, getAccessCodes, isAccessCodeExpired } from "../../../utils/auth";
 import type { SessionPayload, AccessCodeRecord } from "../../../utils/auth";
 
 // Session configuration
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const CODE_SECRET = process.env.CODE_SECRET;
 const SESSION_DURATION = 24 * 60 * 60;
-
-function createSessionToken(payload: SessionPayload): string {
-  if (!SESSION_SECRET) {
-    throw new Error("Session secret not configured");
-  }
-  const data = JSON.stringify(payload);
-  const signature = createHmac("sha256", SESSION_SECRET).update(data).digest("hex");
-
-  return `${Buffer.from(data).toString("base64")}.${signature}`;
-}
 
 function hashCode(code: string): string {
   if (!CODE_SECRET) {
@@ -68,9 +59,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Access KV storage
-    const ACCESS_CODES = (locals as any).runtime?.env?.ACCESS_CODES;
+    const accessCodes = getAccessCodes({ locals } as any);
 
-    if (!ACCESS_CODES) {
+    if (!accessCodes) {
       console.error("ACCESS_CODES KV namespace not available");
       return new Response(
         JSON.stringify({
@@ -88,7 +79,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const codeHash = hashCode(accessCode);
 
     // Try to get the access code record from KV
-    const recordData = await ACCESS_CODES.get(codeHash);
+    const recordData = await accessCodes.get(codeHash);
 
     if (!recordData) {
       return new Response(
@@ -120,11 +111,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // Check if code has expired
-    const now = new Date();
-    const expiresAt = new Date(record.expiresAt);
+    const now = new Date().getTime();
 
-    if (now > expiresAt) {
+    // Check if code has expired
+    if (isAccessCodeExpired(record, now)) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -157,20 +147,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
       uses: (record.uses || 0) + 1,
     };
 
-    await ACCESS_CODES.put(codeHash, JSON.stringify(updatedRecord));
+    await accessCodes.put(codeHash, JSON.stringify(updatedRecord));
 
     // Create session token
     const sessionPayload: SessionPayload = {
       codeId: codeHash,
-      expiresAt: now.getTime() + SESSION_DURATION * 1000,
-      issuedAt: now.getTime(),
+      expiresAt: now + SESSION_DURATION * 1000,
+      issuedAt: now,
     };
 
     const sessionToken = createSessionToken(sessionPayload);
 
     // Set secure session cookie
     const cookieOptions = [
-      `vault_session=${sessionToken}`,
+      `${COOKIE_NAME}=${sessionToken}`,
       "HttpOnly",
       "Secure",
       "SameSite=Lax",
