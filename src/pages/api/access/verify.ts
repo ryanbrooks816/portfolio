@@ -1,6 +1,12 @@
 import type { APIRoute } from "astro";
 import { createHmac } from "crypto";
-import { COOKIE_NAME, createSessionToken, getAccessCodes, isAccessCodeExpired } from "../../../utils/auth";
+import {
+  COOKIE_NAME,
+  createSessionToken,
+  getAccessCodes,
+  getAccessCodeRecord,
+  isAccessCodeExpired,
+} from "../../../utils/auth";
 import type { SessionPayload, AccessCodeRecord } from "../../../utils/auth";
 
 // Session configuration
@@ -79,24 +85,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const codeHash = hashCode(accessCode);
 
     // Try to get the access code record from KV
-    const recordData = await accessCodes.get(codeHash);
-
-    if (!recordData) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "Invalid access code.",
-        }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-    }
-
     let record: AccessCodeRecord;
     try {
-      record = JSON.parse(recordData);
+      const fetchedRecord = await getAccessCodeRecord(accessCodes, codeHash);
+      if (!fetchedRecord) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Invalid access code.",
+          }),
+          {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+      record = fetchedRecord;
     } catch (e) {
       console.error("Failed to parse access code record:", e);
       return new Response(
