@@ -90,7 +90,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         if (response.ok && result.success) {
           successMessage?.classList.remove("hidden");
           const urlParams = new URLSearchParams(window.location.search);
-          const redirectTo = urlParams.get("redirect") || "/projects";
+          const requestedRedirect = urlParams.get("redirect");
+          // Handle redirect safely: only allow relative paths, default to /projects
+          const redirectTo =
+            requestedRedirect?.startsWith("/") && !requestedRedirect.startsWith("//") ? requestedRedirect : "/projects";
           setTimeout(() => {
             window.location.href = redirectTo;
           }, 1500);
