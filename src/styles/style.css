@@ -4,37 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --glass: rgba(255, 255, 255, 0.04);
-  --academic-primary: #1e3a8a;
-  --academic-secondary: #3730a3;
-  --academic-accent: #059669;
-  --academic-text: #1e293b;
-  --academic-text-light: #64748b;
-  --academic-bg: #ffffff;
-  --academic-bg-secondary: #f8fafc;
-  --academic-border: #e2e8f0;
-}
-
 html.dark {
   color-scheme: dark;
-  --academic-primary: #3b82f6;
-  --academic-secondary: #6366f1;
-  --academic-accent: #10b981;
-  --academic-text: #f1f5f9;
-  --academic-text-light: #94a3b8;
-  --academic-bg: #0f172a;
-  --academic-bg-secondary: #1e293b;
-  --academic-border: #334155;
 }
 
 /* Global utilities */
 body {
+  @apply font-sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Inter", system-ui, sans-serif;
-  background-color: var(--academic-bg);
-  color: var(--academic-text);
 }
 
 html {
@@ -49,7 +27,6 @@ html {
 
 html.dark .glass {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -78,9 +55,7 @@ html.dark .animated-gradient {
     rgba(99, 102, 241, 0.07),
     rgba(236, 72, 153, 0.05)
   );
-  background-size: 400% 400%;
   animation: gradientShift 18s ease infinite;
-  filter: blur(60px);
 }
 
 @keyframes gradientShift {
@@ -95,71 +70,57 @@ html.dark .animated-gradient {
   }
 }
 
-.transition-colors {
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
+/* Common components */
+.ui-divider {
+  @apply border-slate-200 dark:border-slate-700;
 }
 
-/* Common components */
+.section-heading {
+  @apply mb-8 border-b pb-4;
+}
+
+.project-title {
+  @apply inline-flex items-baseline text-xl font-semibold leading-tight tracking-tight text-slate-900 no-underline transition-colors hover:text-gray-700 focus-visible:text-gray-700 group-hover:text-gray-700 dark:text-white dark:hover:text-blue-300 dark:focus-visible:text-blue-300 dark:group-hover:text-blue-300;
+}
+
+.project-title-arrow {
+  @apply ml-1 h-4 w-4 shrink-0 opacity-0 transition-all duration-200 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none;
+}
+
+.project-description {
+  @apply text-sm font-normal leading-relaxed text-slate-700 dark:text-slate-500;
+}
+
+.project-hover-surface {
+  @apply absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-slate-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.10)];
+}
+
+.project-date {
+  @apply inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400;
+}
+
+.ui-button-primary,
+.ui-button-secondary {
+  @apply inline-flex items-center gap-2 rounded-md transition-colors;
+}
+
 .ui-button-primary {
-  @apply inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700;
+  @apply bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700;
 }
 
 .ui-button-secondary {
-  @apply inline-flex items-center gap-2 rounded-md border border-slate-300 px-4 py-2 text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800;
-}
-
-.ui-heading-hero {
-  @apply text-4xl font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-100 lg:text-5xl;
-}
-
-.ui-heading-lg {
-  @apply text-2xl font-semibold text-slate-900 dark:text-slate-100;
-}
-
-.ui-heading-md {
-  @apply text-lg font-semibold text-slate-900 dark:text-slate-100;
-}
-
-.ui-heading-sm {
-  @apply text-sm font-semibold text-slate-800 dark:text-slate-200;
-}
-
-.ui-subheading {
-  @apply font-medium text-blue-600 dark:text-blue-400;
-}
-
-.ui-p {
-  @apply text-slate-600 dark:text-slate-400;
-}
-
-.ui-p-accent {
-  @apply text-slate-600 dark:text-slate-300;
-}
-
-.ui-list {
-  @apply text-sm text-slate-700 dark:text-slate-300;
+  @apply border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800;
 }
 
 .ui-tag {
-  @apply relative z-10 rounded-full px-3 py-1 text-xs font-medium;
+  @apply relative z-10 rounded-full px-2 py-1 text-[0.625rem] font-medium;
 }
 
 .ui-tag.blue {
   @apply bg-blue-100 text-blue-800 dark:bg-blue-400/10 dark:text-blue-300;
 }
 
-.ui-tag.green {
-  @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-300;
-}
-
-.ui-tag.orange {
-  @apply bg-orange-100 text-orange-800 dark:bg-orange-400/10 dark:text-orange-300;
-}
-
-.ui-tag.teal {
+.ui-tag.purple {
   @apply bg-violet-100 text-violet-800 dark:bg-violet-400/10 dark:text-violet-300;
 }
 
@@ -180,61 +141,39 @@ html.dark select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394A3B8' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* Floating nav */
+/* Floating navigation elements */
 .nav-section {
-  @apply rounded-full border border-slate-200/50 bg-white/80 shadow-lg backdrop-blur-sm transition-all duration-200 dark:border-slate-700/50 dark:bg-slate-800/80;
   height: 46px;
 }
 
 .nav-dot {
-  @apply relative h-2 w-2 rounded-full border-2 border-slate-600 transition-colors duration-200 hover:border-slate-800 dark:border-slate-400 dark:hover:border-slate-200;
+  @apply relative inline-block h-2 w-2 rounded-full bg-slate-500 transition-colors duration-200 hover:bg-slate-700 dark:bg-slate-400 dark:hover:bg-slate-200;
+}
+
+.nav-link.active,
+html.dark .nav-link.active {
+  @apply shadow-sm;
 }
 
 .nav-link.active {
-  @apply bg-slate-200/70 text-slate-900 shadow-sm;
+  @apply bg-slate-200/70 text-slate-900;
 }
-.nav-dot.active {
-  @apply h-2.5 w-2.5 border-blue-600 bg-blue-100 text-blue-900 shadow-lg;
+
+.nav-dot.active,
+html.dark .nav-dot.active {
+  @apply h-2.5 w-2.5 shadow-lg;
 }
 
 html.dark .nav-link.active {
-  @apply bg-slate-800/70 text-white shadow-sm;
+  @apply bg-slate-800/70 text-white;
 }
+
+.nav-dot.active {
+  @apply bg-blue-600 text-blue-900;
+}
+
 html.dark .nav-dot.active {
-  @apply h-2.5 w-2.5 border-blue-600 bg-blue-700 text-white shadow-lg;
-}
-
-/* Project Detail Page Components */
-.project-card {
-  @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-700/50 dark:bg-slate-800/50;
-}
-
-.summary-card {
-  @apply rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
-}
-
-.card-title {
-  @apply text-lg font-bold text-slate-900 dark:text-slate-200;
-}
-
-.section-title {
-  @apply text-4xl font-bold text-slate-900 dark:text-slate-100;
-}
-
-.section-divider {
-  @apply mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600;
-}
-
-.icon-circle {
-  @apply flex h-8 w-8 items-center justify-center rounded-lg;
-}
-
-.tech-tag {
-  @apply cursor-default rounded-md border border-slate-200 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-800/40 dark:text-slate-300 dark:hover:bg-slate-700;
-}
-
-.action-button {
-  @apply inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 font-medium text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-700/80;
+  @apply bg-blue-500 text-white;
 }
 
 /* Markdown content styling */

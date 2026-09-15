@@ -104,25 +104,24 @@ const recentProjects = projects
     </div>
 
     <!-- Scrollable Right Content -->
-    <div class="pt-32 lg:w-1/2 lg:py-32">
-      
+    <div class="pt-28 md:pr-24 lg:w-1/2 lg:py-28 lg:pr-20">
       <!-- About Section -->
       <SectionLayout id="section-about" heading="About" delay={2}>
         <div class="space-y-4">
-          <p class="mb-4 ui-p">
+          <p class="mb-4 text-slate-600 dark:text-slate-400">
             {text.about.intro}
           </p>
-          <p class="mb-4 ui-p">
+          <p class="mb-4 text-slate-600 dark:text-slate-400">
             {text.about.focus}
           </p>
-          <p class="ui-p">
+          <p class="text-slate-600 dark:text-slate-400">
             {text.about.personal}
           </p>
         </div>
       </SectionLayout>
 
       <!-- Experience & Education Section -->
-      <SectionLayout id="section-experience" heading="Experience" delay={3}>
+      <SectionLayout id="section-experience" heading="Experience & Education" delay={3}>
         <ol class="group/list">
           <li class="mb-12">
             <ExperienceCard
@@ -136,7 +135,7 @@ const recentProjects = projects
                   omni.map((item) => (
                     <li class="flex items-start">
                       <span class="mr-3 text-slate-600 dark:text-slate-400">•</span>
-                      <span class="ui-p">{item}</span>
+                      <span class="text-slate-600 dark:text-slate-400">{item}</span>
                     </li>
                   ))
                 }
@@ -151,7 +150,7 @@ const recentProjects = projects
               endDate={text.experience.university.endDate}
             >
               <div class="flex flex-wrap gap-2">
-                {coursework.map((course) => <span class="ui-tag green">{course}</span>)}
+                {coursework.map((course) => <span class="text-slate-700 dark:text-slate-500">{course}</span>)}
               </div>
             </ExperienceCard>
           </li>
@@ -166,14 +165,16 @@ const recentProjects = projects
   </div>
 
   <!-- Projects Section -->
-  <SectionLayout id="section-projects" heading="Featured Projects" delay={4} stickyHeading={true}>
+  <SectionLayout id="section-projects" heading="Featured Projects" delay={4}>
     <ul class="group/list">
       {
         recentProjects.map((project) => (
-          <li class="mb-12">
-            <CardGridView project={project} />
-          </li>
-            <hr class="my-12 border-slate-200 dark:border-slate-700" />
+          <>
+            <li class="mb-12">
+              <CardGridView project={project} />
+            </li>
+            <hr class="ui-divider my-12" />
+          </>
         ))
       }
     </ul>
@@ -185,7 +186,7 @@ const recentProjects = projects
   <!-- Skills & Technologies Section -->
   <SectionLayout id="section-skills" heading="Skills & Technologies" delay={5}>
     <div class="mb-8">
-      <p class="ui-p leading-relaxed">
+      <p class="leading-relaxed text-slate-600 dark:text-slate-400">
         {text.skillsIntro}
       </p>
     </div>
@@ -194,37 +195,37 @@ const recentProjects = projects
       <div class="space-y-3">
         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Languages</h3>
         <div class="flex flex-wrap gap-2">
-          {skills.languages.map((s) => <span class="ui-tag teal">{s}</span>)}
+          {skills.languages.map((s) => <span class="ui-tag purple">{s}</span>)}
         </div>
       </div>
       <div class="space-y-3">
         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Frontend</h3>
         <div class="flex flex-wrap gap-2">
-          {skills.frontend.map((s) => <span class="ui-tag teal">{s}</span>)}
+          {skills.frontend.map((s) => <span class="ui-tag purple">{s}</span>)}
         </div>
       </div>
       <div class="space-y-3">
         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Backend</h3>
         <div class="flex flex-wrap gap-2">
-          {skills.backend.map((s) => <span class="ui-tag teal">{s}</span>)}
+          {skills.backend.map((s) => <span class="ui-tag purple">{s}</span>)}
         </div>
       </div>
       <div class="space-y-3">
         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">DevOps</h3>
         <div class="flex flex-wrap gap-2">
-          {skills.devops.map((s) => <span class="ui-tag teal">{s}</span>)}
+          {skills.devops.map((s) => <span class="ui-tag purple">{s}</span>)}
         </div>
       </div>
       <div class="space-y-3">
         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Machine Learning</h3>
         <div class="flex flex-wrap gap-2">
-          {skills.ml.map((s) => <span class="ui-tag teal">{s}</span>)}
+          {skills.ml.map((s) => <span class="ui-tag purple">{s}</span>)}
         </div>
       </div>
       <div class="space-y-3">
         <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Tools & Analytics</h3>
         <div class="flex flex-wrap gap-2">
-          {skills.product_growth.map((s) => <span class="ui-tag teal">{s}</span>)}
+          {skills.product_growth.map((s) => <span class="ui-tag purple">{s}</span>)}
         </div>
       </div>
     </div>
@@ -233,7 +234,7 @@ const recentProjects = projects
   <!-- Research Interests Section -->
   <SectionLayout id="section-research" heading="Research & Interests" delay={6}>
     <div class="mb-8">
-      <p class="ui-p text-base leading-relaxed">
+      <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400">
         {text.researchIntro}
       </p>
     </div>
