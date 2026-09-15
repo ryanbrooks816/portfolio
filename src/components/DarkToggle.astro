@@ -4,28 +4,14 @@ import { Icon } from "astro-icon/components";
 
 <button
   id="theme-toggle"
-  class="relative inline-flex h-8 w-14 items-center rounded-full bg-slate-200 dark:bg-slate-700 transition-colors duration-200"
-  role="switch"
-  aria-checked="false"
+  type="button"
+  class="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200/70 bg-white/70 text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 dark:border-slate-600/70 dark:bg-slate-700/70 dark:text-slate-200 dark:hover:border-slate-500"
   aria-label="Toggle dark mode"
 >
   <span class="sr-only">Toggle dark mode</span>
 
-  <!-- Switch handle with icons -->
-  <span
-    class="h-6 w-6 transform rounded-full bg-white dark:bg-slate-800 shadow-lg transition-transform duration-200 translate-x-1 dark:translate-x-7 flex items-center justify-center"
-  >
-    <Icon
-      name="mdi:white-balance-sunny"
-      class="h-4 w-4 text-amber-500 opacity-100 dark:opacity-0 transition-opacity duration-200 absolute"
-    />
-    <Icon
-      name="mdi:moon-waning-crescent"
-      class="h-4 w-4 text-slate-300 opacity-0 dark:opacity-100 transition-opacity duration-200 absolute"
-    />
-  </span>
-
-  <div class="absolute inset-0 flex items-center justify-between px-2"></div>
+  <Icon name="mdi:white-balance-sunny" class="h-4 w-4 text-amber-500 dark:hidden" />
+  <Icon name="mdi:moon-waning-crescent" class="hidden h-4 w-4 text-slate-200 dark:block" />
 </button>
 
 <script>
@@ -51,6 +37,8 @@ import { Icon } from "astro-icon/components";
 
     const btn = document.getElementById("theme-toggle");
     if (!btn) return;
+
+    btn.setAttribute("aria-label", root.classList.contains("dark") ? "Switch to light mode" : "Switch to dark mode");
 
     const ANIM_DURATION = 700; // ms
 
@@ -132,6 +120,7 @@ import { Icon } from "astro-icon/components";
       } else {
         root.classList.remove("dark");
       }
+      btn.setAttribute("aria-label", targetIsDark ? "Switch to light mode" : "Switch to dark mode");
 
       createGlassyRipple(cx, cy, targetIsDark);
 
