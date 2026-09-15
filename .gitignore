@@ -7,6 +7,7 @@ dist
 /.astro
 SECURITY.md
 /.wrangler
+wrangler.jsonc
 
 # Synced from the private portfolio-data repository.
 /portfolio-projects/
