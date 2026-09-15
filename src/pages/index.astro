@@ -1,5 +1,5 @@
 ---
-import { text, omni, coursework, interests, skills } from "../data/text";
+import { text, interests, skills } from "../data/text";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionLayout from "../layouts/SectionLayout.astro";
@@ -142,37 +142,13 @@ const recentProjects = projects
       <!-- Experience & Education Section -->
       <SectionLayout id="section-experience" heading="Experience & Education" delay={3}>
         <ol class="group/list">
-          <li class="mb-12">
-            <ExperienceCard
-              title="OMNI Digital Services"
-              description="Full-Stack Developer"
-              date="2023-07"
-              endDate="Present"
-            >
-              <ul class="space-y-3 text-sm">
-                {
-                  omni.map((item) => (
-                    <li class="flex items-start">
-                      <span class="mr-3 text-slate-600 dark:text-slate-400">•</span>
-                      <span class="text-slate-600 dark:text-slate-400">{item}</span>
-                    </li>
-                  ))
-                }
-              </ul>
-            </ExperienceCard>
-          </li>
-          <li class="mb-12">
-            <ExperienceCard
-              title={text.experience.university.name}
-              description={text.experience.university.description}
-              date={text.experience.university.startDate}
-              endDate={text.experience.university.endDate}
-            >
-              <div class="flex flex-wrap gap-2">
-                {coursework.map((course) => <span class="text-slate-700 dark:text-slate-500">{course}</span>)}
-              </div>
-            </ExperienceCard>
-          </li>
+          {
+            text.experience.map((entry) => (
+              <li class="mb-12">
+                <ExperienceCard {...entry} />
+              </li>
+            ))
+          }
 
           <!-- Resume Link -->
           <div class="mt-12">
@@ -205,72 +181,33 @@ const recentProjects = projects
   <!-- Skills & Technologies Section -->
   <SectionLayout id="section-skills" heading="Skills & Technologies" delay={5}>
     <div class="mb-8">
-      <p class="leading-relaxed text-slate-600 dark:text-slate-400">
+      <p class="leading-relaxed text-slate-600 dark:text-slate-400 max-w-2xl">
         {text.skillsIntro}
       </p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="space-y-3">
-        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Languages</h3>
-        <div class="flex flex-wrap gap-2">
-          {skills.languages.map((s) => <span class="ui-tag purple">{s}</span>)}
-        </div>
-      </div>
-      <div class="space-y-3">
-        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Frontend</h3>
-        <div class="flex flex-wrap gap-2">
-          {skills.frontend.map((s) => <span class="ui-tag purple">{s}</span>)}
-        </div>
-      </div>
-      <div class="space-y-3">
-        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Backend</h3>
-        <div class="flex flex-wrap gap-2">
-          {skills.backend.map((s) => <span class="ui-tag purple">{s}</span>)}
-        </div>
-      </div>
-      <div class="space-y-3">
-        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">DevOps</h3>
-        <div class="flex flex-wrap gap-2">
-          {skills.devops.map((s) => <span class="ui-tag purple">{s}</span>)}
-        </div>
-      </div>
-      <div class="space-y-3">
-        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Machine Learning</h3>
-        <div class="flex flex-wrap gap-2">
-          {skills.ml.map((s) => <span class="ui-tag purple">{s}</span>)}
-        </div>
-      </div>
-      <div class="space-y-3">
-        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">Tools & Analytics</h3>
-        <div class="flex flex-wrap gap-2">
-          {skills.product_growth.map((s) => <span class="ui-tag purple">{s}</span>)}
-        </div>
-      </div>
+      {
+        skills.map((skill) => (
+          <div class="space-y-3">
+            <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">{skill.name}</h3>
+            <div class="flex flex-wrap gap-2">
+              {skill.items.map((item) => (
+                <span class="ui-tag purple">{item}</span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
     </div>
   </SectionLayout>
 
   <!-- Research Interests Section -->
   <SectionLayout id="section-research" heading="Research & Interests" delay={6}>
     <div class="mb-8">
-      <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400">
+      <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400 max-w-2xl">
         {text.researchIntro}
       </p>
-    </div>
-
-    <div class="space-y-6">
-      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-200">Current Focus Areas</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 gap-4">
-        {
-          interests.map((interest) => (
-            <div class="group bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-              <h4 class="text-sm font-medium text-slate-900 dark:text-slate-100 group-hover:text-slate-800 dark:group-hover:text-white transition-colors">
-                {interest}
-              </h4>
-            </div>
-          ))
-        }
-      </div>
     </div>
   </SectionLayout>
 </BaseLayout>
