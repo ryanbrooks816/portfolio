@@ -64,7 +64,7 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
   </div>
 
   <!-- Grid View -->
-  <div id="projects-grid" class="mt-8 hidden grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:gap-x-10 lg:gap-y-14">
+  <div id="projects-grid" class="mt-8 hidden grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:gap-x-10 lg:gap-y-14">
     {sortedProjects.map((p) => <CardGridView project={p} />)}
   </div>
 

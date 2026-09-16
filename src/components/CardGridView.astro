@@ -1,27 +1,40 @@
 ---
 import { Icon } from "astro-icon/components";
 
-import { formatProjectDate, getProjectThumbnail, PROJECT_THUMBNAIL_PLACEHOLDER } from "../data/projects";
+import { formatProjectDate, getProjectThumbnail } from "../data/projects";
 import type { Project } from "../data/projects";
 
 const { project } = Astro.props as { project: Project };
-const thumbnailUrl = getProjectThumbnail(project) || PROJECT_THUMBNAIL_PLACEHOLDER;
+const thumbnailUrl = getProjectThumbnail(project);
 const date = formatProjectDate(project.data.date);
 ---
 
-<article class="group relative min-w-0">
+<article
+  class="group relative min-w-0"
+  data-title={project.data.title}
+  data-p={project.data.description}
+  data-type={project.data.type}
+  data-tags={project.data.tags.join(",")}
+  data-featured={project.data.featured ? "true" : "false"}
+>
   <div class="project-hover-surface"></div>
 
   <a href={`/projects/${project.id}`} class="relative z-10 block">
     <div
       class="mb-5 aspect-video overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-700/50 dark:bg-slate-800"
     >
-      <img
-        src={thumbnailUrl}
-        alt={project.data.title + " image"}
-        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
-        loading="lazy"
-      />
+      {
+        thumbnailUrl ? (
+          <img
+            src={thumbnailUrl}
+            alt={project.data.title + " image"}
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+            loading="lazy"
+          />
+        ) : (
+          <div class="h-full w-full bg-slate-100 dark:bg-slate-800" aria-hidden="true" />
+        )
+      }
     </div>
 
     <div class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
