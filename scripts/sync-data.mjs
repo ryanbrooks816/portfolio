@@ -31,15 +31,16 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
+const rootDir = resolve(scriptDir, "..");
 
-const dataRepo = resolve(scriptDir, "..", "portfolio-data");
+const dataRepo = resolve(rootDir, "..", "portfolio-data");
 const sourceRoot = join(dataRepo, "projects");
 const photosRoot = join(dataRepo, "photos");
 const resumeSource = join(dataRepo, "resume.pdf");
 const textSource = join(dataRepo, "text.ts");
 
-const contentRoot = join(scriptDir, "src", "content", "projects");
-const publicRoot = join(scriptDir, "public", "projects");
+const contentRoot = join(rootDir, "src", "content", "projects");
+const publicRoot = join(rootDir, "public", "projects");
 
 async function exists(path) {
   try {
@@ -86,20 +87,20 @@ async function main() {
   await mkdir(contentRoot, { recursive: true });
   await mkdir(publicRoot, { recursive: true });
 
-  await cp(textSource, join(scriptDir, "src", "data", "text.ts"));
-  await cp(resumeSource, join(scriptDir, "public", "resume.pdf"));
+  await cp(textSource, join(rootDir, "src", "data", "text.ts"));
+  await cp(resumeSource, join(rootDir, "public", "resume.pdf"));
 
-  const existingPublicFiles = await readdir(join(scriptDir, "public"), { withFileTypes: true });
+  const existingPublicFiles = await readdir(join(rootDir, "public"), { withFileTypes: true });
   for (const entry of existingPublicFiles) {
     if (entry.isFile() && /^photo\./i.test(entry.name)) {
-      await rm(join(scriptDir, "public", entry.name), { force: true });
+      await rm(join(rootDir, "public", entry.name), { force: true });
     }
   }
 
   const photoEntries = await readdir(photosRoot, { withFileTypes: true });
   for (const entry of photoEntries) {
     if (!entry.isFile()) continue;
-    await cp(join(photosRoot, entry.name), join(scriptDir, "public", entry.name));
+    await cp(join(photosRoot, entry.name), join(rootDir, "public", entry.name));
     console.log(`[sync] photo ${entry.name}`);
   }
 
