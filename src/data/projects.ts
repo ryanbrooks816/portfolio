@@ -24,8 +24,11 @@ export async function renderProject(project: CollectionEntry<"projects">) {
  * @returns Properly formatted URL
  */
 function resolveProjectLink(url: string, projectSlug: string): string {
-  // Check if URL is absolute (starts with http/https or protocol-relative //)
+  // Keep absolute URLs and root-relative paths as-is.
   if (/^(https?:)?\/\//.test(url)) {
+    return url;
+  }
+  if (url.startsWith("/")) {
     return url;
   }
 
