@@ -29,6 +29,7 @@ if (!project) {
 const { Content } = await renderProject(project);
 
 const thumbnailUrl = getProjectThumbnail(project);
+const projectLinks = getProjectLinks(project);
 ---
 
 <BaseLayout title={`${project.data.title} | Portfolio`}>
@@ -69,30 +70,30 @@ const thumbnailUrl = getProjectThumbnail(project);
       <p class="mt-6 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
         {project.data.description}
       </p>
-
-      <!-- Action Links -->
-      {
-        getProjectLinks(project).length > 0 && (
-          <div class="mt-8 flex flex-wrap gap-3">
-            {getProjectLinks(project).map((link) => (
-              <a
-                href={link.url}
-                class={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all lg:px-5 lg:py-3 lg:text-base ${
-                  link.isPrimary
-                    ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-                    : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon name={link.icon} class="h-4 w-4 lg:h-5 lg:w-5" />
-                <span>{link.label}</span>
-              </a>
-            ))}
-          </div>
-        )
-      }
     </div>
+
+    <!-- Action Links -->
+    {
+      getProjectLinks(project).length > 0 && (
+        <div class="mt-8 flex flex-wrap gap-4">
+          {getProjectLinks(project).map((link) => (
+            <a
+              href={link.url}
+              class={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all lg:px-5 lg:py-3 lg:text-base ${
+                link.isPrimary
+                  ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                  : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name={link.icon} class="h-4 w-4 lg:h-5 lg:w-5" />
+              <span>{link.label}</span>
+            </a>
+          ))}
+        </div>
+      )
+    }
 
     <!-- Project Thumbnail -->
     {
@@ -134,7 +135,7 @@ const thumbnailUrl = getProjectThumbnail(project);
       </div>
 
       {/* Sidebar */}
-      <div class="space-y-8">
+      <aside class="space-y-8 self-start lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto">
         <!-- Technologies -->
         <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
           <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Technologies</h3>
@@ -177,7 +178,33 @@ const thumbnailUrl = getProjectThumbnail(project);
             </div>
           )
         }
-      </div>
+
+        <!-- Project Links -->
+        {
+          projectLinks.length > 0 && (
+            <div class="rounded-lg border border-slate-300 p-6 dark:border-slate-700">
+              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Project Links</h3>
+              <div class="mt-8 flex flex-wrap gap-4">
+                {getProjectLinks(project).map((link) => (
+                  <a
+                    href={link.url}
+                    class={`inline-flex items-center gap-2 rounded-lg text-sm font-medium transition-all lg:px-5 lg:py-2.5 ${
+                      link.isPrimary
+                        ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                        : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name={link.icon} class="h-4 w-4 lg:h-5 lg:w-5" />
+                    <span>{link.label}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </aside>
     </div>
 
     <!-- Gallery Section -->
