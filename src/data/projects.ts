@@ -90,6 +90,9 @@ export function formatProjectDate(date?: Date): string {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     year: "numeric",
+    // Content dates are calendar dates. Keep them in UTC so a local timezone
+    // cannot turn the first day of a month into the previous month.
+    timeZone: "UTC",
   }).format(date);
 }
 
