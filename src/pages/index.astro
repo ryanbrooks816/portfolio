@@ -14,10 +14,14 @@ import { getProjects } from "../data/projects";
 
 const projects = await getProjects();
 
-// Sort projects by date (most recent first) and take top 4
-const recentProjects = projects
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-  .slice(0, 4);
+// Find the latest 4 projects, taking featured projects first
+const numProjects = 4;
+const sortedProjects = projects.toSorted((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const selectedProjects = [
+  ...sortedProjects.filter((project) => project.data.featured),
+  ...sortedProjects.filter((project) => !project.data.featured),
+].slice(0, numProjects);
 ---
 
 <BaseLayout title="Home | Portfolio">
@@ -165,7 +169,7 @@ const recentProjects = projects
   <SectionLayout id="section-projects" heading="Featured Projects" delay={4}>
     <ul class="group/list">
       {
-        recentProjects.map((project) => (
+        selectedProjects.map((project) => (
           <>
             <li class="mb-12">
               <FeaturedProjectCard project={project} />
