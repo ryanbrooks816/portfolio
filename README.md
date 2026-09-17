@@ -14,9 +14,9 @@ parent/
 └── portfolio-data/
     ├── projects/
     │   ├── project-name/
-    │   │   ├── project.md
+    │   │   ├── project.md (or project.mdx)
     │   │   └── assets...
-    │   └── optional-flat-project.md
+    │   └── optional-flat-project.md(x)
     ├── photos/
     ├── resume.pdf
     └── text.ts
@@ -35,6 +35,28 @@ npm run dev
 ```
 
 Run `npm run sync-data` whenever the private data changes. It removes and recreates the generated project content, then copies the resume, photos, and text data into the locations expected by the site.
+
+## Inline project galleries
+
+Project content can use Astro components inline by using an `.mdx` file. Import the gallery from the content file and place it anywhere between paragraphs:
+
+```mdx
+import Gallery from "../../components/Gallery.astro";
+
+Here is some context before the screenshots.
+
+<Gallery
+  label="Project screenshots"
+  images={[
+    { src: "/projects/example/dashboard.png", alt: "Dashboard overview", caption: "The dashboard overview" },
+    { src: "/projects/example/settings.png", alt: "Settings screen", caption: "Configurable project settings" },
+  ]}
+/>
+
+The explanation can continue here after the gallery.
+```
+
+`images` also accepts an array of paths with optional `captions` and a shared `alt` prefix, but image objects are recommended so every image has meaningful alternative text.
 
 ## Deployment
 

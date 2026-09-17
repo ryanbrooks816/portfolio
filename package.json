@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/mdx": "^4.3.14",
     "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/mdi": "^1.2.3",
     "aos": "^2.3.4",
