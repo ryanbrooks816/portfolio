@@ -128,6 +128,169 @@ html.dark .animated-gradient {
   @apply bg-green-100 text-green-800 dark:bg-green-600/10 dark:text-green-300;
 }
 
+/* Project gallery */
+.gallery {
+  --gallery-border: rgb(203 213 225);
+  --gallery-surface: rgb(248 250 252);
+  --gallery-control: rgb(15 23 42 / 0.84);
+  --gallery-caption: rgb(51 65 85);
+  --gallery-focus: rgb(79 70 229);
+  margin: 2rem 0;
+  outline: none;
+}
+
+.gallery:focus-visible {
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 3px var(--gallery-focus);
+}
+
+.gallery__viewport {
+  position: relative;
+  display: grid;
+  min-height: 15rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--gallery-border);
+  border-radius: 0.75rem;
+  background: var(--gallery-surface);
+}
+
+.gallery .gallery__image {
+  display: block;
+  margin: 0;
+  width: 100%;
+  max-height: min(70vh, 42rem);
+  object-fit: contain;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.gallery__arrow {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--gallery-control);
+  color: white;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.9;
+  transform: translateY(-50%);
+  transition:
+    background-color 150ms ease,
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.gallery__arrow:hover {
+  background: rgb(15 23 42);
+  opacity: 1;
+}
+
+.gallery__arrow:focus-visible,
+.gallery__thumbnail:focus-visible {
+  outline: 3px solid var(--gallery-focus);
+  outline-offset: 2px;
+}
+
+.gallery__arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.gallery__arrow--previous {
+  left: 0.75rem;
+}
+
+.gallery__arrow--next {
+  right: 0.75rem;
+}
+
+.gallery .gallery__caption {
+  margin: 0.75rem 0 0;
+  color: var(--gallery-caption);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.gallery__thumbnails {
+  display: flex;
+  gap: 0.625rem;
+  margin-top: 0.875rem;
+  overflow-x: auto;
+  padding: 0.25rem;
+  scrollbar-width: thin;
+}
+
+.gallery__thumbnails > [role="listitem"] {
+  flex: 0 0 5.25rem;
+}
+
+.gallery__thumbnail {
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  background: var(--gallery-surface);
+  cursor: pointer;
+  opacity: 0.65;
+  transition:
+    border-color 150ms ease,
+    opacity 150ms ease;
+}
+
+.gallery__thumbnail:hover,
+.gallery__thumbnail.is-active {
+  border-color: var(--gallery-focus);
+  opacity: 1;
+}
+
+.gallery .gallery__thumbnail img {
+  display: block;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (min-width: 640px) {
+  .gallery__thumbnails > [role="listitem"] {
+    flex-basis: 6.5rem;
+  }
+}
+
+html.dark .gallery {
+  --gallery-border: rgb(51 65 85);
+  --gallery-surface: rgb(30 41 59);
+  --gallery-control: rgb(226 232 240 / 0.88);
+  --gallery-caption: rgb(226 232 240);
+  --gallery-focus: rgb(129 140 248);
+}
+
+html.dark .gallery__arrow {
+  color: rgb(15 23 42);
+}
+
+html.dark .gallery__arrow:hover {
+  background: rgb(248 250 252);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__arrow,
+  .gallery__thumbnail {
+    transition: none;
+  }
+}
+
 input,
 select {
   @apply rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100;

@@ -1,0 +1,166 @@
+---
+export type GalleryImage = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+export interface Props {
+  /** Images can be objects with alt text, or simple paths with captions supplied separately. */
+  images: Array<GalleryImage | string>;
+  captions?: string[];
+  /** Used for simple string image paths that do not have their own alt text. */
+  alt?: string;
+  label?: string;
+}
+
+const { images, captions, alt = "Gallery image", label = "Image gallery" } = Astro.props;
+
+const normalizedImages = images.map((image, index) =>
+  typeof image === "string"
+    ? {
+        src: image,
+        alt: `${alt} ${index + 1}`,
+        caption: captions?.[index],
+      }
+    : image,
+);
+
+const hasMultipleImages = normalizedImages.length > 1;
+---
+
+{
+  normalizedImages.length > 0 && (
+    <div class="gallery" data-gallery role="region" aria-label={label} tabindex="0">
+      <div class="gallery__viewport">
+        <img
+          class="gallery__image"
+          data-gallery-image
+          src={normalizedImages[0].src}
+          alt={normalizedImages[0].alt}
+          loading="eager"
+          decoding="async"
+          draggable="false"
+        />
+
+        {hasMultipleImages && (
+          <>
+            <button
+              class="gallery__arrow gallery__arrow--previous"
+              type="button"
+              data-gallery-previous
+              aria-label="Previous image"
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+            <button class="gallery__arrow gallery__arrow--next" type="button" data-gallery-next aria-label="Next image">
+              <span aria-hidden="true">→</span>
+            </button>
+          </>
+        )}
+      </div>
+
+      <p class="gallery__caption" data-gallery-caption hidden={!normalizedImages[0].caption}>
+        {normalizedImages[0].caption}
+      </p>
+
+      {hasMultipleImages && (
+        <div class="gallery__thumbnails" data-gallery-thumbnails role="list" aria-label="Choose an image">
+          {normalizedImages.map((image, index) => (
+            <div role="listitem">
+              <button
+                class:list={{ gallery__thumbnail: true, "is-active": index === 0 }}
+                type="button"
+                data-gallery-thumbnail
+                data-index={index}
+                data-src={image.src}
+                data-alt={image.alt}
+                data-caption={image.caption}
+                aria-label={`Show image ${index + 1}`}
+                aria-current={index === 0 ? "true" : undefined}
+              >
+                <img src={image.src} alt="" loading="lazy" decoding="async" draggable="false" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p class="sr-only" data-gallery-status aria-live="polite">
+        Showing image 1 of {normalizedImages.length}: {normalizedImages[0].alt}
+      </p>
+    </div>
+  )
+}
+
+<script is:inline>
+  (() => {
+    const script = document.currentScript;
+    const gallery = script?.previousElementSibling;
+
+    if (!(gallery instanceof HTMLElement) || !gallery.matches("[data-gallery]")) return;
+
+    const image = gallery.querySelector("[data-gallery-image]");
+    const caption = gallery.querySelector("[data-gallery-caption]");
+    const status = gallery.querySelector("[data-gallery-status]");
+    const thumbnails = Array.from(gallery.querySelectorAll("[data-gallery-thumbnail]"));
+    const previous = gallery.querySelector("[data-gallery-previous]");
+    const next = gallery.querySelector("[data-gallery-next]");
+
+    if (!(image instanceof HTMLImageElement) || thumbnails.length < 2) return;
+
+    let currentIndex = 0;
+
+    const showImage = (nextIndex) => {
+      currentIndex = (nextIndex + thumbnails.length) % thumbnails.length;
+      const thumbnail = thumbnails[currentIndex];
+
+      if (!(thumbnail instanceof HTMLElement)) return;
+
+      const { src, alt, caption: captionText } = thumbnail.dataset;
+      if (!src) return;
+
+      image.src = src;
+      image.alt = alt || "";
+
+      thumbnails.forEach((item, index) => {
+        const isActive = index === currentIndex;
+        item.classList.toggle("is-active", isActive);
+        if (isActive) item.setAttribute("aria-current", "true");
+        else item.removeAttribute("aria-current");
+      });
+
+      if (caption instanceof HTMLElement) {
+        caption.textContent = captionText || "";
+        caption.hidden = !captionText;
+      }
+
+      if (status instanceof HTMLElement) {
+        status.textContent = `Showing image ${currentIndex + 1} of ${thumbnails.length}: ${alt || "Gallery image"}`;
+      }
+    };
+
+    previous?.addEventListener("click", () => showImage(currentIndex - 1));
+    next?.addEventListener("click", () => showImage(currentIndex + 1));
+
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener("click", () => showImage(index));
+    });
+
+    gallery.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        showImage(currentIndex - 1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        showImage(currentIndex + 1);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        showImage(0);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        showImage(thumbnails.length - 1);
+      }
+    });
+  })();
+</script>
