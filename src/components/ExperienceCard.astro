@@ -17,7 +17,7 @@ function formatDate(date?: Date | string) {
       const year = Number(monthDate[1]);
       const month = Number(monthDate[2]);
       if (month >= 1 && month <= 12) {
-        return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(
+        return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" }).format(
           new Date(year, month - 1, 1),
         );
       }
@@ -26,10 +26,10 @@ function formatDate(date?: Date | string) {
     // Try to parse as date
     const dateObj = new Date(date);
     if (isNaN(dateObj.getTime())) return date; // Not a valid date string
-    return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(dateObj);
+    return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" }).format(dateObj);
   }
   // If it's a Date object
-  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
+  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" }).format(date);
 }
 ---
 
