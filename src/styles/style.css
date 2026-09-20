@@ -25,8 +25,8 @@ html {
 }
 
 html.dark .glass {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  border: 1px solid rgba(255, 255, 255, 0.11);
 }
 
 /* Hero gradient */
@@ -49,10 +49,10 @@ html.dark .glass {
 html.dark .animated-gradient {
   background: linear-gradient(
     135deg,
-    rgba(88, 28, 135, 0.08),
-    rgba(14, 165, 233, 0.06),
-    rgba(99, 102, 241, 0.07),
-    rgba(236, 72, 153, 0.05)
+    rgba(255, 255, 255, 0.025),
+    rgba(148, 148, 148, 0.018),
+    rgba(255, 255, 255, 0.012),
+    rgba(92, 92, 92, 0.02)
   );
   animation: gradientShift 18s ease infinite;
 }
@@ -71,15 +71,24 @@ html.dark .animated-gradient {
 
 /* Common components */
 .ui-divider {
-  @apply border-slate-200 dark:border-slate-700;
+  @apply border-slate-200 dark:border-neutral-800;
 }
 
 .section-heading {
   @apply mb-8 border-b pb-4;
 }
 
+html.dark .section-heading h2 {
+  color: rgb(201 202 218 / 0.92);
+}
+
 .project-title {
-  @apply inline-flex items-baseline text-xl font-semibold leading-tight tracking-tight text-slate-900 no-underline transition-colors hover:text-gray-700 focus-visible:text-gray-700 group-hover:text-gray-700 dark:text-white dark:hover:text-blue-300 dark:focus-visible:text-blue-300 dark:group-hover:text-blue-300;
+  @apply inline-flex items-baseline text-xl font-semibold leading-tight tracking-tight text-slate-900 no-underline transition-colors hover:text-gray-700 focus-visible:text-gray-700 group-hover:text-gray-700 dark:text-neutral-100 dark:hover:text-neutral-300 dark:focus-visible:text-neutral-300 dark:group-hover:text-neutral-300;
+}
+html.dark .project-title:hover,
+html.dark .project-title:focus-visible,
+html.dark .group:hover .project-title {
+  color: rgb(174 180 224 / 0.88);
 }
 
 .project-title-arrow {
@@ -87,15 +96,15 @@ html.dark .animated-gradient {
 }
 
 .project-description {
-  @apply text-sm font-normal leading-relaxed text-slate-700 dark:text-slate-500;
+  @apply text-sm font-normal leading-relaxed text-slate-700 dark:text-neutral-400;
 }
 
 .project-hover-surface {
-  @apply absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-slate-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.10)];
+  @apply absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-neutral-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(163,163,163,0.10)];
 }
 
 .project-date {
-  @apply inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400;
+  @apply inline-flex items-center gap-2 text-sm text-slate-600 dark:text-neutral-400;
 }
 
 .ui-button-primary,
@@ -104,11 +113,11 @@ html.dark .animated-gradient {
 }
 
 .ui-button-primary {
-  @apply bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700;
+  @apply bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 dark:bg-neutral-200 dark:text-neutral-950 dark:hover:bg-white;
 }
 
 .ui-button-secondary {
-  @apply border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800;
+  @apply border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800;
 }
 
 .ui-tag {
@@ -116,15 +125,30 @@ html.dark .animated-gradient {
 }
 
 .ui-tag.blue {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-400/10 dark:text-blue-300;
+  @apply bg-blue-100 text-blue-800 dark:bg-neutral-800/80 dark:text-neutral-300;
+}
+
+html.dark .ui-tag.blue {
+  background: rgb(96 165 250 / 0.12);
+  color: rgb(147 197 253 / 0.8);
 }
 
 .ui-tag.purple {
-  @apply bg-violet-100 text-violet-800 dark:bg-violet-400/10 dark:text-violet-300;
+  @apply bg-violet-100 text-violet-800 dark:bg-neutral-800/80 dark:text-neutral-300;
+}
+
+html.dark .ui-tag.purple {
+  background: rgb(139 92 246 / 0.13);
+  color: rgb(196 181 253 / 0.82);
 }
 
 .ui-tag.green {
-  @apply bg-green-100 text-green-800 dark:bg-green-600/10 dark:text-green-300;
+  @apply bg-green-100 text-green-800 dark:bg-neutral-800/80 dark:text-neutral-300;
+}
+
+html.dark .ui-tag.green {
+  background: rgb(34 197 94 / 0.1);
+  color: rgb(134 239 172 / 0.78);
 }
 
 /* Project gallery */
@@ -268,19 +292,19 @@ html.dark .animated-gradient {
 }
 
 html.dark .gallery {
-  --gallery-border: rgb(51 65 85);
-  --gallery-surface: rgb(30 41 59);
-  --gallery-control: rgb(226 232 240 / 0.88);
-  --gallery-caption: rgb(226 232 240);
-  --gallery-focus: rgb(129 140 248);
+  --gallery-border: rgb(64 64 64);
+  --gallery-surface: rgb(24 24 24);
+  --gallery-control: rgb(229 229 229 / 0.9);
+  --gallery-caption: rgb(212 212 212);
+  --gallery-focus: rgb(163 163 163);
 }
 
 html.dark .gallery__arrow {
-  color: rgb(15 23 42);
+  color: rgb(23 23 23);
 }
 
 html.dark .gallery__arrow:hover {
-  background: rgb(248 250 252);
+  background: rgb(250 250 250);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -292,7 +316,7 @@ html.dark .gallery__arrow:hover {
 
 input,
 select {
-  @apply rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-100;
+  @apply rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-transparent focus:ring-2 focus:ring-neutral-500 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-neutral-100;
   padding-right: 2rem;
 }
 
@@ -313,7 +337,7 @@ html.dark select {
 }
 
 .nav-dot {
-  @apply relative inline-block h-2 w-2 rounded-full bg-slate-500 transition-colors duration-200 hover:bg-slate-700 dark:bg-slate-400 dark:hover:bg-slate-200;
+  @apply relative inline-block h-2 w-2 rounded-full bg-slate-500 transition-colors duration-200 hover:bg-slate-700 dark:bg-neutral-500 dark:hover:bg-neutral-200;
 }
 
 .nav-link.active,
@@ -331,7 +355,7 @@ html.dark .nav-dot.active {
 }
 
 html.dark .nav-link.active {
-  @apply bg-slate-800/70 text-white;
+  @apply bg-neutral-800/80 text-neutral-100;
 }
 
 .nav-dot.active {
@@ -339,35 +363,35 @@ html.dark .nav-link.active {
 }
 
 html.dark .nav-dot.active {
-  @apply bg-blue-500 text-white;
+  @apply bg-neutral-200 text-neutral-950;
 }
 
 /* Markdown content styling */
 .markdown {
-  @apply mx-auto max-w-3xl px-4 text-base text-slate-700 dark:text-slate-300;
+  @apply mx-auto max-w-3xl px-4 text-base text-slate-700 dark:text-neutral-300;
 }
 
 .markdown h1 {
-  @apply mb-4 mt-8 text-4xl font-bold text-slate-900 dark:text-slate-100;
+  @apply mb-4 mt-8 text-4xl font-bold text-slate-900 dark:text-neutral-100;
 }
 .markdown h2 {
-  @apply mb-3 mt-6 text-3xl font-semibold text-slate-900 dark:text-slate-100;
+  @apply mb-3 mt-6 text-3xl font-semibold text-slate-900 dark:text-neutral-100;
 }
 .markdown h3 {
-  @apply mb-2 mt-4 text-2xl font-semibold text-slate-800 dark:text-slate-200;
+  @apply mb-2 mt-4 text-2xl font-semibold text-slate-800 dark:text-neutral-200;
 }
 .markdown h4 {
-  @apply mb-2 mt-4 text-xl font-semibold text-slate-700 dark:text-slate-300;
+  @apply mb-2 mt-4 text-xl font-semibold text-slate-700 dark:text-neutral-300;
 }
 .markdown h5 {
-  @apply mb-2 mt-4 text-lg font-semibold text-slate-700 dark:text-slate-300;
+  @apply mb-2 mt-4 text-lg font-semibold text-slate-700 dark:text-neutral-300;
 }
 .markdown h6 {
-  @apply mb-2 mt-4 text-base font-semibold text-slate-700 dark:text-slate-300;
+  @apply mb-2 mt-4 text-base font-semibold text-slate-700 dark:text-neutral-300;
 }
 
 .markdown p {
-  @apply mb-4 leading-relaxed text-slate-700 dark:text-slate-300;
+  @apply mb-4 leading-relaxed text-slate-700 dark:text-neutral-300;
 }
 
 .markdown ul,
@@ -385,7 +409,16 @@ html.dark .nav-dot.active {
 }
 
 .markdown a {
-  @apply text-blue-600 underline transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300;
+  @apply text-blue-600 underline transition-colors hover:text-blue-800 dark:text-neutral-300 dark:hover:text-neutral-100;
+}
+
+html.dark .markdown a {
+  color: rgb(147 197 253 / 0.84);
+}
+
+html.dark .markdown a:hover,
+html.dark .markdown a:focus-visible {
+  color: rgb(191 219 254 / 0.94);
 }
 
 .markdown a::after {
@@ -419,11 +452,11 @@ html.dark .nav-dot.active {
 }
 
 .markdown code {
-  @apply rounded bg-slate-100 px-1 py-0.5 font-mono text-sm dark:bg-slate-800;
+  @apply rounded bg-slate-100 px-1 py-0.5 font-mono text-sm dark:bg-neutral-800;
 }
 
 .markdown pre {
-  @apply mb-4 overflow-x-auto rounded bg-slate-100 p-4 dark:bg-slate-800;
+  @apply mb-4 overflow-x-auto rounded bg-slate-100 p-4 dark:bg-neutral-800;
 }
 
 .markdown img {
@@ -435,8 +468,8 @@ html.dark .nav-dot.active {
 }
 .markdown th,
 .markdown td {
-  @apply border border-slate-200 px-4 py-2 dark:border-slate-700;
+  @apply border border-slate-200 px-4 py-2 dark:border-neutral-800;
 }
 .markdown th {
-  @apply bg-slate-50 font-semibold dark:bg-slate-800;
+  @apply bg-slate-50 font-semibold dark:bg-neutral-800;
 }

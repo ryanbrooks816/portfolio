@@ -34,14 +34,14 @@ const selectedProjects = [
     >
       <div>
         <h1
-          class="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl"
+          class="text-4xl font-bold tracking-tight text-slate-900 dark:text-neutral-100 sm:text-5xl"
           data-aos="fade-up"
           data-aos-delay="100"
         >
           <a href="/">{text.name}</a>
         </h1>
         <h2
-          class="mt-4 text-base font-bold tracking-tight text-slate-700 dark:text-slate-200"
+          class="mt-4 text-base font-bold tracking-tight text-slate-700 dark:text-neutral-200"
           data-aos="fade-up"
           data-aos-delay="200"
         >
@@ -55,7 +55,7 @@ const selectedProjects = [
           }
         </h2>
         <p
-          class="mt-6 max-w-md text-lg leading-normal text-slate-600 dark:text-slate-400"
+          class="mt-6 max-w-md text-lg leading-normal text-slate-600 dark:text-neutral-400"
           data-aos="fade-up"
           data-aos-delay="300"
         >
@@ -64,7 +64,7 @@ const selectedProjects = [
 
         <!-- Key Interests -->
         <div class="mt-8" data-aos="fade-up" data-aos-delay="400">
-          <h3 class="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-600 dark:text-slate-300">
+          <h3 class="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-600 dark:text-neutral-300">
             Interests
           </h3>
           <div class="flex flex-wrap gap-2">
@@ -77,7 +77,7 @@ const selectedProjects = [
       <ul class="ml-1 mt-8 flex items-center" aria-label="Social media" data-aos="fade-up" data-aos-delay="500">
         <li class="mr-5 text-xs shrink-0">
           <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
             href={text.contact.github}
             target="_blank"
             rel="noreferrer noopener"
@@ -90,7 +90,7 @@ const selectedProjects = [
         </li>
         <li class="mr-5 text-xs shrink-0">
           <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
             href={text.contact.linkedin}
             target="_blank"
             rel="noreferrer noopener"
@@ -103,7 +103,7 @@ const selectedProjects = [
         </li>
         <li class="mr-5 text-xs shrink-0">
           <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
             href={`mailto:${text.contact.email}`}
             aria-label="Email (opens your email client)"
             title="Email"
@@ -114,7 +114,7 @@ const selectedProjects = [
         </li>
         <li class="mr-5 text-xs shrink-0">
           <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
             href={text.contact.resume}
             target="_blank"
             rel="noreferrer noopener"
@@ -133,13 +133,13 @@ const selectedProjects = [
       <!-- About Section -->
       <SectionLayout id="section-about" heading="About" delay={2}>
         <div class="space-y-4">
-          <p class="mb-4 text-slate-600 dark:text-slate-400">
+          <p class="mb-4 text-slate-600 dark:text-neutral-400">
             {text.about.intro}
           </p>
-          <p class="mb-4 text-slate-600 dark:text-slate-400">
+          <p class="mb-4 text-slate-600 dark:text-neutral-400">
             {text.about.focus}
           </p>
-          <p class="text-slate-600 dark:text-slate-400">
+          <p class="text-slate-600 dark:text-neutral-400">
             {text.about.personal}
           </p>
         </div>
@@ -187,7 +187,7 @@ const selectedProjects = [
   <!-- Skills & Technologies Section -->
   <SectionLayout id="section-skills" heading="Skills & Technologies" delay={5}>
     <div class="mb-8">
-      <p class="leading-relaxed text-slate-600 dark:text-slate-400 max-w-2xl">
+      <p class="leading-relaxed text-slate-600 dark:text-neutral-400 max-w-2xl">
         {text.skillsIntro}
       </p>
     </div>
@@ -196,7 +196,7 @@ const selectedProjects = [
       {
         skills.map((skill) => (
           <div class="space-y-3">
-            <h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">{skill.name}</h3>
+            <h3 class="text-base font-semibold text-slate-900 dark:text-neutral-200">{skill.name}</h3>
             <div class="flex flex-wrap gap-2">
               {skill.items.map((item) => (
                 <span class="ui-tag purple">{item}</span>
@@ -211,7 +211,7 @@ const selectedProjects = [
   <!-- Research Interests Section -->
   <SectionLayout id="section-research" heading="Research & Interests" delay={6}>
     <div class="mb-8">
-      <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400 max-w-2xl">
+      <p class="text-base leading-relaxed text-slate-600 dark:text-neutral-400 max-w-2xl">
         {text.researchIntro}
       </p>
     </div>

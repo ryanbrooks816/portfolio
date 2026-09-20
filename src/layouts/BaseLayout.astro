@@ -20,7 +20,7 @@ const { title = "Portfolio" } = Astro.props;
     <meta name="description" content={`${text.title}. ${text.tagline}`} />
   </head>
   <body
-    class="relative min-h-screen antialiased bg-gradient-to-br from-slate-50/90 via-white/95 to-slate-100/90 text-slate-900 dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-950 dark:to-black dark:text-slate-100"
+    class="relative min-h-screen antialiased bg-gradient-to-br from-slate-50/90 via-white/95 to-slate-100/90 text-slate-900 dark:bg-gradient-to-b dark:from-[#0d0d0d] dark:via-[#080808] dark:to-[#030303] dark:text-neutral-100"
   >
     <AnimatedGradient />
 
@@ -29,14 +29,14 @@ const { title = "Portfolio" } = Astro.props;
         <slot />
       </main>
 
-      <footer class="pt-16 text-sm text-slate-400 dark:text-slate-500">
+      <footer class="pt-16 text-sm text-slate-400 dark:text-neutral-500">
         <hr class="ui-divider" />
 
         <div class="pt-8 pb-12">
-          <h4 class="mb-2 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">Let's Get In Touch</h4>
+          <h4 class="mb-2 text-lg font-bold tracking-tight text-slate-900 dark:text-neutral-100">Let's Get In Touch</h4>
           <div class="grid grid-cols-1 items-start gap-12 md:grid-cols-[minmax(0,1fr)_auto]">
             <div class="max-w-md">
-              <p class="leading-relaxed text-slate-600 dark:text-slate-400">
+              <p class="leading-relaxed text-slate-600 dark:text-neutral-400">
                 {text.contactSection.description}
               </p>
             </div>

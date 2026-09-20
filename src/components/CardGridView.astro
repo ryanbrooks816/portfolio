@@ -21,7 +21,7 @@ const date = formatProjectDate(project.data.date);
 
   <a href={`/projects/${project.id}`} class="relative z-10 block">
     <div
-      class="mb-5 aspect-video overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-700/50 dark:bg-slate-800"
+      class="mb-5 aspect-video overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-900"
     >
       {
         thumbnailUrl ? (
@@ -32,12 +32,12 @@ const date = formatProjectDate(project.data.date);
             loading="lazy"
           />
         ) : (
-          <div class="h-full w-full bg-slate-100 dark:bg-slate-800" aria-hidden="true" />
+          <div class="h-full w-full bg-slate-100 dark:bg-neutral-900" aria-hidden="true" />
         )
       }
     </div>
 
-    <div class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+    <div class="flex items-center justify-between text-sm text-slate-600 dark:text-neutral-300">
       <span>{date}</span>
       {
         project.data.private && (
