@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createHmac } from "crypto";
+import { env } from "cloudflare:workers";
 import {
   COOKIE_NAME,
   createSessionToken,
@@ -10,19 +11,16 @@ import {
 import type { SessionPayload, AccessCodeRecord } from "../../../utils/auth";
 
 // Session configuration
-const SESSION_SECRET = process.env.SESSION_SECRET;
-const CODE_SECRET = process.env.CODE_SECRET;
 const SESSION_DURATION = 24 * 60 * 60;
 
-function hashCode(code: string): string {
-  if (!CODE_SECRET) {
-    throw new Error("Code secret not configured");
-  }
-  return createHmac("sha256", CODE_SECRET).update(code.toLowerCase()).digest("hex");
+function hashCode(code: string, secret: string): string {
+  return createHmac("sha256", secret).update(code.toLowerCase()).digest("hex");
 }
 
 export const POST: APIRoute = async (context) => {
   const { request } = context;
+  const SESSION_SECRET = env.SESSION_SECRET ?? process.env.SESSION_SECRET;
+  const CODE_SECRET = env.CODE_SECRET ?? process.env.CODE_SECRET;
 
   if (!SESSION_SECRET) {
     return new Response(
@@ -51,7 +49,8 @@ export const POST: APIRoute = async (context) => {
   }
 
   try {
-    const { accessCode } = await request.json();
+    const body = await request.json();
+    const accessCode = body && typeof body === "object" && "accessCode" in body ? body.accessCode : undefined;
 
     if (!accessCode || typeof accessCode !== "string") {
       return new Response(
@@ -84,7 +83,7 @@ export const POST: APIRoute = async (context) => {
     }
 
     // Hash the submitted code to look up in KV
-    const codeHash = hashCode(accessCode);
+    const codeHash = hashCode(accessCode, CODE_SECRET);
 
     // Try to get the access code record from KV
     let record: AccessCodeRecord;
@@ -162,7 +161,7 @@ export const POST: APIRoute = async (context) => {
       issuedAt: now,
     };
 
-    const sessionToken = createSessionToken(sessionPayload);
+    const sessionToken = createSessionToken(sessionPayload, SESSION_SECRET);
 
     // Set secure session cookie
     const cookieOptions = [

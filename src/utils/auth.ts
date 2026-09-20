@@ -1,8 +1,10 @@
 import type { APIContext } from "astro";
 import { createHmac } from "crypto";
-import type { KVNamespace } from "@cloudflare/workers-types";
+import { env } from "cloudflare:workers";
 
-const SESSION_SECRET = process.env.SESSION_SECRET;
+function sessionSecret(): string | undefined {
+  return env.SESSION_SECRET ?? process.env.SESSION_SECRET;
+}
 
 export const COOKIE_NAME = "portfolio_session";
 
@@ -75,12 +77,12 @@ export async function authenticateSession(context: APIContext, projectId: string
  * Creates a session token with a payload and signs it with the SESSION_SECRET.
  * The token is a base64-encoded JSON string of the payload, followed by a signature.
  */
-export function createSessionToken(payload: SessionPayload): string {
-  if (!SESSION_SECRET) {
+export function createSessionToken(payload: SessionPayload, secret = sessionSecret()): string {
+  if (!secret) {
     throw new Error("Session secret not configured");
   }
   const data = JSON.stringify(payload);
-  const signature = createHmac("sha256", SESSION_SECRET).update(data).digest("hex");
+  const signature = createHmac("sha256", secret).update(data).digest("hex");
 
   return `${Buffer.from(data).toString("base64")}.${signature}`;
 }
@@ -89,8 +91,8 @@ export function createSessionToken(payload: SessionPayload): string {
  * Verifies a session token matches the correct signature and the payload is not expired.
  * Returns an AuthResult indicating whether the token is valid and, if so, the decoded payload.
  */
-export function verifySessionToken(token: string): AuthResult {
-  if (!SESSION_SECRET) {
+export function verifySessionToken(token: string, secret = sessionSecret()): AuthResult {
+  if (!secret) {
     return { isAuthenticated: false, reason: "Session secret not configured" };
   }
 
@@ -103,7 +105,7 @@ export function verifySessionToken(token: string): AuthResult {
 
     // Verify signature matches SESSION_SECRET
     const data = Buffer.from(dataB64, "base64").toString();
-    const expectedSignature = createHmac("sha256", SESSION_SECRET).update(data).digest("hex");
+    const expectedSignature = createHmac("sha256", secret).update(data).digest("hex");
 
     if (signature !== expectedSignature) {
       return { isAuthenticated: false, reason: "Invalid signature" };
@@ -147,11 +149,14 @@ function redirectToAccess(currentUrl: URL): Response {
   });
 }
 
-export function getAccessCodes(context: APIContext): KVNamespace | null {
-  return (context.locals as any).runtime?.env?.ACCESS_CODES ?? null;
+export function getAccessCodes(_context?: APIContext): typeof env.ACCESS_CODES | null {
+  return env.ACCESS_CODES ?? null;
 }
 
-export async function getAccessCodeRecord(accessCodes: KVNamespace, codeId: string): Promise<AccessCodeRecord | null> {
+export async function getAccessCodeRecord(
+  accessCodes: typeof env.ACCESS_CODES,
+  codeId: string,
+): Promise<AccessCodeRecord | null> {
   return await accessCodes.get<AccessCodeRecord>(codeId, "json");
 }
 

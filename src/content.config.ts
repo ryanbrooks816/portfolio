@@ -1,8 +1,12 @@
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
-import { z, defineCollection } from "astro:content";
+import { z } from "astro/zod";
 
-const projectsCollection = defineCollection({
-  loader: glob({ pattern: ["**/[^_]*.md", "**/[^_]*.mdx"], base: "./src/content/projects" }),
+const projects = defineCollection({
+  loader: glob({
+    base: "./src/content/projects",
+    pattern: "**/*.{md,mdx}",
+  }),
   schema: z.object({
     // Main Details
     title: z.string(),
@@ -42,9 +46,8 @@ const projectsCollection = defineCollection({
       .optional(),
     responsibilities: z.array(z.string()).optional(),
     // Action Links Section
-    links: z.record(z.string()).optional(), // Accept any key with a string value
+    links: z.record(z.string(), z.string()).optional(), // Accept any key with a string value
   }),
 });
 
-// Export a collections object to register the collections
-export const collections = { projects: projectsCollection };
+export const collections = { projects };
