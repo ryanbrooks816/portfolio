@@ -1,12 +1,10 @@
 # Ryan Brooks Portfolio
 
-This is the public source for my portfolio website. It is built with Astro, styled with Tailwind, and deployed as a Cloudflare Worker.
+Public source for my portfolio site, built with Astro and deployed to Cloudflare Workers.
 
 ## Repository layout
 
-The public `portfolio` repository contains the site code, configuration, and deployment scripts. Private portfolio data lives in a separate repository named `portfolio-data` and is never committed here.
-
-The local layout should be:
+The public `portfolio` repository contains the site code, access control, configuration, and deployment scripts. The portfolio data is supplied in a sibling private repository, `portfolio-data` and contains project Markdown and materials, photos, and the site copy in `text.ts`.
 
 ```text
 parent/
@@ -22,19 +20,7 @@ parent/
     └── text.ts
 ```
 
-The private data repository supplies project Markdown and materials, photos, the resume, and the site copy in `text.ts`. The generated copies in `src/content/projects/`, `public/projects/`, `public/resume.pdf`, `public/photo.*`, and `src/data/text.ts` are all ignored by Git.
-
-## Local development
-
-Clone both repositories side by side, install dependencies, and sync the private data before starting Astro:
-
-```sh
-npm install
-npm run sync-data
-npm run dev
-```
-
-Run `npm run sync-data` whenever the private data changes. It removes and recreates the generated project content, then copies the resume, photos, and text data into the locations expected by the site.
+This is how I manage the content, it is not necessary to sync a separate repository to run the site. Add any projects in `src/content/projects` (handled by Astro content collections) and any photos in `publuc`. The `text.ts` file goes in `src/data` and can be configured as you wish.
 
 ## Inline project galleries
 
@@ -60,14 +46,9 @@ The explanation can continue here after the gallery.
 
 ## Deployment
 
-The Cloudflare configuration is in `wrangler.jsonc`. A deployment environment must be authorized to access the private `portfolio-data` repository and run the sync step before building:
+The Cloudflare configuration is in `wrangler.jsonc`.
 
 ```sh
-npm run sync-data
 npm run build
 npm run deploy
 ```
-
-The live site is currently available at <https://portfolio.sotcompass.workers.dev/>.
-
-Keeping source files in a private repository does not by itself make generated pages or assets private. Any data included in a public static build must also be protected by the application or deployed separately.
