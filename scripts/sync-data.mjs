@@ -106,7 +106,11 @@ async function main() {
 
   const entries = await readdir(sourceRoot, { withFileTypes: true });
   const projectEntries = entries
-    .filter((entry) => entry.isDirectory() || (entry.isFile() && entry.name.toLowerCase().endsWith(".md")))
+    .filter(
+      (entry) =>
+        entry.isDirectory() ||
+        (entry.isFile() && [".md", ".mdx"].includes(entry.name.slice(entry.name.lastIndexOf(".")).toLowerCase())),
+    )
     .sort((a, b) => a.name.localeCompare(b.name));
 
   let projectCount = 0;
@@ -121,26 +125,29 @@ async function main() {
 
     const projectName = entry.name;
     const projectRoot = join(sourceRoot, projectName);
-    const projectFile = join(projectRoot, "project.md");
+    const mdxProjectFile = join(projectRoot, "project.mdx");
+    const markdownProjectFile = join(projectRoot, "project.md");
+    const projectFile = (await exists(mdxProjectFile)) ? mdxProjectFile : markdownProjectFile;
 
     if (!(await exists(projectFile))) {
-      console.warn(`[skip] ${projectName}: missing project.md`);
+      console.warn(`[skip] ${projectName}: missing project.md or project.mdx`);
       continue;
     }
 
-    const contentDestination = join(contentRoot, `${projectName}.md`);
+    const contentExtension = projectFile.endsWith(".mdx") ? ".mdx" : ".md";
+    const contentDestination = join(contentRoot, `${projectName}${contentExtension}`);
     const assetDestination = join(publicRoot, projectName);
 
     // Copy the project's Markdown entry.
     await cp(projectFile, contentDestination);
 
     // Copy the project directory as its public asset directory,
-    // excluding project.md itself.
+    // excluding the project content file itself.
     const projectEntries = await readdir(projectRoot, {
       withFileTypes: true,
     });
 
-    const assets = projectEntries.filter((projectEntry) => projectEntry.name !== "project.md");
+    const assets = projectEntries.filter((projectEntry) => !["project.md", "project.mdx"].includes(projectEntry.name));
 
     if (assets.length > 0) {
       await mkdir(assetDestination, { recursive: true });
