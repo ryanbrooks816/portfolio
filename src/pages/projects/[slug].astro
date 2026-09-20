@@ -41,8 +41,8 @@ const projectLinks = getProjectLinks(project);
     <BackLinkNavigation href={PROJECTS_LINK} label="Back to Projects" />
 
     <div class="pt-8">
-      <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
-        <span class="font-medium text-slate-900 dark:text-slate-100">
+      <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-neutral-400">
+        <span class="font-medium text-slate-900 dark:text-neutral-100">
           {project.data.type.charAt(0).toUpperCase() + project.data.type.slice(1)} Project
         </span>
         {
@@ -63,12 +63,12 @@ const projectLinks = getProjectLinks(project);
       </div>
 
       <h1
-        class="mt-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl"
+        class="mt-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-slate-900 dark:text-neutral-100 sm:text-5xl"
       >
         {project.data.title}
       </h1>
 
-      <p class="mt-6 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+      <p class="mt-6 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-neutral-400">
         {project.data.description}
       </p>
     </div>
@@ -82,8 +82,8 @@ const projectLinks = getProjectLinks(project);
               href={link.url}
               class={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all lg:px-5 lg:py-3 lg:text-base ${
                 link.isPrimary
-                  ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-                  : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                  ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-white"
+                  : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
               }`}
               target="_blank"
               rel="noopener noreferrer"
@@ -99,7 +99,7 @@ const projectLinks = getProjectLinks(project);
     <!-- Project Thumbnail -->
     {
       thumbnailUrl && (
-        <div class="mx-auto mt-12 aspect-[16/9] max-w-[70%] overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+        <div class="mx-auto mt-12 aspect-[16/9] max-w-[70%] overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
           <img src={thumbnailUrl} alt={`${project.data.title} thumbnail`} class="object-center" loading="lazy" />
         </div>
       )
@@ -109,12 +109,12 @@ const projectLinks = getProjectLinks(project);
   <!-- Main Outcomes -->
   {
     project.data.outcomes && project.data.outcomes.length > 0 && (
-      <div class="my-16 py-8 border-t border-slate-300 dark:border-slate-700">
-        <h3 class="mb-6 text-2xl font-semibold text-slate-900 dark:text-slate-100">Main Outcomes</h3>
+      <div class="my-16 py-8 border-t border-slate-300 dark:border-neutral-800">
+        <h3 class="mb-6 text-2xl font-semibold text-slate-900 dark:text-neutral-100">Main Outcomes</h3>
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {project.data.outcomes.map((outcome) => (
-            <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
-              <span class="text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0 font-bold text-lg leading-none">
+            <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-neutral-300">
+              <span class="text-slate-700 dark:text-neutral-300 mt-0.5 flex-shrink-0 font-bold text-lg leading-none">
                 ✓
               </span>
               <span>{outcome}</span>
@@ -138,8 +138,8 @@ const projectLinks = getProjectLinks(project);
       {/* Sidebar */}
       <aside class="space-y-8 self-start lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto">
         <!-- Technologies -->
-        <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-          <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Technologies</h3>
+        <div class="border border-slate-300 dark:border-neutral-800 rounded-lg p-6">
+          <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-neutral-200">Technologies</h3>
           <div class="flex flex-wrap gap-2">
             {project.data.tags.map((tag) => <span class="ui-tag purple">{tag}</span>)}
           </div>
@@ -148,14 +148,14 @@ const projectLinks = getProjectLinks(project);
         <!-- Timeline -->
         {
           project.data.timeline && project.data.timeline.length > 0 && (
-            <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Timeline</h3>
+            <div class="border border-slate-300 dark:border-neutral-800 rounded-lg p-6">
+              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-neutral-200">Timeline</h3>
               <div class="space-y-4">
                 {project.data.timeline.map((phase) => (
-                  <div class="border-l-2 border-slate-400 dark:border-slate-600 pl-4 pb-4">
-                    <div class="font-medium text-slate-900 dark:text-slate-200">{phase.phase}</div>
-                    <div class="mb-1 text-sm text-slate-600 dark:text-slate-400">{phase.duration}</div>
-                    <div class="text-sm text-slate-600 dark:text-slate-400">{phase.description}</div>
+                  <div class="border-l-2 border-slate-400 dark:border-neutral-700 pl-4 pb-4">
+                    <div class="font-medium text-slate-900 dark:text-neutral-200">{phase.phase}</div>
+                    <div class="mb-1 text-sm text-slate-600 dark:text-neutral-400">{phase.duration}</div>
+                    <div class="text-sm text-slate-600 dark:text-neutral-400">{phase.description}</div>
                   </div>
                 ))}
               </div>
@@ -166,12 +166,12 @@ const projectLinks = getProjectLinks(project);
         <!-- Responsibilities -->
         {
           project.data.responsibilities && project.data.responsibilities.length > 0 && (
-            <div class="border border-slate-300 dark:border-slate-700 rounded-lg p-6">
-              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">My Role</h3>
+            <div class="border border-slate-300 dark:border-neutral-800 rounded-lg p-6">
+              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-neutral-200">My Role</h3>
               <ul class="space-y-2">
                 {project.data.responsibilities.map((responsibility) => (
-                  <li class="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
-                    <span class="text-slate-400 dark:text-slate-500 mt-1">•</span>
+                  <li class="flex items-start gap-2 text-sm text-slate-700 dark:text-neutral-300">
+                    <span class="text-slate-400 dark:text-neutral-500 mt-1">•</span>
                     <span>{responsibility}</span>
                   </li>
                 ))}
@@ -183,16 +183,16 @@ const projectLinks = getProjectLinks(project);
         <!-- Project Links -->
         {
           projectLinks.length > 0 && (
-            <div class="rounded-lg border border-slate-300 p-6 dark:border-slate-700">
-              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Project Links</h3>
+            <div class="rounded-lg border border-slate-300 p-6 dark:border-neutral-800">
+              <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-neutral-200">Project Links</h3>
               <div class="mt-8 flex flex-wrap gap-4">
                 {getProjectLinks(project).map((link) => (
                   <a
                     href={link.url}
                     class={`inline-flex items-center gap-2 rounded-lg text-sm font-medium transition-all lg:px-5 lg:py-2.5 ${
                       link.isPrimary
-                        ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-                        : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+                        ? "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-white"
+                        : "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                     }`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -211,25 +211,25 @@ const projectLinks = getProjectLinks(project);
     <!-- Gallery Section -->
     {
       project.data.gallery?.images && project.data.gallery.images.length > 0 && (
-        <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-          <h2 class="mb-6 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+        <section class="mt-16 pt-8 border-t border-slate-300 dark:border-neutral-800">
+          <h2 class="mb-6 text-2xl font-semibold text-slate-900 dark:text-neutral-100">
             {project.data.private ? "Private Gallery" : "Project Gallery"}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {project.data.gallery.images.map((image, index) => (
               <div class="group cursor-pointer">
-                <div class="aspect-video border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden hover:border-slate-400 dark:hover:border-slate-600 transition-colors">
-                  <div class="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-800">
+                <div class="aspect-video border border-slate-300 dark:border-neutral-800 rounded-lg overflow-hidden hover:border-slate-400 dark:hover:border-neutral-600 transition-colors">
+                  <div class="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-neutral-900">
                     <div class="text-center">
-                      <Icon name="mdi:image" class="mx-auto mb-2 h-8 w-8 text-slate-500 dark:text-slate-300" />
-                      <div class="text-xs font-medium text-slate-700 dark:text-slate-100">
+                      <Icon name="mdi:image" class="mx-auto mb-2 h-8 w-8 text-slate-500 dark:text-neutral-300" />
+                      <div class="text-xs font-medium text-slate-700 dark:text-neutral-100">
                         {project.data.gallery?.captions?.[index] || `Screenshot ${index + 1}`}
                       </div>
                     </div>
                   </div>
                 </div>
                 {project.data.gallery?.captions?.[index] && (
-                  <p class="mt-2 text-center text-sm text-slate-700 dark:text-slate-200">
+                  <p class="mt-2 text-center text-sm text-slate-700 dark:text-neutral-200">
                     {project.data.gallery.captions[index]}
                   </p>
                 )}
@@ -243,17 +243,17 @@ const projectLinks = getProjectLinks(project);
     <!-- Project Summary Section -->
     {
       (project.data.achievements || project.data.challenges || project.data.learnings) && (
-        <section class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
-          <h2 class="mb-8 text-2xl font-semibold text-slate-900 dark:text-slate-100">Project Summary</h2>
+        <section class="mt-16 pt-8 border-t border-slate-300 dark:border-neutral-800">
+          <h2 class="mb-8 text-2xl font-semibold text-slate-900 dark:text-neutral-100">Project Summary</h2>
 
           <div class="grid md:grid-cols-3 gap-8">
             {project.data.achievements && project.data.achievements.length > 0 && (
               <div>
-                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Key Achievements</h3>
+                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-neutral-100">Key Achievements</h3>
                 <ul class="space-y-3">
                   {project.data.achievements.map((achievement) => (
-                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
-                      <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-neutral-300">
+                      <span class="text-slate-600 dark:text-neutral-400 mt-1">•</span>
                       <span class="text-sm leading-relaxed">{achievement}</span>
                     </li>
                   ))}
@@ -263,11 +263,11 @@ const projectLinks = getProjectLinks(project);
 
             {project.data.challenges && project.data.challenges.length > 0 && (
               <div>
-                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Key Challenges</h3>
+                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-neutral-100">Key Challenges</h3>
                 <ul class="space-y-3">
                   {project.data.challenges.map((challenge) => (
-                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
-                      <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-neutral-300">
+                      <span class="text-slate-600 dark:text-neutral-400 mt-1">•</span>
                       <span class="text-sm leading-relaxed">{challenge}</span>
                     </li>
                   ))}
@@ -277,11 +277,11 @@ const projectLinks = getProjectLinks(project);
 
             {project.data.learnings && project.data.learnings.length > 0 && (
               <div>
-                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Key Learnings</h3>
+                <h3 class="mb-4 text-lg font-semibold text-slate-900 dark:text-neutral-100">Key Learnings</h3>
                 <ul class="space-y-3">
                   {project.data.learnings.map((learning) => (
-                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
-                      <span class="text-slate-600 dark:text-slate-400 mt-1">•</span>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-neutral-300">
+                      <span class="text-slate-600 dark:text-neutral-400 mt-1">•</span>
                       <span class="text-sm leading-relaxed">{learning}</span>
                     </li>
                   ))}
@@ -295,7 +295,7 @@ const projectLinks = getProjectLinks(project);
   </div>
 
   <!-- Navigation -->
-  <nav class="mt-16 pt-8 border-t border-slate-300 dark:border-slate-700">
+  <nav class="mt-16 pt-8 border-t border-slate-300 dark:border-neutral-800">
     <div class="flex flex-wrap items-center justify-center gap-8 xs:justify-between">
       <a href="/projects" class="ui-button-secondary">
         <Icon name="mdi:arrow-left" class="w-4 h-4" />

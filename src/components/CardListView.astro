@@ -11,12 +11,12 @@ const primaryLink = getPrimaryProjectLink(project);
 ---
 
 <tr
-  class="group border-b border-slate-300 transition-colors last:border-none hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800/50"
+  class="group border-b border-slate-300 transition-colors last:border-none hover:bg-slate-100 dark:border-neutral-700 dark:hover:bg-neutral-900/70"
 >
   <td class="py-4 px-4 align-top text-sm">
-    <div class="translate-y-px text-slate-600 dark:text-slate-400">{formatProjectDate(project.data.date)}</div>
+    <div class="translate-y-px text-slate-600 dark:text-neutral-400">{formatProjectDate(project.data.date)}</div>
   </td>
-  <td class="py-4 px-4 align-top font-semibold leading-snug text-slate-900 dark:text-slate-200">
+  <td class="py-4 px-4 align-top font-semibold leading-snug text-slate-900 dark:text-neutral-200">
     <div>
       <div class="flex items-center gap-2">
         <h3 class="m-0">
@@ -57,7 +57,7 @@ const primaryLink = getPrimaryProjectLink(project);
     </ul>
   </td>
   <td class="hidden py-4 px-4 align-top text-sm sm:table-cell">
-    <div class="translate-y-px whitespace-nowrap text-slate-600 dark:text-slate-400 capitalize">
+    <div class="translate-y-px whitespace-nowrap text-slate-600 dark:text-neutral-400 capitalize">
       {project.data.type}
     </div>
   </td>
@@ -65,7 +65,7 @@ const primaryLink = getPrimaryProjectLink(project);
     <ul class="translate-y-px">
       <li class="mb-3 flex items-center">
         <a
-          class="group/link inline-flex items-baseline text-sm font-medium leading-tight text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-900 hover:decoration-current focus-visible:text-slate-900 dark:text-white dark:decoration-slate-600 dark:hover:text-white dark:focus-visible:text-white"
+          class="group/link inline-flex items-baseline text-sm font-medium leading-tight text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-900 hover:decoration-current focus-visible:text-slate-900 dark:text-neutral-100 dark:decoration-neutral-600 dark:hover:text-white dark:focus-visible:text-white"
           href={getProjectUrl(project)}
           aria-label={`View ${project.data.title} details`}
         >
@@ -80,7 +80,7 @@ const primaryLink = getPrimaryProjectLink(project);
         primaryLink?.key === "github" && (
           <li class="mb-1 flex items-center">
             <a
-              class="group/link inline-flex items-baseline text-sm font-medium leading-tight text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-900 hover:decoration-current focus-visible:text-slate-900 dark:text-white dark:decoration-slate-600 dark:hover:text-white dark:focus-visible:text-white"
+              class="group/link inline-flex items-baseline text-sm font-medium leading-tight text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-900 hover:decoration-current focus-visible:text-slate-900 dark:text-neutral-100 dark:decoration-neutral-600 dark:hover:text-white dark:focus-visible:text-white"
               href={primaryLink.url}
               target="_blank"
               rel="noreferrer noopener"

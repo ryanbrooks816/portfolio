@@ -5,12 +5,12 @@ const { href, label } = Astro.props;
 ---
 
 <a
-  class="group inline-flex items-center leading-tight font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-current dark:text-white dark:decoration-slate-600"
+  class="group inline-flex items-center leading-tight font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-current dark:text-neutral-100 dark:decoration-neutral-600"
   aria-label={label}
   href={href}
   target="_blank"
 >
-  <span>{label}</span>
+  <span class="ui-link">{label}</span>
   <Icon
     name="mdi:arrow-top-right"
     class="ml-1 h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 group-focus-visible:-translate-y-1 group-focus-visible:translate-x-1 motion-reduce:transition-none"
