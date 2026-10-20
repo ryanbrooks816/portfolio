@@ -38,6 +38,7 @@ const dataRepo = resolve(rootDir, "..", "portfolio-data");
 const sourceRoot = join(dataRepo, "projects");
 const publicSource = join(dataRepo, "public");
 const textSource = join(dataRepo, "text.ts");
+const typesSource = join(dataRepo, "types.ts");
 
 const contentRoot = join(rootDir, "src", "content", "projects");
 const publicRoot = join(rootDir, "public", "projects");
@@ -77,6 +78,7 @@ async function main() {
   await requirePath(sourceRoot, "projects directory");
   await requirePath(publicSource, "public directory");
   await requirePath(textSource, "text data");
+  await requirePath(typesSource, "types data");
 
   // Remove previously synced content so deleted or renamed data does not
   // leave stale files behind. These destinations are gitignored.
@@ -87,6 +89,7 @@ async function main() {
   await mkdir(publicRoot, { recursive: true });
 
   await cp(textSource, join(rootDir, "src", "data", "text.ts"));
+  await cp(typesSource, join(rootDir, "src", "data", "types.ts"));
 
   const publicDestination = join(rootDir, "public");
   const publicEntries = await readdir(publicSource, { withFileTypes: true });
