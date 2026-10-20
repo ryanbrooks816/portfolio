@@ -52,9 +52,18 @@ export const text = {
   experience: [
     {
       title: "Organization or school",
-      description: "Role, degree, or area of study",
-      date: "2024-01",
-      endDate: "Present",
+      location: "City, State",
+      roles: [{ title: "Role title", date: "2024-01", endDate: "Present" }],
+      content: {
+        layout: "bullets",
+        items: ["A concise accomplishment or responsibility."],
+      },
+    },
+  ],
+  education: [
+    {
+      title: "Organization or school",
+      roles: [{ title: "Role, degree, or area of study", date: "2024-01", endDate: "Present" }],
       content: {
         layout: "bullets",
         items: ["A concise accomplishment or responsibility."],
@@ -85,6 +94,8 @@ Experience entries support two layouts:
 { layout: "bullets", items: ["A longer accomplishment."] }
 { layout: "tags", items: ["Operating Systems", "Databases"] }
 ```
+
+Use `roles` for the position or degree information associated with an entry. Add multiple role objects when an experience entry includes more than one position at the same organization.
 
 ## Projects
 

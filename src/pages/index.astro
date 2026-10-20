@@ -153,8 +153,8 @@ const researchProjects = sortedProjects.filter((project) =>
         </div>
       </SectionLayout>
 
-      <!-- Experience & Education Section -->
-      <SectionLayout id="section-experience" heading="Experience & Education" delay={3}>
+      <!-- Experience Section -->
+      <SectionLayout id="section-experience" heading="Experience" delay={3}>
         <ol class="group/list">
           {
             text.experience.map((entry) => (
@@ -170,11 +170,24 @@ const researchProjects = sortedProjects.filter((project) =>
           </div>
         </ol>
       </SectionLayout>
+
+      <!-- Education Section -->
+      <SectionLayout id="section-education" heading="Education" delay={4}>
+        <ol class="group/list">
+          {
+            text.education.map((entry) => (
+              <li class="mb-12">
+                <ExperienceCard {...entry} />
+              </li>
+            ))
+          }
+        </ol>
+      </SectionLayout>
     </div>
   </div>
 
   <!-- Projects Section -->
-  <SectionLayout id="section-projects" heading="Featured Projects" delay={4}>
+  <SectionLayout id="section-projects" heading="Featured Projects" delay={5}>
     <ul class="group/list">
       {
         selectedProjects.map((project) => (
@@ -193,7 +206,7 @@ const researchProjects = sortedProjects.filter((project) =>
   </SectionLayout>
 
   <!-- Skills & Technologies Section -->
-  <SectionLayout id="section-skills" heading="Skills & Technologies" delay={5}>
+  <SectionLayout id="section-skills" heading="Skills & Technologies" delay={6}>
     <div class="mb-8">
       <p class="leading-relaxed text-slate-600 dark:text-neutral-400 max-w-2xl">
         {text.skillsIntro}
@@ -217,7 +230,7 @@ const researchProjects = sortedProjects.filter((project) =>
   </SectionLayout>
 
   <!-- Research Interests Section -->
-  <SectionLayout id="section-research" heading="Research & Interests" delay={6}>
+  <SectionLayout id="section-research" heading="Research & Interests" delay={7}>
     <div class="mb-8">
       <p class="text-base leading-relaxed text-slate-600 dark:text-neutral-400 max-w-2xl">
         {text.researchIntro}

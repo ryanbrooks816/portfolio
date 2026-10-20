@@ -8,11 +8,16 @@ export type ExperienceContent =
       items: string[];
     };
 
-export type ExperienceEntry = {
+export type ExperienceRole = {
   title: string;
-  description: string;
   date: string;
   endDate?: string;
+};
+
+export type ExperienceEntry = {
+  title: string;
+  location?: string;
+  roles: ExperienceRole[];
   content: ExperienceContent;
 };
 
@@ -47,6 +52,7 @@ export type PortfolioText = {
   contact: ContactInfo;
   about: AboutContent;
   experience: ExperienceEntry[];
+  education: ExperienceEntry[];
   skillsIntro: string;
   researchIntro: string;
   contactSection: ContactSection;

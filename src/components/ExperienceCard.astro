@@ -3,7 +3,7 @@ import type { ExperienceEntry } from "../data/types";
 
 type Props = ExperienceEntry;
 
-const { title, description, date, endDate, content } = Astro.props;
+const { title, location, roles, content } = Astro.props;
 
 function formatDate(date?: Date | string) {
   if (!date) return "";
@@ -41,16 +41,23 @@ function formatDate(date?: Date | string) {
 
   <div class="relative z-10">
     <div class="flex-1 min-w-0">
-      <div class="mb-1 text-xs uppercase text-slate-600 dark:text-neutral-300">
-        {formatDate(date)}
-        {endDate && ` - ${formatDate(endDate)}`}
+      <div class="mb-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <h3 class="mb-0.5 text-lg font-semibold text-slate-900 dark:text-neutral-100">{title}</h3>
+        {location && <span class="text-sm text-slate-600 dark:text-neutral-400">{location}</span>}
       </div>
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2">
-          <h3 class="mb-0.5 text-lg font-semibold text-slate-900 dark:text-neutral-100">{title}</h3>
-        </div>
-      </div>
-      <p class="mb-4 font-semibold text-slate-600 dark:text-neutral-400">{description}</p>
+      <ul class="mb-4 space-y-1 text-sm text-slate-600 dark:text-neutral-400">
+        {
+          roles.map((role) => (
+            <li class="flex flex-wrap gap-x-2 gap-y-1">
+              <span class="font-semibold italic text-slate-700 dark:text-neutral-300">{role.title}</span>
+              <span>
+                {formatDate(role.date)}
+                {role.endDate && ` - ${formatDate(role.endDate)}`}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
       {
         content.layout === "bullets" ? (
           <ul class="space-y-3 text-sm">

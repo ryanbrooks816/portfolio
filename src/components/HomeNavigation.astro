@@ -6,6 +6,7 @@ import NavLink from "../components/NavLink.astro";
 const sections = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
+  { id: "education", label: "Education" },
   { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
   { id: "research", label: "Research" },
@@ -16,6 +17,7 @@ const sections = [
 <Navigation>
   <NavLink slot="nav-links" href="#section-about" label="About" section="about" />
   <NavLink slot="nav-links" href="#section-experience" label="Experience" section="experience" />
+  <NavLink slot="nav-links" href="#section-education" label="Education" section="education" />
   <NavLink slot="nav-links" href="#section-projects" label="Projects" section="projects" />
   <NavLink slot="nav-links" href="#section-skills" label="Skills" section="skills" />
   <NavLink slot="nav-links" href="#section-research" label="Research" section="research" />
@@ -38,7 +40,9 @@ const sections = [
 
   <!-- Floating Dots Navigator: Mobile (bottom center) -->
   <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex md:hidden" aria-label="Section navigation">
-    <div class="flex flex-row space-x-4 items-center bg-white/80 dark:bg-neutral-900/90 px-4 py-2 rounded-full shadow-lg">
+    <div
+      class="flex flex-row space-x-4 items-center bg-white/80 dark:bg-neutral-900/90 px-4 py-2 rounded-full shadow-lg"
+    >
       {
         sections.map((section) => (
           <a
@@ -54,7 +58,7 @@ const sections = [
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const sectionIds = ["about", "experience", "projects", "skills", "research", "contact"];
+      const sectionIds = ["about", "experience", "education", "projects", "skills", "research", "contact"];
       const navLinks = Array.from(document.querySelectorAll("a[data-section]")) as HTMLElement[];
 
       function onScroll() {
