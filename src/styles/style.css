@@ -74,17 +74,18 @@ html.dark .animated-gradient {
   @apply border-slate-200 dark:border-neutral-800;
 }
 
+.ui-link {
+  @apply dark:text-neutral-200/80 dark:group-hover:text-neutral-100/90 dark:group-focus-visible:text-neutral-100/90;
+}
+
 .section-heading {
   @apply mb-8 border-b pb-4;
 }
 
-html.dark .section-heading h2 {
-  color: rgb(201 202 218 / 0.92);
+.project-title {
+  @apply inline-flex items-baseline text-xl leading-tight font-semibold tracking-tight text-slate-900 no-underline transition-colors group-hover:text-gray-700 hover:text-gray-700 focus-visible:text-gray-700 dark:text-neutral-100 dark:group-hover:text-neutral-300 dark:hover:text-neutral-300 dark:focus-visible:text-neutral-300;
 }
 
-.project-title {
-  @apply inline-flex items-baseline text-xl font-semibold leading-tight tracking-tight text-slate-900 no-underline transition-colors hover:text-gray-700 focus-visible:text-gray-700 group-hover:text-gray-700 dark:text-neutral-100 dark:hover:text-neutral-300 dark:focus-visible:text-neutral-300 dark:group-hover:text-neutral-300;
-}
 html.dark .project-title:hover,
 html.dark .project-title:focus-visible,
 html.dark .group:hover .project-title {
@@ -92,11 +93,11 @@ html.dark .group:hover .project-title {
 }
 
 .project-title-arrow {
-  @apply ml-1 h-4 w-4 shrink-0 opacity-0 transition-all duration-200 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none;
+  @apply ml-1 h-4 w-4 shrink-0 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100 motion-reduce:transition-none;
 }
 
 .project-description {
-  @apply text-sm font-normal leading-relaxed text-slate-700 dark:text-neutral-400;
+  @apply text-sm leading-relaxed font-normal text-slate-700 dark:text-neutral-400;
 }
 
 .project-hover-surface {
@@ -372,22 +373,22 @@ html.dark .nav-dot.active {
 }
 
 .markdown h1 {
-  @apply mb-4 mt-8 text-4xl font-bold text-slate-900 dark:text-neutral-100;
+  @apply mt-8 mb-4 text-4xl font-bold text-slate-900 dark:text-neutral-100;
 }
 .markdown h2 {
-  @apply mb-3 mt-6 text-3xl font-semibold text-slate-900 dark:text-neutral-100;
+  @apply mt-6 mb-3 text-3xl font-semibold text-slate-900 dark:text-neutral-100;
 }
 .markdown h3 {
-  @apply mb-2 mt-4 text-2xl font-semibold text-slate-800 dark:text-neutral-200;
+  @apply mt-4 mb-2 text-2xl font-semibold text-slate-800 dark:text-neutral-200;
 }
 .markdown h4 {
-  @apply mb-2 mt-4 text-xl font-semibold text-slate-700 dark:text-neutral-300;
+  @apply mt-4 mb-2 text-xl font-semibold text-slate-700 dark:text-neutral-300;
 }
 .markdown h5 {
-  @apply mb-2 mt-4 text-lg font-semibold text-slate-700 dark:text-neutral-300;
+  @apply mt-4 mb-2 text-lg font-semibold text-slate-700 dark:text-neutral-300;
 }
 .markdown h6 {
-  @apply mb-2 mt-4 text-base font-semibold text-slate-700 dark:text-neutral-300;
+  @apply mt-4 mb-2 text-base font-semibold text-slate-700 dark:text-neutral-300;
 }
 
 .markdown p {
@@ -448,7 +449,7 @@ html.dark .markdown a:focus-visible {
 }
 
 .markdown blockquote {
-  @apply mb-4 border-l-4 border-indigo-500 pl-4 italic text-slate-600 dark:text-slate-400;
+  @apply mb-4 border-l-4 border-neutral-500 pl-4 text-slate-600 italic dark:text-neutral-400;
 }
 
 .markdown code {
