@@ -3,8 +3,7 @@ import "../styles/style.css";
 import "aos/dist/aos.css";
 
 import AnimatedGradient from "../components/AnimatedGradient.astro";
-
-import { Icon } from "astro-icon/components";
+import TextLink from "../components/TextLink.astro";
 
 import { text } from "../data/text";
 
@@ -18,6 +17,14 @@ const { title = "Portfolio" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={`${text.title}. ${text.tagline}`} />
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" href="/favicon-dark-32x32.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!-- Browser theme -->
+    <meta name="theme-color" content="#f8f7f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
   </head>
   <body
     class="relative min-h-screen antialiased bg-gradient-to-br from-slate-50/90 via-white/95 to-slate-100/90 text-slate-900 dark:bg-gradient-to-b dark:from-[#0d0d0d] dark:via-[#080808] dark:to-[#030303] dark:text-neutral-100"
@@ -40,16 +47,7 @@ const { title = "Portfolio" } = Astro.props;
                 {text.contactSection.description}
               </p>
             </div>
-            <a
-              href={`mailto:${text.contact.email}`}
-              class="group inline-flex items-center justify-self-start font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-current dark:text-white dark:decoration-slate-600 md:justify-self-end"
-            >
-              <span>{text.contact.email}</span>
-              <Icon
-                name="mdi:arrow-top-right"
-                class="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
-              />
-            </a>
+            <TextLink href={`mailto:${text.contact.email}`} label={text.contact.email} />
           </div>
         </div>
 
