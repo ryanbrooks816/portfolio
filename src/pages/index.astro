@@ -79,58 +79,61 @@ const researchProjects = sortedProjects.filter((project) =>
       </div>
 
       <!-- Social Icons - Sticky Bottom -->
-      <ul class="ml-1 mt-8 flex items-center" aria-label="Social media" data-aos="fade-up" data-aos-delay="500">
-        <li class="mr-5 text-xs shrink-0">
-          <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
-            href={text.contact.github}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="GitHub (opens in a new tab)"
-            title="GitHub"
-          >
-            <span class="sr-only">GitHub</span>
-            <Icon name="mdi:github" class="h-6 w-6" />
-          </a>
-        </li>
-        <li class="mr-5 text-xs shrink-0">
-          <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
-            href={text.contact.linkedin}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="LinkedIn (opens in a new tab)"
-            title="LinkedIn"
-          >
-            <span class="sr-only">LinkedIn</span>
-            <Icon name="mdi:linkedin" class="h-6 w-6" />
-          </a>
-        </li>
-        <li class="mr-5 text-xs shrink-0">
-          <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
-            href={`mailto:${text.contact.email}`}
-            aria-label="Email (opens your email client)"
-            title="Email"
-          >
-            <span class="sr-only">Email</span>
-            <Icon name="mdi:email" class="h-6 w-6" />
-          </a>
-        </li>
-        <li class="mr-5 text-xs shrink-0">
-          <a
-            class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
-            href={text.contact.resume}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="Resume (opens in a new tab)"
-            title="Resume"
-          >
-            <span class="sr-only">Resume</span>
-            <Icon name="mdi:file-document-outline" class="h-6 w-6" />
-          </a>
-        </li>
-      </ul>
+      <div class="ml-1 mt-8" data-aos="fade-up" data-aos-delay="500">
+        <TextLink href="/projects" label="View All Projects" class="mt-8 block lg:hidden" />
+        <ul class="mt-6 flex items-center" aria-label="Social media">
+          <li class="mr-5 text-xs shrink-0">
+            <a
+              class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
+              href={text.contact.github}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="GitHub (opens in a new tab)"
+              title="GitHub"
+            >
+              <span class="sr-only">GitHub</span>
+              <Icon name="mdi:github" class="h-6 w-6" />
+            </a>
+          </li>
+          <li class="mr-5 text-xs shrink-0">
+            <a
+              class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
+              href={text.contact.linkedin}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="LinkedIn (opens in a new tab)"
+              title="LinkedIn"
+            >
+              <span class="sr-only">LinkedIn</span>
+              <Icon name="mdi:linkedin" class="h-6 w-6" />
+            </a>
+          </li>
+          <li class="mr-5 text-xs shrink-0">
+            <a
+              class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
+              href={`mailto:${text.contact.email}`}
+              aria-label="Email (opens your email client)"
+              title="Email"
+            >
+              <span class="sr-only">Email</span>
+              <Icon name="mdi:email" class="h-6 w-6" />
+            </a>
+          </li>
+          <li class="mr-5 text-xs shrink-0">
+            <a
+              class="block text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200"
+              href={text.contact.resume}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="Resume (opens in a new tab)"
+              title="Resume"
+            >
+              <span class="sr-only">Resume</span>
+              <Icon name="mdi:file-document-outline" class="h-6 w-6" />
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- Scrollable Right Content -->
