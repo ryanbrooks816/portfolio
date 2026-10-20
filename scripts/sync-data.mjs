@@ -13,13 +13,14 @@
  *   └── portfolio-data/
  *       ├── projects/
  *       │   ├── project-name/
- *       │   │   ├── project.md
+ *       │   │   ├── project.md (or project.mdx)
  *       │   │   ├── thumbnail.webp
  *       │   │   └── ...
- *       │   └── optional-flat-project.md
- *       ├── photos/
- *       │   └── photo.webp
- *       ├── resume.pdf
+ *       │   └── optional-flat-project.md(x)
+ *       ├── public/
+ *       │   ├── photo.webp
+ *       │   ├── favicon.ico
+ *       │   └── ...
  *       └── text.ts
  *
  * Usage:
@@ -35,8 +36,7 @@ const rootDir = resolve(scriptDir, "..");
 
 const dataRepo = resolve(rootDir, "..", "portfolio-data");
 const sourceRoot = join(dataRepo, "projects");
-const photosRoot = join(dataRepo, "photos");
-const resumeSource = join(dataRepo, "resume.pdf");
+const publicSource = join(dataRepo, "public");
 const textSource = join(dataRepo, "text.ts");
 
 const contentRoot = join(rootDir, "src", "content", "projects");
@@ -75,8 +75,7 @@ async function main() {
   }
 
   await requirePath(sourceRoot, "projects directory");
-  await requirePath(photosRoot, "photos directory");
-  await requirePath(resumeSource, "resume");
+  await requirePath(publicSource, "public directory");
   await requirePath(textSource, "text data");
 
   // Remove previously synced content so deleted or renamed data does not
@@ -88,20 +87,26 @@ async function main() {
   await mkdir(publicRoot, { recursive: true });
 
   await cp(textSource, join(rootDir, "src", "data", "text.ts"));
-  await cp(resumeSource, join(rootDir, "public", "resume.pdf"));
 
-  const existingPublicFiles = await readdir(join(rootDir, "public"), { withFileTypes: true });
-  for (const entry of existingPublicFiles) {
-    if (entry.isFile() && /^photo\./i.test(entry.name)) {
-      await rm(join(rootDir, "public", entry.name), { force: true });
+  const publicDestination = join(rootDir, "public");
+  const publicEntries = await readdir(publicSource, { withFileTypes: true });
+  const publicNames = new Set(publicEntries.map((entry) => entry.name));
+  const protectedPublicNames = new Set([".assetsignore", "projects", "robots.txt"]);
+
+  // Keep repository-owned files such as robots.txt and remove stale files from previous syncs.
+  const existingPublicEntries = await readdir(publicDestination, { withFileTypes: true });
+  for (const entry of existingPublicEntries) {
+    if (!protectedPublicNames.has(entry.name) && !publicNames.has(entry.name)) {
+      await rm(join(publicDestination, entry.name), { recursive: true, force: true });
     }
   }
 
-  const photoEntries = await readdir(photosRoot, { withFileTypes: true });
-  for (const entry of photoEntries) {
-    if (!entry.isFile()) continue;
-    await cp(join(photosRoot, entry.name), join(rootDir, "public", entry.name));
-    console.log(`[sync] photo ${entry.name}`);
+  for (const entry of publicEntries) {
+    const source = join(publicSource, entry.name);
+    const destination = join(publicDestination, entry.name);
+    await rm(destination, { recursive: true, force: true });
+    await cp(source, destination, { recursive: true });
+    console.log(`[sync] public/${entry.name}`);
   }
 
   const entries = await readdir(sourceRoot, { withFileTypes: true });
