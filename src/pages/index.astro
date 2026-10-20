@@ -1,5 +1,5 @@
 ---
-import { text, interests, skills } from "../data/text";
+import { Icon } from "astro-icon/components";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionLayout from "../layouts/SectionLayout.astro";
@@ -7,9 +7,9 @@ import HomeNavigation from "../components/HomeNavigation.astro";
 import TextLink from "../components/TextLink.astro";
 import FeaturedProjectCard from "../components/FeaturedProjectCard.astro";
 import ExperienceCard from "../components/ExperienceCard.astro";
+import CardSmall from "../components/CardSmall.astro";
 
-import { Icon } from "astro-icon/components";
-
+import { text, interests, skills } from "../data/text";
 import { getProjects } from "../data/projects";
 
 const projects = await getProjects();
@@ -22,6 +22,11 @@ const selectedProjects = [
   ...sortedProjects.filter((project) => project.data.featured),
   ...sortedProjects.filter((project) => !project.data.featured),
 ].slice(0, numProjects);
+
+// Filter research projects based on tags to display in the "Research & Interests" section
+const researchProjects = sortedProjects.filter((project) =>
+  project.data.tags.some((tag) => tag.toLowerCase().includes("research")),
+);
 ---
 
 <BaseLayout title="Home | Portfolio">
@@ -215,5 +220,17 @@ const selectedProjects = [
         {text.researchIntro}
       </p>
     </div>
+
+    {
+      researchProjects.length > 0 && (
+        <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2" aria-label="Research projects">
+          {researchProjects.map((project) => (
+            <li>
+              <CardSmall project={project} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </SectionLayout>
 </BaseLayout>
