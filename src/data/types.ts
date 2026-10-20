@@ -1,13 +1,3 @@
-export type ExperienceContent =
-  | {
-      layout: "bullets";
-      items: string[];
-    }
-  | {
-      layout: "tags";
-      items: string[];
-    };
-
 export type ExperienceRole = {
   title: string;
   date: string;
@@ -18,7 +8,10 @@ export type ExperienceEntry = {
   title: string;
   location?: string;
   roles: ExperienceRole[];
-  content: ExperienceContent;
+  content: {
+    bullets?: string[];
+    tags?: string[];
+  };
 };
 
 export type ContactInfo = {

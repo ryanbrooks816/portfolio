@@ -33,7 +33,7 @@ function formatDate(date?: Date | string) {
 }
 ---
 
-<article class="group relative gap-4 pb-1 transition-all sm:gap-8 md:gap-4 lg:hover:!opacity-100">
+<article class="group relative gap-4 pb-1 transition-all sm:gap-8 md:gap-4 lg:hover:opacity-100!">
   <div
     class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-gray-200/60 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(100,116,139,0.08)] lg:group-hover:drop-shadow-md dark:lg:group-hover:bg-neutral-800/60 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(163,163,163,0.10)]"
   >
@@ -59,23 +59,20 @@ function formatDate(date?: Date | string) {
         }
       </ul>
       {
-        content.layout === "bullets" ? (
-          <ul class="space-y-3 text-sm">
-            {content.items.map((item) => (
+          <ul class="space-y-3 text-sm mb-4">
+            {content.bullets?.map((item) => (
               <li class="flex items-start">
                 <span class="mr-3 text-slate-600 dark:text-neutral-400">•</span>
                 <span class="text-slate-600 dark:text-neutral-400">{item}</span>
               </li>
             ))}
           </ul>
-        ) : (
           <div class="flex flex-wrap gap-2">
-            {content.items.map((item) => (
+            {content.tags?.map((item) => (
               <span class="ui-tag green">{item}</span>
             ))}
           </div>
-        )
-      }
+        }
     </div>
   </div>
 </article>
