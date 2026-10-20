@@ -1,12 +1,13 @@
 ---
+import { Icon } from "astro-icon/components";
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navigation from "../components/Navigation.astro";
 import CardGridView from "../components/CardGridView.astro";
 import CardListView from "../components/CardListView.astro";
 import BackLinkNavigation from "../components/BackNavigation.astro";
 
-import { Icon } from "astro-icon/components";
-
+import { text } from "../data/text";
 import { getProjects } from "../data/projects";
 
 const projects = await getProjects();
@@ -78,9 +79,11 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
           <tr>
             <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200">Date</th>
             <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200">Project</th>
-            <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200 lg:table-cell">Tags</th
+            <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200 lg:table-cell"
+              >Tags</th
             >
-            <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200 sm:table-cell">Type</th
+            <th class="hidden py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200 sm:table-cell"
+              >Type</th
             >
             <th class="py-4 px-4 text-sm font-semibold text-slate-900 dark:text-neutral-200">Links</th>
           </tr>
@@ -97,13 +100,15 @@ const uniqueTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
   </div>
 
   <div class="mx-auto mt-24 max-w-xl text-center">
-    <h2 class="mb-4 text-2xl font-bold tracking-tight text-slate-900 dark:text-neutral-100">More Projects Added Soon</h2>
+    <h2 class="mb-4 text-2xl font-bold tracking-tight text-slate-900 dark:text-neutral-100">
+      More Projects Added Soon
+    </h2>
     <p class="mb-8 text-base leading-relaxed text-slate-600 dark:text-neutral-400">
       I'm always working on new projects and will be updating this page regularly. Check out my GitHub for the latest
       work.
     </p>
     <a
-      href="https://github.com/ryanbrooks816"
+      href={text.contact.github}
       target="_blank"
       rel="noopener noreferrer"
       class="ui-button-primary group"
